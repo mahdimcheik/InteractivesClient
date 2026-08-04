@@ -1,0 +1,77 @@
+<a class="app-skip-link" href="#contenu">Aller au contenu principal</a>
+
+<header class="site-header">
+  <div class="app-container header-inner">
+    <a routerLink="/" class="brand">Interactives</a>
+
+    <button
+      type="button"
+      class="menu-button visible md:invisible !flex !items-center !justify-center"
+      ejs-button
+      cssClass="e-flat e-round e-icon-btn"
+      aria-controls="navigation-principale"
+      [attr.aria-expanded]="menuOpen()"
+      [attr.aria-label]="menuOpen() ? 'Fermer le menu' : 'Ouvrir le menu'"
+      (click)="toggleMenu()"
+    >
+      <i
+        class="pi"
+        [class.pi-bars]="!menuOpen()"
+        [class.pi-times]="menuOpen()"
+        aria-hidden="true"
+      ></i>
+    </button>
+
+    <nav
+      id="navigation-principale"
+      class="site-nav"
+      aria-label="Navigation principale"
+      [class.is-open]="menuOpen()"
+      [hidden]="!shouldShowMenu()"
+    >
+      <ul class="nav-list">
+        @for (link of links; track link.path) {
+          <li>
+            <a
+              [routerLink]="link.path"
+              routerLinkActive="is-active"
+              #active="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+              [attr.aria-current]="active.isActive ? 'page' : null"
+              (click)="closeMenu()"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        }
+      </ul>
+
+      <div class="nav-actions">
+        <app-theme-toggle />
+        @if (isAuthenticated()) {
+          <a routerLink="/dashboard" ejs-button (click)="closeMenu()">Mon espace</a>
+        } @else {
+          <a routerLink="/connexion" ejs-button cssClass="e-outline" (click)="closeMenu()"
+            >Connexion</a
+          >
+        }
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu" class="app-container site-main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <div class="app-container footer-inner">
+    <p>© {{ currentYear }} BoilerPlate. Tous droits réservés.</p>
+    <nav aria-label="Navigation du pied de page">
+      <ul class="footer-links">
+        <li><a routerLink="/a-propos">À propos</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>

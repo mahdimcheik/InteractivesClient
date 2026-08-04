@@ -1,0 +1,120 @@
+@layer app {
+  :host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: var(--app-header-height);
+    padding-inline: var(--app-gutter);
+    border-bottom: 1px solid var(--app-border-color);
+    background: var(--app-background);
+  }
+
+  .brand {
+    font-weight: 700;
+    color: var(--app-text-color);
+    text-decoration: none;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  .user-name {
+    color: var(--app-text-muted-color);
+    font-size: 0.9375rem;
+  }
+
+  .sidebar-button {
+    display: none;
+  }
+
+  .shell {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .sidebar {
+    flex: 0 0 var(--app-sidebar-width);
+    padding: 1.25rem 0.75rem;
+    border-right: 1px solid var(--app-border-color);
+    background: var(--app-background);
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: var(--app-radius);
+      color: var(--app-text-muted-color);
+      text-decoration: none;
+
+      &:hover {
+        background: var(--app-surface-subtle);
+        color: var(--app-text-color);
+      }
+
+      &.is-active {
+        background: var(--app-highlight-background);
+        color: var(--app-highlight-color);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 2rem var(--app-gutter) 3rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .sidebar-button {
+      display: inline-flex;
+    }
+
+    .user-name {
+      display: none;
+    }
+
+    .sidebar {
+      display: none;
+      position: fixed;
+      inset: var(--app-header-height) auto 0 0;
+      z-index: 90;
+      width: var(--app-sidebar-width);
+      overflow-y: auto;
+      box-shadow: 0 0 2rem rgb(0 0 0 / 25%);
+
+      &[hidden] {
+        display: none !important;
+      }
+
+      &.is-open {
+        display: block;
+      }
+    }
+  }
+}

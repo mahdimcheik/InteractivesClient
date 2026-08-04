@@ -1,0 +1,433 @@
+@if (structure(); as structureData) {
+  <div
+    class="w-full max-w-6xl mx-auto overflow-hidden scrollbar-off configurable-form-container"
+    [class]="structureData.styleClass || ''"
+  >
+    <!-- Form Header -->
+    @if (
+      structureData.imgUrl && structureData.imgUrl && (structureData.label || structureData.name)
+    ) {
+      <div class="px-6 py-8 pb-2 configurable-form-header">
+        <div class="flex flex-col items-center configurable-form-header-content">
+          @if (structureData.imgUrl) {
+            <img
+              [src]="structureData.imgUrl"
+              alt="Form Icon"
+              class="w-[350px] h-auto rounded-full"
+            />
+          }
+          @if (structureData.label || structureData.name) {
+            <h2 class="text-2xl sm:text-3xl font-bold configurable-form-title self-center">
+              {{ structureData.label || structureData.name }}
+            </h2>
+          }
+          @if (structureData.description) {
+            <p class="text-3xl leading-relaxed configurable-form-description">
+              {{ structureData.description }}
+            </p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Form Content -->
+    <div class="configurable-form-body">
+      <form
+        [formGroup]="form()"
+        (ngSubmit)="onSubmit()"
+        (keydown.enter)="onFormKeydown($event)"
+        class="space-y-8 configurable-form-content"
+      >
+        <!-- Sections (each section holds its fields) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 configurable-form-elements-container">
+          @for (section of sortedSections(); track trackByGroupId($index, section)) {
+            <div
+              class="p-6 border-b hover:shadow-md transition-shadow duration-200 configurable-form-section configurable-form-field-group lg:col-span-2"
+              [class]="section.styleClass || ''"
+              [formGroupName]="section.id"
+            >
+              <!-- Group Header -->
+              <div
+                class="mb-4 configurable-form-section-header configurable-form-field-group-header"
+              >
+                <div class="flex flex-col configurable-form-section-title-container">
+                  <div class="flex items-center gap-3 configurable-form-section-title-content">
+                    @if (section.icon) {
+                      <div
+                        class="flex-shrink-0 p-2 rounded-lg shadow-sm configurable-form-section-icon"
+                      >
+                        <i [class]="section.icon" class="text-lg text-blue-500"></i>
+                      </div>
+                    }
+                    <h3
+                      class="text-lg sm:text-xl p-0 m-0 font-semibold configurable-form-section-title"
+                    >
+                      {{ section.label }}
+                    </h3>
+                  </div>
+                  @if (section.description) {
+                    <p class="text-sm leading-relaxed configurable-form-section-description">
+                      {{ section.description }}
+                    </p>
+                  }
+                  @let groupValidationErrors = getGroupValidationErrors(section.id);
+                </div>
+
+                <!-- Group-level Validation Errors -->
+                @if (hasGroupValidationErrors(section.id) && isGroupTouched(section.id)) {
+                  <div
+                    class="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg shadow-sm configurable-form-section-errors configurable-form-group-validation-errors"
+                  >
+                    <div class="flex items-start gap-3 configurable-form-section-errors-header">
+                      <i class="pi pi-exclamation-triangle text-red-500 mt-0.5 flex-shrink-0"></i>
+                      <div class="flex-1 configurable-form-section-errors-content">
+                        <p
+                          class="text-sm font-medium text-red-800 configurable-form-section-errors-title"
+                        >
+                          Erreurs de validation du groupe :
+                        </p>
+                        <ul class="mt-2 space-y-1 configurable-form-section-errors-list">
+                          @for (error of groupValidationErrors; track error) {
+                            <li
+                              class="text-sm text-red-700 flex items-start gap-2 configurable-form-section-error-item"
+                            >
+                              <span
+                                class="w-1 h-1 bg-red-400 rounded-full mt-2 flex-shrink-0"
+                              ></span>
+                              <span>{{ error }}</span>
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <!-- Field-level Errors Summary -->
+                @if (
+                  verboseError() &&
+                  getGroupErrors(section.id).length > getGroupValidationErrors(section.id).length &&
+                  isGroupTouched(section.id)
+                ) {
+                  <div
+                    class="mt-4 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-r-lg shadow-sm configurable-form-section-field-errors configurable-form-group-errors-summary"
+                  >
+                    <div
+                      class="flex items-start gap-3 configurable-form-section-field-errors-header"
+                    >
+                      <i class="pi pi-info-circle text-orange-500 mt-0.5 flex-shrink-0"></i>
+                      <div class="flex-1 configurable-form-section-field-errors-content">
+                        <p
+                          class="text-sm font-medium text-orange-800 configurable-form-section-field-errors-title"
+                        >
+                          Erreurs dans les champs :
+                        </p>
+                        <ul class="mt-2 space-y-1 configurable-form-section-field-errors-list">
+                          @for (error of getGroupErrors(section.id); track error) {
+                            @if (!getGroupValidationErrors(section.id).includes(error)) {
+                              <li
+                                class="text-sm text-orange-700 flex items-start gap-2 configurable-form-section-field-error-item"
+                              >
+                                <span
+                                  class="w-1 h-1 bg-orange-400 rounded-full mt-2 flex-shrink-0"
+                                ></span>
+                                <span>{{ error }}</span>
+                              </li>
+                            }
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Fields Grid -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-2 gap-6 configurable-form-fields-container configurable-form-fields-grid"
+              >
+                @for (
+                  field of getSortedFieldsInGroup(section);
+                  track trackByFieldId($index, field)
+                ) {
+                  <div
+                    class="space-y-2 configurable-form-field-container configurable-form-field"
+                    [class.lg:col-span-2]="field.fullWidth || field.type === 'textarea'"
+                    [class.lg:col-span-1]="!field.fullWidth && field.type !== 'textarea'"
+                  >
+                    <!-- Field Label -->
+                    @if (field.type != 'checkbox') {
+                      <label
+                        [for]="field.id"
+                        class="block text-sm font-medium configurable-form-field-label"
+                      >
+                        <span class="configurable-form-field-label-text">{{ field.label }}</span>
+                        @if (field.required) {
+                          <span class="text-red-500 ml-1 configurable-form-field-required">*</span>
+                        }
+                      </label>
+                    }
+
+                    <!-- Input Container -->
+                    <div class="relative configurable-form-input-container">
+                      @if (field.type === 'text' || field.type === 'email') {
+                        <ejs-textbox
+                          [type]="field.type"
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || ''"
+                          [readonly]="field.readonly || false"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full configurable-form-input configurable-form-text-input"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      @if (field.type === 'password') {
+                        <ejs-textbox
+                          [type]="getPasswordFieldType(field.id)"
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || ''"
+                          [readonly]="field.readonly || false"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full pr-10 configurable-form-input configurable-form-text-input"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                        <button
+                          type="button"
+                          class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center"
+                          (click)="togglePasswordVisibility(field.id)"
+                          [attr.aria-label]="
+                            isPasswordVisible(field.id) ? 'Hide password' : 'Show password'
+                          "
+                        >
+                          <i
+                            [class]="isPasswordVisible(field.id) ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                          ></i>
+                        </button>
+                      }
+
+                      <!-- Number Input -->
+                      @if (field.type === 'number') {
+                        <ejs-numerictextbox
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || ''"
+                          [readonly]="field.readonly || false"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full configurable-form-input configurable-form-number-input"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      <!-- Date Input -->
+                      @if (field.type === 'date') {
+                        @if (field.timeOnly) {
+                          <ejs-timepicker
+                            [step]="field.stepMinute ?? 1"
+                            [formControlName]="field.name"
+                            [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                            class="w-full configurable-form-input configurable-form-date-input"
+                            [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                          />
+                        } @else if (field.showTime) {
+                          <ejs-datetimepicker
+                            [step]="field.stepMinute ?? 1"
+                            [formControlName]="field.name"
+                            [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                            class="w-full configurable-form-input configurable-form-date-input"
+                            [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                          />
+                        } @else {
+                          <ejs-datepicker
+                            [formControlName]="field.name"
+                            [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                            class="w-full configurable-form-input configurable-form-date-input"
+                            [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                          />
+                        }
+                      }
+
+                      <!-- Color Input -->
+                      @if (field.type === 'color') {
+                        <input
+                          type="color"
+                          ejs-colorpicker
+                          [id]="field.id"
+                          [formControlName]="field.name"
+                          [attr.aria-invalid]="isFieldInvalid(section.id, field.name)"
+                          class="configurable-form-input configurable-form-color-input"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      <!-- Textarea -->
+                      @if (field.type === 'textarea') {
+                        <ejs-textarea
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || ''"
+                          [readonly]="field.readonly || false"
+                          [rows]="4"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full configurable-form-input configurable-form-textarea"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      @if (field.type === 'texteditor') {
+                        <ejs-richtexteditor
+                          [formControlName]="field.name"
+                          [height]="200"
+                          class="w-full configurable-form-input configurable-form-texteditor"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        >
+                        </ejs-richtexteditor>
+                      }
+
+                      <!-- Select -->
+                      @if (field.type === 'select') {
+                        <ejs-dropdownlist
+                          [dataSource]="getSelectOptions(field)"
+                          [fields]="getSelectFields(field)"
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || 'Sélectionnez une option'"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full configurable-form-input configurable-form-select"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      <!-- MultiSelect -->
+                      @if (field.type === 'multiselect') {
+                        <ejs-multiselect
+                          [dataSource]="getSelectOptions(field)"
+                          [fields]="getSelectFields(field)"
+                          [formControlName]="field.name"
+                          [placeholder]="field.placeholder || 'Sélectionnez vos options'"
+                          [showSelectAll]="true"
+                          selectAllText="Sélectionner tout"
+                          mode="CheckBox"
+                          [htmlAttributes]="fieldHtmlAttrs(section.id, field)"
+                          class="w-full configurable-form-input configurable-form-select"
+                          [class.field-invalid]="isFieldInvalid(section.id, field.name)"
+                        />
+                      }
+
+                      <!-- Checkbox -->
+                      @if (field.type === 'checkbox') {
+                        <div class="flex items-start gap-3 configurable-form-checkbox-container">
+                          <ejs-checkbox
+                            [formControlName]="field.name"
+                            [label]="field.placeholder || field.label"
+                            [htmlAttributes]="{ id: field.id }"
+                            class="configurable-form-input configurable-form-checkbox"
+                          />
+                        </div>
+                      }
+
+                      <!-- Radio -->
+                      @if (field.type === 'radio') {
+                        <div class="space-y-3 configurable-form-radio-container">
+                          @for (option of getSelectOptions(field); track option) {
+                            <div class="flex items-center gap-3 configurable-form-radio-option">
+                              <ejs-radiobutton
+                                [formControlName]="field.name"
+                                [value]="getOptionValue(option, field)"
+                                [label]="getOptionLabel(option, field)"
+                                [htmlAttributes]="{
+                                  id: field.id + '_' + getOptionValue(option, field)
+                                }"
+                                class="configurable-form-input configurable-form-radio"
+                              />
+                            </div>
+                          }
+                        </div>
+                      }
+
+                      <!-- File Upload -->
+                      @if (field.type === 'file') {
+                        <bp-custom-upload-file
+                          [id]="field.id"
+                          [name]="field.name"
+                          [formControlName]="field.name"
+                          [accept]="field.accept || '*'"
+                          [multiple]="field.multiple || false"
+                          [maxFileSize]="field.maxFileSize || 1000000"
+                          [chooseLabel]="field.chooseLabel || 'Choisir'"
+                          [uploadLabel]="field.uploadLabel || 'Téléverser'"
+                          [cancelLabel]="field.cancelLabel || 'Annuler'"
+                          [emptyMessage]="
+                            field.emptyMessage || 'Sélectionnez et glissez vos fichiers ici'
+                          "
+                          [mode]="field.mode || 'advanced'"
+                          [url]="field.url || ''"
+                          [showUploadButton]="field.showUploadButton !== false"
+                          [showCancelButton]="field.showCancelButton !== false"
+                          [auto]="field.auto || false"
+                          [invalid]="isFieldInvalid(section.id, field.name)"
+                          class="configurable-form-input configurable-form-file-input"
+                        />
+                      }
+                    </div>
+                    @if (getFieldError(section.id, field.name); as errorMessage) {
+                      <div class="flex items-start gap-2 mt-2 configurable-form-field-error">
+                        <i
+                          class="pi pi-exclamation-circle text-red-500 text-sm mt-0.5 flex-shrink-0 configurable-form-field-error-icon"
+                        ></i>
+                        <p
+                          class="text-sm text-red-600 leading-relaxed configurable-form-field-error-message"
+                        >
+                          {{ errorMessage }}
+                        </p>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Form Actions -->
+        @if (!structureData.hideSubmitButton || !structureData.hideCancelButton) {
+          <div
+            class="sticky bottom-0 px-6 py-4 mt-8 -mx-6 -mb-6 rounded-b-xl configurable-form-actions"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:justify-end gap-3 w-full sm:w-auto configurable-form-buttons px-6"
+            >
+              @if (!structureData.hideCancelButton) {
+                <button
+                  type="button"
+                  ejs-button
+                  cssClass="e-outline w-full"
+                  class="w-full sm:w-auto configurable-form-button configurable-form-button-cancel"
+                  (click)="onCancelClick()"
+                >
+                  Annuler
+                </button>
+              }
+              <ng-content select="[slot=more-controls]"></ng-content>
+              @if (!structureData.hideSubmitButton) {
+                <button
+                  type="submit"
+                  ejs-button
+                  cssClass="e-primary w-full"
+                  class="w-full sm:w-auto configurable-form-button configurable-form-button-submit"
+                >
+                  {{ structureData.submitButtonLabel || 'Soumettre' }}
+                </button>
+                <!-- [disabled]="!isFormValid()" -->
+              }
+            </div>
+          </div>
+        }
+      </form>
+    </div>
+  </div>
+} @else {
+  <div class="flex items-center justify-center p-12 bg-gray-50 rounded-lg configurable-form-empty">
+    <div class="text-center configurable-form-empty-content">
+      <i class="pi pi-inbox text-4xl mb-4 configurable-form-empty-icon"></i>
+      <p class="text-lg configurable-form-empty-message">Aucune structure de formulaire fournie</p>
+    </div>
+  </div>
+}

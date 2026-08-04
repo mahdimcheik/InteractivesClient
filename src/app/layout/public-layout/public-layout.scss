@@ -1,0 +1,136 @@
+@layer app {
+  :host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--app-background);
+    border-bottom: 1px solid var(--app-border-color);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: var(--app-header-height);
+  }
+
+  .brand {
+    margin-right: auto;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--app-text-color);
+    text-decoration: none;
+  }
+
+  .menu-button {
+    display: none;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    a {
+      color: var(--app-text-muted-color);
+      text-decoration: none;
+      padding: 0.25rem 0;
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        color: var(--app-text-color);
+      }
+
+      &.is-active {
+        color: var(--app-primary-color);
+        border-bottom-color: var(--app-primary-color);
+      }
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .site-main {
+    flex: 1;
+    padding-block: 2.5rem 4rem;
+
+    /* Cible du lien d'évitement : pas de contour parasite au focus programmatique. */
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--app-border-color);
+    color: var(--app-text-muted-color);
+    font-size: 0.875rem;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 1.5rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (max-width: 48rem) {
+    .menu-button {
+      display: inline-flex;
+    }
+
+    .site-nav {
+      display: none;
+      position: absolute;
+      inset: var(--app-header-height) 0 auto 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+      padding: 1.25rem var(--app-gutter);
+      background: var(--app-background);
+      border-bottom: 1px solid var(--app-border-color);
+
+      &[hidden] {
+        display: none !important;
+      }
+
+      &.is-open {
+        display: flex;
+      }
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+  }
+}

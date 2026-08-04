@@ -1,0 +1,60 @@
+<a class="app-skip-link" href="#contenu">Aller au contenu principal</a>
+
+<header class="topbar">
+  <button
+    type="button"
+    class="sidebar-button"
+    ejs-button
+    cssClass="e-flat e-round e-icon-btn"
+    aria-controls="navigation-dashboard"
+    [attr.aria-expanded]="sidebarOpen()"
+    [attr.aria-label]="sidebarOpen() ? 'Fermer le menu' : 'Ouvrir le menu'"
+    (click)="toggleSidebar()"
+  >
+    <i
+      class="pi"
+      [class.pi-bars]="!sidebarOpen()"
+      [class.pi-times]="sidebarOpen()"
+      aria-hidden="true"
+    ></i>
+  </button>
+
+  <a routerLink="/" class="brand">BoilerPlate</a>
+
+  <div class="topbar-actions">
+    <span class="user-name">{{ fullName() }}</span>
+    <app-theme-toggle />
+    <button type="button" ejs-button cssClass="e-outline" (click)="logout()">Déconnexion</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav
+    id="navigation-dashboard"
+    class="sidebar"
+    aria-label="Navigation du tableau de bord"
+    [class.is-open]="sidebarOpen()"
+    [hidden]="!shouldShowSidebar()"
+  >
+    <ul>
+      @for (link of links; track link.path) {
+        <li>
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="is-active"
+            #active="routerLinkActive"
+            [routerLinkActiveOptions]="{ exact: link.exact }"
+            [attr.aria-current]="active.isActive ? 'page' : null"
+          >
+            <i class="pi" [class]="link.icon" aria-hidden="true"></i>
+            {{ link.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <main id="contenu" class="content" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

@@ -1,0 +1,38 @@
+<ejs-dialog
+    [(visible)]="visible"
+    [isModal]="true"
+    [closeOnEscape]="true"
+    [showCloseIcon]="false"
+    [allowDragging]="false"
+    [enableResize]="false"
+    [cssClass]="'confirm-modal scrollbar-off'"
+    (close)="onHide()"
+    (overlayClick)="onHide()"
+>
+    <ng-template #header>
+        <div class="flex items-center justify-between gap-3 min-w-[300px] w-full md:w-[500px] lg:w-[1/2]">
+            <div class="flex items-center gap-3">
+                <i [class]="iconClass()" class="text-2xl"></i>
+                <span class="text-md font-semibold text-gray-800 dark:text-white m-0">{{ title() }}</span>
+                <ng-content select="[header-start]"></ng-content>
+            </div>
+            <div class="flex items-center gap-3">
+                <ng-content select="[header-end]"></ng-content>
+                <button type="button" ejs-button cssClass="e-flat e-round e-icon-btn" (click)="onHide()">
+                    <i class="pi pi-times"></i>
+                </button>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #content>
+        <div class="flex gap-3 min-w-[300px] w-full md:w-[500px] lg:w-[1/2] min-h-[100px] !scrollbar-off">
+            <ng-content select="[content]"></ng-content>
+        </div>
+    </ng-template>
+    <ng-template #footerTemplate>
+        <div class="flex items-center justify-between gap-3 min-w-[300px] w-full md:w-[500px] lg:w-[1/2] min-h-[25px]">
+            <ng-content select="[footer-start]"></ng-content>
+            <ng-content select="[footer-end]"></ng-content>
+        </div>
+    </ng-template>
+</ejs-dialog>

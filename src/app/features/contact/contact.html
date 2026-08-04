@@ -1,0 +1,50 @@
+<h1>Contact</h1>
+<p>Une question ? Écrivez-nous, nous répondons sous 48 heures.</p>
+
+<form class="contact-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label for="name">Nom</label>
+    <ejs-textbox
+      type="text"
+      formControlName="name"
+      autocomplete="name"
+      [htmlAttributes]="fieldAttrs('name')"
+    />
+    @if (showError('name')) {
+      <p id="name-error" class="field-error" role="alert">
+        Indiquez votre nom (2 caractères minimum).
+      </p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="email">Adresse e-mail</label>
+    <ejs-textbox
+      type="email"
+      formControlName="email"
+      autocomplete="email"
+      [htmlAttributes]="fieldAttrs('email')"
+    />
+    @if (showError('email')) {
+      <p id="email-error" class="field-error" role="alert">Indiquez une adresse e-mail valide.</p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="message">Message</label>
+    <ejs-textarea
+      [rows]="6"
+      formControlName="message"
+      [htmlAttributes]="fieldAttrs('message')"
+    />
+    @if (showError('message')) {
+      <p id="message-error" class="field-error" role="alert">
+        Votre message doit contenir au moins 10 caractères.
+      </p>
+    }
+  </div>
+
+  <button type="submit" ejs-button [disabled]="submitting()">
+    {{ submitting() ? 'Envoi…' : 'Envoyer' }}
+  </button>
+</form>

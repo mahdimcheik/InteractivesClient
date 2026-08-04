@@ -1,0 +1,60 @@
+<ejs-dialog
+    [(visible)]="visible"
+    [isModal]="true"
+    [allowDragging]="true"
+    [enableResize]="false"
+    [closeOnEscape]="true"
+    [width]="'min(90vw, 500px)'"
+    [cssClass]="'confirm-modal'"
+    (close)="close()"
+    (overlayClick)="close()"
+>
+    <ng-template #header>
+        <div class="flex items-center gap-3">
+            <i [class]="iconClass()" class="text-2xl"></i>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white m-0">{{ title() }}</h3>
+        </div>
+    </ng-template>
+
+    <ng-template #content>
+        <div class="py-4">
+            <div [class]="containerClass()">
+                <div class="flex items-start gap-4">
+                    <i [class]="iconClass()" class="text-3xl flex-shrink-0 mt-1"></i>
+                    <div class="flex-1">
+                        <p class="text-gray-700 text-base leading-relaxed m-0">
+                            {{ question() }}
+                        </p>
+                        <ng-content></ng-content>
+                    </div>
+                </div>
+            </div>
+
+            <ng-content select="[slot=info]"></ng-content>
+        </div>
+    </ng-template>
+
+    <ng-template #footerTemplate>
+        <div class="flex justify-end gap-3 pt-4">
+            @if (!confirmButtonOnly()) {
+                <button
+                    type="button"
+                    ejs-button
+                    cssClass="e-outline flex-shrink-0"
+                    (click)="handleCancel()"
+                >
+                    {{ cancelText() }}
+                </button>
+            }
+
+            <button
+                type="button"
+                ejs-button
+                [cssClass]="confirmButtonSeverityClass() + ' flex-shrink-0'"
+                (click)="handleConfirm()"
+            >
+                {{ confirmText() }}
+            </button>
+        </div>
+    </ng-template>
+</ejs-dialog>

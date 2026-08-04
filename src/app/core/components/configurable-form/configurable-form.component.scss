@@ -1,0 +1,67 @@
+// Grid layout styling
+.configurable-form-elements-container {
+  // Ensure grid items maintain proper spacing
+  > * {
+    min-width: 0; // Prevents grid items from overflowing
+  }
+}
+
+.configurable-form-fields-grid {
+  // Grid layout for fields within groups
+  > * {
+    min-width: 0; // Prevents grid items from overflowing
+  }
+}
+
+// Essential Syncfusion overrides to fix component widths
+:host ::ng-deep {
+  // Fix datepicker width to match other inputs
+  .configurable-form-date-input {
+    width: 100% !important;
+
+    .e-input-group {
+      width: 100% !important;
+    }
+  }
+
+  // Ensure other components maintain full width (except checkboxes, radios, and color pickers)
+  .configurable-form-input:not(.configurable-form-checkbox):not(.configurable-form-radio):not(
+      .configurable-form-color-input
+    ) {
+    width: 100% !important;
+  }
+
+  // General Syncfusion component overrides
+  .e-btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .e-multi-select-list-wrapper {
+    border-radius: 0.375rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .e-checkbox-wrapper .e-frame,
+  .e-radio-wrapper .e-frame {
+    border-color: #d1d5db;
+    transition: all 0.2s ease;
+  }
+
+  .e-checkbox-wrapper .e-check ~ .e-frame,
+  .e-radio-wrapper .e-check ~ .e-frame {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  // Marque un champ invalide (remplace PrimeNG's `.p-invalid`, qui ne s'applique plus).
+  .field-invalid {
+    .e-input-group,
+    &.e-input-group,
+    &.e-control-wrapper .e-input-group,
+    input[type='color'] {
+      border-color: #ef4444 !important;
+    }
+  }
+}

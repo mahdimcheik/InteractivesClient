@@ -1,0 +1,25 @@
+<div class="auth-card">
+  <div class="auth-header">
+    <h1>Créer un compte</h1>
+    <app-theme-toggle />
+  </div>
+
+  @if (serverError(); as error) {
+    <p class="form-error" role="alert">{{ error }}</p>
+  }
+
+  <bp-configurable-form
+    [structure]="structure"
+    (onFormSubmit)="submit($event)"
+    [verboseError]="false"
+  />
+
+  <p class="auth-status" role="status" aria-live="polite">
+    @if (submitting()) {
+      Création du compte…
+    }
+  </p>
+
+  <p class="auth-footer">Déjà inscrit ? <a routerLink="/connexion">Se connecter</a></p>
+  <p class="auth-footer"><a routerLink="/">Retour à l'accueil</a></p>
+</div>

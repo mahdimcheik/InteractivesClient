@@ -1,0 +1,53 @@
+{
+  "name": "boiler-plate-client",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "gen-api": "ng-openapi -c openapi.config.ts"
+  },
+  "private": true,
+  "packageManager": "npm@11.16.0",
+  "dependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/platform-server": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "@angular/ssr": "^21.2.12",
+    "@syncfusion/ej2-angular-buttons": "^34.1.30",
+    "@syncfusion/ej2-angular-calendars": "^34.1.29",
+    "@syncfusion/ej2-angular-dropdowns": "^34.1.33",
+    "@syncfusion/ej2-angular-inputs": "^34.1.32",
+    "@syncfusion/ej2-angular-navigations": "^34.1.31",
+    "@syncfusion/ej2-angular-notifications": "^34.1.29",
+    "@syncfusion/ej2-angular-popups": "^34.1.29",
+    "@syncfusion/ej2-angular-richtexteditor": "^34.1.33",
+    "@syncfusion/ej2-base": "^34.1.30",
+    "@syncfusion/ej2-tailwind3-dark-theme": "^34.1.33",
+    "@syncfusion/ej2-tailwind3-theme": "^34.1.33",
+    "express": "^5.1.0",
+    "primeicons": "^8.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.12",
+    "@angular/cli": "^21.2.12",
+    "@angular/compiler-cli": "^21.2.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
+    "jsdom": "^28.0.0",
+    "ng-openapi": "^0.2.9",
+    "postcss": "^8.5.3",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}
