@@ -73,6 +73,15 @@ export const routes: Routes = [
       import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
   },
   {
+    path: 'editeur',
+    title: 'Éditeur',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/presentation-editor/presentation-editor').then(
+        (m) => m.PresentationEditor,
+      ),
+  },
+  {
     path: '**',
     title: 'Page introuvable',
     loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),

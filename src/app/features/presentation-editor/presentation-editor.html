@@ -1,0 +1,13 @@
+<div class="editor-shell">
+  <app-editor-header />
+  <app-editor-toolbar />
+
+  <main class="editor-workspace">
+    <app-slide-panel
+      [selectedSlideIndex]="selectedSlideIndex()"
+      (slideSelected)="selectedSlideIndex.set($event)"
+    />
+    <app-slide-canvas />
+    <app-properties-panel />
+  </main>
+</div>

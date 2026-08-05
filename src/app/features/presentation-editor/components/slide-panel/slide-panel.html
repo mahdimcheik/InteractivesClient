@@ -1,0 +1,59 @@
+<aside class="slide-panel">
+  <div class="panel-header">
+    <span class="panel-title">Diapositives</span>
+    <button type="button" class="grid-view-button" title="Vue en grille" aria-label="Vue en grille">
+      <i class="pi pi-grid-2" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="thumbnail-list">
+    @for (slide of slides; track $index) {
+      <div class="thumbnail-row">
+        <div class="thumbnail-index" [class.thumbnail-index-active]="$index === selectedSlideIndex()">
+          {{ $index + 1 }}
+        </div>
+        <button
+          type="button"
+          class="thumbnail"
+          [class.thumbnail-active]="$index === selectedSlideIndex()"
+          (click)="slideSelected.emit($index)"
+        >
+          @if ($index === selectedSlideIndex()) {
+            <div class="thumbnail-active-bar" aria-hidden="true"></div>
+          }
+
+          @switch (slide.kind) {
+            @case ('title') {
+              <div class="thumbnail-content thumbnail-content-centered">
+                <div class="thumbnail-line thumbnail-line-wide"></div>
+                <div class="thumbnail-line thumbnail-line-narrow"></div>
+              </div>
+            }
+            @case ('content') {
+              <div class="thumbnail-content thumbnail-content-split">
+                <div class="thumbnail-image-block"></div>
+                <div class="thumbnail-text-block">
+                  <div class="thumbnail-line thumbnail-line-full"></div>
+                  <div class="thumbnail-line thumbnail-line-wide"></div>
+                  <div class="thumbnail-line thumbnail-line-medium"></div>
+                </div>
+              </div>
+            }
+            @case ('poll') {
+              <div class="thumbnail-content thumbnail-content-centered">
+                <div class="thumbnail-poll-icon">
+                  <i class="pi pi-chart-bar" aria-hidden="true"></i>
+                </div>
+              </div>
+            }
+          }
+        </button>
+      </div>
+    }
+
+    <button type="button" class="new-slide-button">
+      <i class="pi pi-plus" aria-hidden="true"></i>
+      Nouvelle diapositive
+    </button>
+  </div>
+</aside>

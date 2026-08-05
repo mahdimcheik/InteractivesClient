@@ -1,0 +1,177 @@
+@layer app {
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1.5rem;
+    background: var(--app-background);
+    border-bottom: 1px solid var(--app-border-color);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+
+  .tool-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding-right: 1rem;
+    border-right: 1px solid var(--app-border-color);
+    flex-shrink: 0;
+
+    &:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+  }
+
+  .tool-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--app-radius);
+    border: none;
+    background: transparent;
+    color: var(--app-text-color);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--app-surface-subtle);
+    }
+  }
+
+  .font-group {
+    gap: 0.5rem;
+  }
+
+  .font-select {
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: var(--app-surface-subtle);
+    color: var(--app-text-color);
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--app-primary-color);
+      outline-offset: 1px;
+    }
+  }
+
+  .font-size-stepper {
+    display: flex;
+    align-items: center;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    background: var(--app-surface-subtle);
+    overflow: hidden;
+  }
+
+  .stepper-button {
+    height: 100%;
+    padding: 0 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--app-text-muted-color);
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--app-text-color) 8%, transparent);
+    }
+  }
+
+  .stepper-input {
+    width: 2.5rem;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: var(--app-text-color);
+    font-size: 0.875rem;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .format-group {
+    gap: 0.25rem;
+  }
+
+  .format-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: var(--app-text-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--app-surface-subtle);
+    }
+  }
+
+  .format-bold {
+    background: var(--app-surface-subtle);
+    font-weight: 700;
+  }
+
+  .format-italic {
+    font-style: italic;
+  }
+
+  .format-underline {
+    text-decoration: underline;
+  }
+
+  .format-divider {
+    width: 1px;
+    height: 1.5rem;
+    background: var(--app-border-color);
+    margin: 0 0.25rem;
+  }
+
+  .insert-group {
+    gap: 0.5rem;
+  }
+
+  .insert-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--app-radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .insert-button-poll {
+    background: color-mix(in srgb, var(--app-success-color) 10%, transparent);
+    color: var(--app-success-color);
+    border-color: color-mix(in srgb, var(--app-success-color) 20%, transparent);
+
+    &:hover {
+      background: color-mix(in srgb, var(--app-success-color) 20%, transparent);
+    }
+  }
+
+  .insert-button-quiz {
+    background: color-mix(in srgb, var(--app-accent-color) 10%, transparent);
+    color: var(--app-accent-color);
+    border-color: color-mix(in srgb, var(--app-accent-color) 20%, transparent);
+
+    &:hover {
+      background: color-mix(in srgb, var(--app-accent-color) 20%, transparent);
+    }
+  }
+}

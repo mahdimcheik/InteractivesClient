@@ -1,0 +1,173 @@
+@layer app {
+  .editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    background: color-mix(in srgb, var(--app-background) 70%, transparent);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--app-border-color);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+    flex-shrink: 0;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--app-radius);
+    background: var(--app-primary-color);
+    color: var(--app-primary-contrast-color);
+    font-weight: 700;
+  }
+
+  .brand-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--app-primary-color);
+  }
+
+  .header-divider {
+    width: 1px;
+    height: 1.5rem;
+    background: var(--app-border-color);
+  }
+
+  .presentation-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .presentation-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .presentation-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .edit-icon {
+    font-size: 0.875rem;
+    color: var(--app-text-muted-color);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--app-primary-color);
+    }
+  }
+
+  .presentation-status {
+    font-size: 0.75rem;
+    color: var(--app-text-muted-color);
+  }
+
+  .header-nav {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+
+    @media (min-width: 64rem) {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    color: var(--app-text-muted-color);
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--app-primary-color);
+    }
+  }
+
+  .nav-link-active {
+    color: var(--app-primary-color);
+    font-weight: 700;
+    padding-bottom: 0.125rem;
+    border-bottom: 2px solid var(--app-primary-color);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .history-actions {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: var(--app-radius);
+    background: var(--app-surface-subtle);
+    border: 1px solid var(--app-border-color);
+
+    @media (min-width: 48rem) {
+      display: flex;
+    }
+  }
+
+  .join-room-button {
+    display: none;
+
+    @media (min-width: 40rem) {
+      display: inline-flex;
+    }
+  }
+
+  .go-live-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .avatar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 2px solid var(--app-surface-subtle);
+    background: var(--app-accent-background);
+    color: var(--app-accent-color);
+    cursor: pointer;
+    margin-left: 0.5rem;
+
+    &:hover {
+      border-color: var(--app-primary-color);
+    }
+  }
+
+  .avatar-initials {
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+}

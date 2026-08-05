@@ -1,0 +1,121 @@
+<aside class="properties-panel">
+  <div class="tabs" role="tablist">
+    <button
+      type="button"
+      role="tab"
+      class="tab-button"
+      [class.tab-button-active]="activeTab() === 'properties'"
+      [attr.aria-selected]="activeTab() === 'properties'"
+      (click)="setActiveTab('properties')"
+    >
+      Propriétés
+    </button>
+    <button
+      type="button"
+      role="tab"
+      class="tab-button"
+      [class.tab-button-active]="activeTab() === 'interactions'"
+      [attr.aria-selected]="activeTab() === 'interactions'"
+      (click)="setActiveTab('interactions')"
+    >
+      Interactions
+    </button>
+  </div>
+
+  <div class="panel-content">
+    @if (activeTab() === 'properties') {
+      <div class="bento-card">
+        <h3 class="bento-card-title">
+          Paramètres de la diapositive
+          <i class="pi pi-sliders-h" aria-hidden="true"></i>
+        </h3>
+
+        <div class="field-group">
+          <label class="field-label">Arrière-plan</label>
+          <div class="swatch-row">
+            @for (swatch of backgroundSwatches; track swatch) {
+              <button
+                type="button"
+                class="swatch"
+                [class]="'swatch-' + swatch"
+                [class.swatch-active]="swatch === 'blanc'"
+                [attr.aria-label]="'Arrière-plan ' + swatch"
+              ></button>
+            }
+            <button type="button" class="swatch swatch-add" aria-label="Ajouter une couleur">
+              <i class="pi pi-plus" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Modèle de mise en page</label>
+          <div class="layout-grid">
+            <div class="layout-option layout-option-active"></div>
+            <div class="layout-option"></div>
+            <div class="layout-option"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bento-card bento-card-accented">
+        <h3 class="bento-card-title bento-card-title-indented">
+          Propriétés du texte
+          <i class="pi pi-text" aria-hidden="true"></i>
+        </h3>
+
+        <div class="field-stack">
+          <div class="position-grid">
+            <div class="field-group">
+              <label class="field-label field-label-tiny">X (px)</label>
+              <input class="number-input" type="number" value="120" />
+            </div>
+            <div class="field-group">
+              <label class="field-label field-label-tiny">Y (px)</label>
+              <input class="number-input" type="number" value="85" />
+            </div>
+            <div class="field-group">
+              <label class="field-label field-label-tiny">L (px)</label>
+              <input class="number-input" type="number" value="340" />
+            </div>
+            <div class="field-group">
+              <label class="field-label field-label-tiny">H (px)</label>
+              <input class="number-input" type="number" value="400" />
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <div class="field-group">
+            <div class="opacity-row">
+              <label class="field-label">Opacité</label>
+              <span class="opacity-value">100%</span>
+            </div>
+            <input class="opacity-slider" type="range" min="0" max="100" value="100" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Effets</label>
+            <button type="button" class="add-effect-button">
+              <i class="pi pi-plus" aria-hidden="true"></i>
+              Ajouter une ombre
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes-card">
+        <h3 class="bento-card-title">
+          Notes du présentateur
+          <i class="pi pi-note-sticky" aria-hidden="true"></i>
+        </h3>
+        <textarea
+          class="notes-textarea"
+          placeholder="Ajouter des notes pour cette diapositive..."
+        ></textarea>
+      </div>
+    } @else {
+      <p class="empty-state">Aucune interaction configurée pour cet élément.</p>
+    }
+  </div>
+</aside>

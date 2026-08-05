@@ -1,0 +1,69 @@
+<header class="editor-header">
+  <div class="header-left">
+    <a routerLink="/" class="brand">
+      <span class="brand-mark">E</span>
+      <span class="brand-name">EduSlide</span>
+    </a>
+
+    <div class="header-divider" aria-hidden="true"></div>
+
+    <div class="presentation-info">
+      <div class="presentation-title-row">
+        <span class="presentation-title">{{ presentationTitle() }}</span>
+        <i class="pi pi-pencil edit-icon" aria-hidden="true"></i>
+      </div>
+      <span class="presentation-status">Enregistré dans le cloud à l'instant</span>
+    </div>
+  </div>
+
+  <nav class="header-nav" aria-label="Navigation de l'éditeur">
+    <a routerLink="/dashboard" class="nav-link">Tableau de bord</a>
+    <span class="nav-link nav-link-active" aria-current="page">Éditeur</span>
+    <span class="nav-link">Ressources</span>
+  </nav>
+
+  <div class="header-actions">
+    <div class="history-actions">
+      <button
+        type="button"
+        ejs-button
+        cssClass="e-flat e-round e-icon-btn"
+        title="Annuler"
+        aria-label="Annuler"
+      >
+        <i class="pi pi-undo" aria-hidden="true"></i>
+      </button>
+      <button
+        type="button"
+        ejs-button
+        cssClass="e-flat e-round e-icon-btn"
+        title="Rétablir"
+        aria-label="Rétablir"
+        disabled
+      >
+        <i class="pi pi-replay" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <button
+      type="button"
+      ejs-button
+      cssClass="e-outline join-room-button !border-[var(--app-primary-color)] !text-[var(--app-primary-color)] !px-4 !py-2 !rounded-lg"
+    >
+      Rejoindre la salle
+    </button>
+
+    <button
+      type="button"
+      ejs-button
+      cssClass="!bg-[var(--app-primary-color)] !text-[var(--app-primary-contrast-color)] !px-4 !py-2 !rounded-lg go-live-button"
+    >
+      <i class="pi pi-play" aria-hidden="true"></i>
+      Démarrer en direct
+    </button>
+
+    <button type="button" class="avatar-button" aria-label="Profil utilisateur">
+      <span class="avatar-initials">SJ</span>
+    </button>
+  </div>
+</header>
