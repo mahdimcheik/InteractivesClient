@@ -1,5 +1,11 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { LoginResponse, PresentationDetails, PresentationSummary, UserDetails } from '@client';
+import {
+  LoginResponse,
+  PresentationDetails,
+  PresentationSummary,
+  SlideDetails,
+  UserDetails,
+} from '@client';
 
 import { StorageService } from './storage.service';
 
@@ -105,6 +111,53 @@ export class Store {
       next[index] = summary;
       return next;
     });
+  }
+
+  /** Insère ou remplace une diapositive d'une présentation déjà en cache. */
+  upsertSlideInPresentationDetails(presentationId: string, slide: SlideDetails): void {
+    const current = this.presentationDetails().get(presentationId);
+    if (!current) {
+      return;
+    }
+    const slides = current.slides ?? [];
+    const index = slide.id ? slides.findIndex((s) => s.id === slide.id) : -1;
+    const nextSlides =
+      index === -1 ? [...slides, slide] : slides.map((s, i) => (i === index ? slide : s));
+    this.upsertPresentationDetails({ ...current, slides: nextSlides });
+  }
+
+  /** Remplace la liste complète des diapositives d'une présentation déjà en cache. */
+  setSlidesForPresentationDetails(presentationId: string, slides: SlideDetails[]): void {
+    const current = this.presentationDetails().get(presentationId);
+    if (!current) {
+      return;
+    }
+    this.upsertPresentationDetails({ ...current, slides });
+  }
+
+  /** Retire une diapositive d'une présentation déjà en cache. */
+  removeSlideFromPresentationDetails(presentationId: string, slideId: string): void {
+    const current = this.presentationDetails().get(presentationId);
+    if (!current) {
+      return;
+    }
+    this.upsertPresentationDetails({
+      ...current,
+      slides: (current.slides ?? []).filter((s) => s.id !== slideId),
+    });
+  }
+
+  /** Réordonne les diapositives d'une présentation déjà en cache selon l'ordre des ids donné. */
+  reorderSlidesInPresentationDetails(presentationId: string, slideIds: string[]): void {
+    const current = this.presentationDetails().get(presentationId);
+    if (!current) {
+      return;
+    }
+    const byId = new Map((current.slides ?? []).map((s) => [s.id, s] as const));
+    const reordered = slideIds
+      .map((id) => byId.get(id))
+      .filter((s): s is SlideDetails => s !== undefined);
+    this.upsertPresentationDetails({ ...current, slides: reordered });
   }
 
   removePresentation(presentationId: string): void {

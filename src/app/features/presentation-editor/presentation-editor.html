@@ -4,6 +4,7 @@
 
   <main class="editor-workspace">
     <app-slide-panel
+      [presentation]="presentation()"
       [selectedSlideIndex]="selectedSlideIndex()"
       (slideSelected)="selectedSlideIndex.set($event)"
     />

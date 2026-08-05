@@ -12,6 +12,7 @@ import { firstValueFrom, map } from 'rxjs';
 
 import { PresentationDetails } from '@client';
 import { PresentationsMirrorService } from '@core/utilities/services/presentations-mirror.service';
+import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 
 import { EditorHeader } from './components/editor-header/editor-header';
 import { EditorToolbar } from './components/editor-toolbar/editor-toolbar';
@@ -40,6 +41,7 @@ export class PresentationEditor {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly presentationsMirror = inject(PresentationsMirrorService);
+  private readonly slidesMirror = inject(SlidesMirrorService);
 
   protected readonly selectedSlideIndex = signal(0);
   protected readonly isNameModalOpen = signal(false);
@@ -54,7 +56,7 @@ export class PresentationEditor {
     () => this.presentationId() === NEW_PRESENTATION_ID,
   );
 
-  private readonly presentation = signal<PresentationDetails | undefined>(undefined);
+  protected readonly presentation = signal<PresentationDetails | undefined>(undefined);
 
   protected readonly presentationTitle = computed(() => {
     const title = this.presentation()?.title;
@@ -101,6 +103,20 @@ export class PresentationEditor {
         }
         this.presentation.set(details);
         this.isNameModalOpen.set(false);
+
+        // Diapositive de départ ajoutée en best-effort : une présentation vide reste
+        // utilisable, et le bouton "Nouvelle diapositive" permet de réessayer.
+        try {
+          const slide = await firstValueFrom(this.slidesMirror.create(details.id));
+          if (slide) {
+            this.presentation.update((p) =>
+              p ? { ...p, slides: [...(p.slides ?? []), slide] } : p,
+            );
+          }
+        } catch {
+          // Ignoré : l'utilisateur peut ajouter une diapositive manuellement.
+        }
+
         // Remplace `new` par l'id réel une fois la présentation créée côté serveur.
         void this.router.navigate(['/dashboard/editeur', details.id], { replaceUrl: true });
       } catch {
