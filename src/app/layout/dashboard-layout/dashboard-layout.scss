@@ -111,7 +111,9 @@
   .content {
     flex: 1;
     min-width: 0;
-    padding: 2rem var(--app-gutter) 3rem;
+    height: calc(100vh - 70px);
+    overflow: auto;
+    padding: 1rem var(--app-gutter) 1rem;
 
     &:focus {
       outline: none;

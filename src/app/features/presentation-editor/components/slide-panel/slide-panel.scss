@@ -56,6 +56,70 @@
     position: relative;
   }
 
+  .thumbnail-topbar {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--app-background) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--app-border-color);
+    box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .thumbnail-row:hover .thumbnail-topbar,
+  .thumbnail-row:focus-within .thumbnail-topbar {
+    opacity: 1;
+  }
+
+  .thumbnail-topbar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--app-text-muted-color);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--app-surface-subtle);
+      color: var(--app-primary-color);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--app-primary-color);
+      outline-offset: 2px;
+    }
+  }
+
+  .thumbnail-drag-handle {
+    cursor: grab;
+  }
+
+  .cdk-drag-preview {
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 15%);
+  }
+
+  .cdk-drag-placeholder {
+    opacity: 0.4;
+    border: 1px dashed var(--app-border-color);
+    border-radius: 0.5rem;
+  }
+
+  .cdk-drop-list-dragging .thumbnail-row:not(.cdk-drag-placeholder) {
+    transition: transform 0.2s ease;
+  }
+
   .thumbnail-index {
     font-size: 0.75rem;
     color: var(--app-text-muted-color);

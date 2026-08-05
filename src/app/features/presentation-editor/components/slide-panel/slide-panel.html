@@ -6,15 +6,41 @@
     </button>
   </div>
 
-  <div class="thumbnail-list">
-    @for (slide of slides(); track $index) {
-      <div class="thumbnail-row">
+  <div
+    class="thumbnail-list"
+    cdkDropList
+    (cdkDropListDropped)="onDrop($event)"
+    [cdkDropListDisabled]="!presentationId()"
+  >
+    @for (slide of slides(); track slide.id) {
+      <div class="thumbnail-row" cdkDrag [cdkDragDisabled]="!presentationId()">
         <div
           class="thumbnail-index"
           [class.thumbnail-index-active]="$index === selectedSlideIndex()"
         >
           {{ $index + 1 }}
         </div>
+
+        <div class="thumbnail-topbar">
+          <button
+            type="button"
+            class="thumbnail-topbar-button"
+            [attr.aria-label]="'Modifier l\'arrière-plan de la diapositive ' + ($index + 1)"
+            (click)="$event.stopPropagation(); openEditModal(slide)"
+          >
+            <i class="pi pi-pencil" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="thumbnail-topbar-button thumbnail-drag-handle"
+            cdkDragHandle
+            [attr.aria-label]="'Réordonner la diapositive ' + ($index + 1)"
+            (click)="$event.stopPropagation()"
+          >
+            <i class="pi pi-bars" aria-hidden="true"></i>
+          </button>
+        </div>
+
         <button
           type="button"
           class="thumbnail"
@@ -33,9 +59,23 @@
       </div>
     }
 
-    <button type="button" class="new-slide-button" aria-label="Nouvelle diapositive">
+    <button
+      type="button"
+      class="new-slide-button"
+      aria-label="Nouvelle diapositive"
+      [disabled]="!presentationId()"
+      (click)="openAddModal()"
+    >
       <i class="pi pi-plus" aria-hidden="true"></i>
       Nouvelle diapositive
     </button>
   </div>
 </aside>
+
+<app-slide-modal
+  [(visible)]="slideModalVisible"
+  [mode]="slideModalMode()"
+  [initialColor]="editingSlide()?.backgroundColor ?? '#ffffff'"
+  [saving]="savingSlide()"
+  (confirmed)="onSlideModalConfirm($event)"
+/>
