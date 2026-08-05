@@ -6,8 +6,6 @@ import { ConfigurableFormComponent } from '@app/core/components/configurable-for
 import { Structure } from '@app/core/components/configurable-form/related-models';
 import { AuthMirrorService } from '@app/core/utilities/services/auth-mirror.service';
 
-import { ThemeToggle } from '../../../layout/theme-toggle/theme-toggle';
-
 /** Identifiant de la section du formulaire : le `FormGroup` émis est imbriqué dessous. */
 const SECTION_ID = 'identifiants';
 
@@ -18,9 +16,9 @@ interface LoginFormValue {
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, ThemeToggle, ConfigurableFormComponent],
+  imports: [RouterLink, ConfigurableFormComponent],
   templateUrl: './login.html',
-  styleUrl: '../auth-shell.scss',
+  styleUrl: '../auth-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {

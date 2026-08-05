@@ -1,0 +1,32 @@
+<div class="auth-card">
+  @switch (status()) {
+    @case ('loading') {
+      <h1 class="auth-title">Confirmation en cours…</h1>
+      <p class="auth-subtitle" role="status" aria-live="polite">
+        Merci de patienter pendant que nous confirmons votre compte.
+      </p>
+    }
+    @case ('success') {
+      <div class="auth-confirmation">
+        <span class="auth-status-icon auth-status-icon--success" aria-hidden="true">
+          <i class="pi pi-check-circle"></i>
+        </span>
+        <h1 class="auth-title">Compte confirmé</h1>
+        <p class="auth-subtitle">
+          Votre adresse e-mail a bien été confirmée. Vous pouvez maintenant vous connecter.
+        </p>
+      </div>
+      <p class="auth-footer"><a routerLink="/connexion">Se connecter</a></p>
+    }
+    @case ('error') {
+      <div class="auth-confirmation">
+        <span class="auth-status-icon auth-status-icon--error" aria-hidden="true">
+          <i class="pi pi-times-circle"></i>
+        </span>
+        <h1 class="auth-title">Confirmation impossible</h1>
+        <p class="auth-subtitle">Ce lien de confirmation est invalide ou a expiré.</p>
+      </div>
+      <p class="auth-footer"><a routerLink="/">Retour à l'accueil</a></p>
+    }
+  }
+</div>

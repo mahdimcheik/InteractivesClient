@@ -1,14 +1,6 @@
-/* Mise en page partagée par les pages Connexion et Inscription. */
+/* Carte partagée par les pages du parcours d'authentification (connexion, inscription,
+   mot de passe oublié, réinitialisation, confirmation de compte). */
 @layer app {
-  :host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100dvh;
-    padding: 2rem 1.25rem;
-  }
-
   .auth-card {
     width: 100%;
     /* Plus large que les anciens formulaires : `bp-configurable-form` place ses
@@ -18,19 +10,19 @@
     border: 1px solid var(--app-border-color);
     border-radius: var(--app-radius);
     background: var(--app-background);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
   }
 
-  .auth-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+  .auth-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
   }
 
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
+  .auth-subtitle {
+    margin: 0 0 1.5rem;
+    color: var(--app-text-muted-color);
   }
 
   form {
@@ -98,6 +90,32 @@
     background: var(--app-surface-subtle);
     color: var(--app-text-muted-color);
     font-size: 0.875rem;
+  }
+
+  /* État "confirmation de compte" : icône + message centrés, sans formulaire. */
+  .auth-confirmation {
+    text-align: center;
+  }
+
+  .auth-status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    font-size: 1.75rem;
+
+    &.auth-status-icon--success {
+      background: var(--app-success-background);
+      color: var(--app-success-color);
+    }
+
+    &.auth-status-icon--error {
+      background: var(--app-danger-background);
+      color: var(--app-danger-color);
+    }
   }
 
   @media (max-width: 30rem) {

@@ -1,8 +1,6 @@
 <div class="auth-card">
-  <div class="auth-header">
-    <h1>Connexion</h1>
-    <app-theme-toggle />
-  </div>
+  <h1 class="auth-title">Connexion</h1>
+  <p class="auth-subtitle">Heureux de vous revoir. Connectez-vous pour retrouver vos présentations.</p>
 
   @if (serverError(); as error) {
     <p class="form-error" role="alert">{{ error }}</p>

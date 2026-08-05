@@ -1,0 +1,42 @@
+<div class="auth-shell-grid app-container">
+  <div class="auth-shell-main">
+    <div class="auth-shell-topbar">
+      <a routerLink="/" class="auth-brand">Interactives</a>
+      <app-theme-toggle />
+    </div>
+
+    <router-outlet />
+  </div>
+
+  <aside class="auth-shell-panel">
+    <div class="auth-benefit-card">
+      <span class="auth-benefit-icon" aria-hidden="true"><i class="pi pi-globe"></i></span>
+      <h2>Rejoignez des milliers d'enseignants et de formateurs.</h2>
+      <p>
+        Créez des présentations interactives qui captivent votre public, du premier cours au
+        dernier.
+      </p>
+      <div class="auth-stat-row">
+        <div class="auth-stat">
+          <span class="auth-stat-value">98 %</span>
+          <span class="auth-stat-label">Engagement en hausse</span>
+        </div>
+        <div class="auth-stat">
+          <span class="auth-stat-value">2 M+</span>
+          <span class="auth-stat-label">Diapositives créées</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-testimonial-card">
+      <span class="auth-testimonial-avatar" aria-hidden="true">SL</span>
+      <div>
+        <p class="auth-testimonial-quote">
+          « Mes élèves participent enfin en temps réel, c'est un vrai changement. »
+        </p>
+        <p class="auth-testimonial-name">Sophie Laurent</p>
+        <p class="auth-testimonial-role">Professeure de sciences</p>
+      </div>
+    </div>
+  </aside>
+</div>

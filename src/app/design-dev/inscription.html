@@ -1,0 +1,352 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Register - EduSlide</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-tertiary-fixed': '#002113',
+              'on-primary-fixed': '#001a42',
+              'surface-container-high': '#e2e8f8',
+              'inverse-surface': '#2a313d',
+              'on-primary-container': '#fefcff',
+              background: '#f9f9ff',
+              'inverse-primary': '#adc6ff',
+              'surface-container-low': '#f0f3ff',
+              outline: '#727785',
+              'tertiary-fixed': '#6ffbbe',
+              'secondary-fixed': '#e2dfff',
+              surface: '#f9f9ff',
+              'primary-fixed': '#d8e2ff',
+              'secondary-fixed-dim': '#c3c0ff',
+              'on-tertiary-fixed-variant': '#005236',
+              primary: '#0058be',
+              'on-background': '#151c27',
+              'surface-tint': '#005ac2',
+              'surface-container': '#e7eefe',
+              'surface-variant': '#dce2f3',
+              'error-container': '#ffdad6',
+              'tertiary-fixed-dim': '#4edea3',
+              'on-secondary-container': '#fffbff',
+              'inverse-on-surface': '#ebf1ff',
+              'on-surface': '#151c27',
+              'on-secondary-fixed': '#0f0069',
+              secondary: '#4b41e1',
+              error: '#ba1a1a',
+              'on-error': '#ffffff',
+              'outline-variant': '#c2c6d6',
+              'on-tertiary-container': '#f5fff6',
+              'on-primary-fixed-variant': '#004395',
+              'surface-dim': '#d3daea',
+              'on-surface-variant': '#424754',
+              'surface-container-highest': '#dce2f3',
+              tertiary: '#006947',
+              'on-tertiary': '#ffffff',
+              'tertiary-container': '#00855b',
+              'surface-container-lowest': '#ffffff',
+              'on-error-container': '#93000a',
+              'surface-bright': '#f9f9ff',
+              'secondary-container': '#645efb',
+              'primary-container': '#2170e4',
+              'primary-fixed-dim': '#adc6ff',
+              'on-secondary-fixed-variant': '#3323cc',
+              'on-secondary': '#ffffff',
+              'on-primary': '#ffffff',
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              gutter: '20px',
+              'cell-padding': '24px',
+              base: '8px',
+              'container-margin': '32px',
+            },
+            fontFamily: {
+              'display-lg-mobile': ['Inter'],
+              'body-md': ['Inter'],
+              'display-lg': ['Inter'],
+              'body-lg': ['Inter'],
+              'label-sm': ['Inter'],
+              'headline-md': ['Inter'],
+              'headline-lg': ['Inter'],
+              'label-md': ['Inter'],
+            },
+            fontSize: {
+              'display-lg-mobile': [
+                '32px',
+                { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '800' },
+              ],
+              'body-md': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
+              'display-lg': [
+                '48px',
+                { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '800' },
+              ],
+              'body-lg': ['18px', { lineHeight: '1.6', fontWeight: '400' }],
+              'label-sm': ['12px', { lineHeight: '1', fontWeight: '500' }],
+              'headline-md': ['24px', { lineHeight: '1.3', fontWeight: '600' }],
+              'headline-lg': [
+                '30px',
+                { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' },
+              ],
+              'label-md': ['14px', { lineHeight: '1', letterSpacing: '0.05em', fontWeight: '600' }],
+            },
+            boxShadow: {
+              'bento-0': 'none',
+              'bento-1': '0px 4px 20px rgba(0,0,0,0.05)',
+              'bento-2': '0px 10px 30px rgba(0,0,0,0.08)',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #f9fafb; /* Level 0 */
+      }
+      .bento-cell {
+        background-color: #ffffff;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+      .bento-cell:hover {
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+      }
+
+      .role-radio:checked + div {
+        background-color: rgba(0, 88, 190, 0.1);
+        border-color: #0058be;
+      }
+      .role-radio:checked + div .material-symbols-outlined {
+        color: #0058be;
+      }
+      .role-radio:checked + div p {
+        color: #0058be;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-background text-on-background font-body-md flex items-center justify-center p-4 md:p-container-margin"
+  >
+    <!-- Suppress Nav & Footer for Transactional Registration Flow -->
+    <main class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+      <!-- Left Column: Form (8 cols on desktop) -->
+      <div class="lg:col-span-7 flex flex-col justify-center">
+        <div class="mb-8">
+          <h1
+            class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-2"
+          >
+            EduSlide
+          </h1>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">
+            Create your account to start presenting differently.
+          </p>
+        </div>
+        <form action="#" class="bento-cell flex flex-col gap-6" method="POST">
+          <!-- Role Selection -->
+          <div>
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-4">I am a...</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="cursor-pointer relative">
+                <input
+                  checked=""
+                  class="role-radio sr-only"
+                  name="role"
+                  type="radio"
+                  value="professionnal"
+                />
+                <div
+                  class="border border-outline-variant rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-all duration-200 h-32 hover:bg-surface-container-low"
+                >
+                  <span
+                    class="material-symbols-outlined text-4xl text-on-surface-variant transition-colors"
+                    data-icon="school"
+                    >school</span
+                  >
+                  <p class="font-label-md text-label-md text-on-surface-variant transition-colors">
+                    Professionel
+                  </p>
+                </div>
+              </label>
+              <label class="cursor-pointer relative">
+                <input class="role-radio sr-only" name="role" type="radio" value="client" />
+                <div
+                  class="border border-outline-variant rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-all duration-200 h-32 hover:bg-surface-container-low"
+                >
+                  <span
+                    class="material-symbols-outlined text-4xl text-on-surface-variant transition-colors"
+                    data-icon="person"
+                    >person</span
+                  >
+                  <p class="font-label-md text-label-md text-on-surface-variant transition-colors">
+                    Client
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+              <label class="font-label-sm text-label-sm text-on-surface-variant" for="firstName"
+                >First Name</label
+              >
+              <input
+                class="bg-surface-container-highest border-transparent rounded-lg px-4 py-3 focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface outline-none"
+                id="firstName"
+                name="firstName"
+                required=""
+                type="text"
+              />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="font-label-sm text-label-sm text-on-surface-variant" for="lastName"
+                >Last Name</label
+              >
+              <input
+                class="bg-surface-container-highest border-transparent rounded-lg px-4 py-3 focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface outline-none"
+                id="lastName"
+                name="lastName"
+                required=""
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-label-sm text-label-sm text-on-surface-variant" for="email"
+              >Email Address</label
+            >
+            <input
+              class="bg-surface-container-highest border-transparent rounded-lg px-4 py-3 focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface outline-none"
+              id="email"
+              name="email"
+              required=""
+              type="email"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-label-sm text-label-sm text-on-surface-variant" for="password"
+              >Password</label
+            >
+            <input
+              class="bg-surface-container-highest border-transparent rounded-lg px-4 py-3 focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface outline-none"
+              id="password"
+              name="password"
+              required=""
+              type="password"
+            />
+          </div>
+          <button
+            class="bg-primary text-on-primary font-label-md text-label-md rounded-xl py-4 mt-2 hover:scale-[1.02] transition-transform duration-200 flex justify-center items-center gap-2 shadow-md"
+            type="submit"
+          >
+            Create Account
+            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward"
+              >arrow_forward</span
+            >
+          </button>
+          <p class="text-center font-body-md text-body-md text-on-surface-variant mt-2">
+            Already have an account?
+            <a class="text-primary font-semibold hover:underline" href="#">Log in</a>
+          </p>
+        </form>
+      </div>
+      <!-- Right Column: Benefit Panel (4 cols on desktop) -->
+      <div class="hidden lg:flex lg:col-span-5 flex-col gap-gutter h-full">
+        <div
+          class="bento-cell flex-1 flex flex-col relative overflow-hidden bg-primary-container text-on-primary-container justify-between border border-outline-variant/10"
+        >
+          <!-- Background Image -->
+          <div
+            class="absolute inset-0 z-0 opacity-20 bg-cover bg-center"
+            data-alt="A modern, brightly lit classroom setting viewed from a slightly elevated angle. Students are engaged with digital tablets on clean wooden desks. The lighting is soft and natural, pouring in through large windows, creating a warm, inspiring, and high-tech educational environment. The color palette emphasizes soft whites, light woods, and subtle blue accents representing modern learning technology."
+            style="
+              background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGJhUjYflplGdu0Ow-Cbq3uSflZ1MbFYBdJc3192IZ7UtXvfrGv_wC_vOjFpcq921sbQ3EXU1oCMMlxr2IJtyC_PWif3NIIPVSkLeXTwo1D1cIR53JqIfbbxwVkBholfGnFeovAI9iNivn7xsAeG42AHXe5u1_Paw0GjsUufl4UQ5sMjFHf1VBqNSEmizbb_1pO87o_Z2bUjkw3NQQ5zTC8--t02WLxNHkopdlp10YVwh4QdXqB7VOug');
+            "
+          ></div>
+          <div class="relative z-10 flex flex-col h-full justify-between">
+            <div>
+              <span
+                class="material-symbols-outlined text-4xl mb-4 bg-on-primary-container text-primary-container p-3 rounded-full inline-flex"
+                data-icon="public"
+                >public</span
+              >
+              <h3 class="font-headline-lg text-headline-lg font-bold mb-4">
+                Join 500k+ educators worldwide.
+              </h3>
+              <p class="font-body-lg text-body-lg opacity-90">
+                Transform your presentations into interactive learning experiences that students
+                love.
+              </p>
+            </div>
+            <div class="mt-8 flex gap-4">
+              <div
+                class="bg-surface-container-low/20 backdrop-blur-md rounded-xl p-4 flex-1 border border-on-primary-container/10"
+              >
+                <div class="font-display-lg text-display-lg font-extrabold mb-1">98%</div>
+                <div class="font-label-sm text-label-sm uppercase tracking-wider opacity-80">
+                  Increased Engagement
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-low/20 backdrop-blur-md rounded-xl p-4 flex-1 border border-on-primary-container/10"
+              >
+                <div class="font-display-lg text-display-lg font-extrabold mb-1">2M+</div>
+                <div class="font-label-sm text-label-sm uppercase tracking-wider opacity-80">
+                  Slides Created
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Small Testimonial Card -->
+        <div
+          class="bento-cell bg-secondary-container text-on-secondary-container border border-outline-variant/10 flex flex-col justify-center h-48"
+        >
+          <div class="flex items-center gap-4 mb-4">
+            <img
+              class="w-12 h-12 rounded-full object-cover border-2 border-on-secondary-container/20"
+              data-alt="A professional headshot of a smiling female teacher in her 30s. She has warm, approachable features, wearing a modern, smart-casual blazer over a light blouse. The background is a softly blurred, bright, modern school library environment with high-key lighting. The color palette features soft whites, gentle blues, and warm skin tones, conveying trust and approachability."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgHJpCXHgUz8fzwhdhLsp253-g13tpzy9Xb7YBwixaEb3mGcSnKScskouFj4Yx-6cN8zICIt-xj-FPzWUo10n7vA2rhmSC0kkJNkZd4gDJDvy6aLiAvlDd7MpUy-85OLXr01i25KfKbCStm3P-bakyTyLOoj41ZDiSQrAh0izxVMa4h6r_rUMRkNv4oA6zDykmboyirwHGzh825TF4jw0YXqkitFzNckG5BcCWbHwfH1WgNKZJ5A212w"
+            />
+            <div>
+              <p class="font-label-md text-label-md">Sarah Jenkins</p>
+              <p class="font-label-sm text-label-sm opacity-80">High School Science Teacher</p>
+            </div>
+          </div>
+          <p class="font-body-md text-body-md italic opacity-90">
+            "EduSlide completely changed how I run my classroom. The interactive features keep my
+            students engaged from start to finish."
+          </p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

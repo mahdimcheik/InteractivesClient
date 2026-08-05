@@ -1,8 +1,8 @@
 <div class="auth-card">
-  <div class="auth-header">
-    <h1>Créer un compte</h1>
-    <app-theme-toggle />
-  </div>
+  <h1 class="auth-title">Créer un compte</h1>
+  <p class="auth-subtitle">
+    Transformez vos présentations en expériences interactives dès aujourd'hui.
+  </p>
 
   @if (serverError(); as error) {
     <p class="form-error" role="alert">{{ error }}</p>

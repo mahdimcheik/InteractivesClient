@@ -1,0 +1,151 @@
+@layer app {
+  :host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    padding-block: 2rem;
+  }
+
+  .auth-shell-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 1.25rem;
+    width: 100%;
+
+    @media (min-width: 64rem) {
+      grid-template-columns: 7fr 5fr;
+    }
+  }
+
+  .auth-shell-main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .auth-shell-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-brand {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--app-text-color);
+    text-decoration: none;
+  }
+
+  .auth-shell-panel {
+    display: none;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @media (min-width: 64rem) {
+      display: flex;
+    }
+  }
+
+  .auth-benefit-card {
+    position: relative;
+    flex: 1;
+    padding: 2rem;
+    border-radius: var(--app-radius);
+    background: var(--app-accent-background);
+    color: var(--app-text-color);
+
+    h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1.375rem;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: var(--app-text-muted-color);
+    }
+  }
+
+  .auth-benefit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: var(--app-accent-color);
+    color: var(--app-primary-contrast-color);
+    font-size: 1.25rem;
+  }
+
+  .auth-stat-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .auth-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--app-accent-color);
+  }
+
+  .auth-stat-label {
+    font-size: 0.8125rem;
+    color: var(--app-text-muted-color);
+  }
+
+  .auth-testimonial-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--app-radius);
+    background: var(--app-surface-subtle);
+  }
+
+  .auth-testimonial-avatar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--app-background);
+    border: 2px solid var(--app-accent-background);
+    color: var(--app-accent-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .auth-testimonial-quote {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    font-style: italic;
+  }
+
+  .auth-testimonial-name {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .auth-testimonial-role {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--app-text-muted-color);
+  }
+}

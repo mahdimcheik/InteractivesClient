@@ -12,8 +12,6 @@ import {
   passwordValidator,
 } from '@app/core/utilities/validators/confirmPasswordValidator';
 
-import { ThemeToggle } from '../../../layout/theme-toggle/theme-toggle';
-
 const IDENTITY_SECTION = 'identite';
 const ACCOUNT_SECTION = 'compte';
 const CONSENT_SECTION = 'consentements';
@@ -22,6 +20,7 @@ interface IdentityValue {
   firstName: string;
   lastName: string;
   dateOfBirth: string | Date;
+  role: RoleEnum;
 }
 
 interface AccountValue {
@@ -37,9 +36,9 @@ interface ConsentValue {
 
 @Component({
   selector: 'app-register',
-  imports: [RouterLink, ThemeToggle, ConfigurableFormComponent],
+  imports: [RouterLink, ConfigurableFormComponent],
   templateUrl: './register.html',
-  styleUrl: '../auth-shell.scss',
+  styleUrl: '../auth-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Register {
@@ -64,12 +63,28 @@ export class Register {
         order: 1,
         fields: [
           {
+            id: 'role',
+            name: 'label',
+            label: 'Je suis...',
+            type: 'select',
+            required: true,
+            fullWidth: true,
+            displayKey: 'label',
+            compareKey: 'label',
+            order: 1,
+            value: RoleEnum.Client,
+            options: [
+              { label: 'Client', value: RoleEnum.Client },
+              { label: 'Professionnel', value: RoleEnum.Professionnal },
+            ],
+          },
+          {
             id: 'firstName',
             name: 'firstName',
             label: 'Prénom',
             type: 'text',
             required: true,
-            order: 1,
+            order: 2,
           },
           {
             id: 'lastName',
@@ -77,7 +92,7 @@ export class Register {
             label: 'Nom',
             type: 'text',
             required: true,
-            order: 2,
+            order: 3,
           },
           {
             id: 'dateOfBirth',
@@ -85,7 +100,7 @@ export class Register {
             label: 'Date de naissance',
             type: 'date',
             fullWidth: true,
-            order: 3,
+            order: 4,
             validation: [ageValidator()],
           },
         ],
@@ -181,7 +196,7 @@ export class Register {
         dateOfBirth: identity.dateOfBirth ? new Date(identity.dateOfBirth) : null,
         email: account.email,
         password: account.password,
-        role: RoleEnum.Client,
+        role: identity.role,
         dataProcessingConsent: consents.dataProcessingConsent,
         privacyPolicyConsent: consents.privacyPolicyConsent,
       })
