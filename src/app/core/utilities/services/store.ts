@@ -62,7 +62,7 @@ export class Store {
     if (this.user() !== undefined) {
       return true;
     }
-    const refreshToken = localStorage.getItem(AUTH_REFRESH_TOKEN_KEY);
-    return refreshToken !== null && refreshToken !== '' && refreshToken !== undefined;
+    const token = this.storage.get(AUTH_TOKEN_KEY);
+    return token !== null && token !== '' && token !== undefined;
   }
 }
