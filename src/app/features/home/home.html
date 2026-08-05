@@ -1,0 +1,126 @@
+<section class="hero">
+  <h1 class="hero-title">Présentations, <span class="hero-highlight">réinventées</span>.</h1>
+  <p class="hero-subtitle">
+    Transformez vos diapositives statiques en expériences d'apprentissage interactives. Engagez
+    votre public en temps réel avec des sondages en direct, des tableaux blancs collaboratifs et des
+    intégrations fluides.
+  </p>
+  <div class="hero-actions">
+    <a
+      routerLink="/inscription"
+      ejs-button
+      cssClass="!bg-[var(--app-primary-color)] !text-[var(--app-primary-contrast-color)] !px-6 !py-3 !rounded-lg "
+      >Commencer gratuitement</a
+    >
+  </div>
+</section>
+
+<div class="bento-grid">
+  <article class="bento-card bento-card-large">
+    <div>
+      <h2 class="bento-card-title">Interaction en direct avec le public</h2>
+      <p class="bento-card-text">
+        Intégrez sondages, séances de questions-réponses et quiz directement dans vos diapositives.
+        Observez les réponses se mettre à jour en temps réel, où que se trouve votre public.
+      </p>
+    </div>
+    <div class="placeholder-visual placeholder-visual--primary">
+      <i class="pi pi-chart-bar" aria-hidden="true"></i>
+      <span class="live-badge">
+        <span class="live-dot"></span>
+        1 248 connectés
+      </span>
+    </div>
+    <a
+      routerLink="/inscription"
+      ejs-button
+      cssClass="e-flat e-round e-icon-btn bento-card-arrow !flex !items-center !justify-center"
+      aria-label="Découvrir l'interaction en direct"
+    >
+      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+    </a>
+  </article>
+
+  <article class="bento-card bento-card-medium-v bento-card--accent">
+    <div>
+      <h2 class="bento-card-title">Collaboration en temps réel</h2>
+      <p class="bento-card-text">
+        Co-écrivez vos présentations avec votre équipe ou vos élèves, simultanément.
+      </p>
+      <div class="avatar-stack" aria-hidden="true">
+        <span class="avatar-circle">AM</span>
+        <span class="avatar-circle">SL</span>
+        <span class="avatar-circle">DR</span>
+        <span class="avatar-circle avatar-circle--more">+3</span>
+      </div>
+    </div>
+    <div class="cursor-panel">
+      <span class="cursor-dot" aria-hidden="true"></span>
+      <span class="cursor-dot" aria-hidden="true"></span>
+      <span class="cursor-dot" aria-hidden="true"></span>
+      <span class="cursor-panel-label">Curseurs en direct actifs</span>
+    </div>
+  </article>
+
+  <article class="bento-card bento-card-medium-h">
+    <div>
+      <h2 class="bento-card-title">Modèles intelligents</h2>
+      <p class="bento-card-text">
+        Démarrez fort avec des centaines de mises en page pensées pour l'éducation et la
+        mémorisation.
+      </p>
+    </div>
+    <div class="thumb-grid">
+      <span class="thumb"><i class="pi pi-book" aria-hidden="true"></i></span>
+      <span class="thumb"><i class="pi pi-globe" aria-hidden="true"></i></span>
+      <span class="thumb"><i class="pi pi-calculator" aria-hidden="true"></i></span>
+    </div>
+  </article>
+
+  <article class="bento-card bento-card-medium-h bento-card--success">
+    <div class="analytics-header">
+      <div>
+        <h2 class="bento-card-title">Analytique instantanée</h2>
+        <p class="bento-card-text">
+          Suivez les scores d'engagement et les indicateurs de compréhension dès la fin de votre
+          session.
+        </p>
+      </div>
+      <i class="pi pi-chart-line analytics-icon" aria-hidden="true"></i>
+    </div>
+    <div class="progress-list">
+      <div class="progress-item">
+        <div class="progress-labels">
+          <span>Engagement global</span>
+          <span>92 %</span>
+        </div>
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-label="Engagement global"
+          aria-valuenow="92"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="progress-fill" style="width: 92%"></div>
+        </div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-labels">
+          <span>Précision des quiz</span>
+          <span>78 %</span>
+        </div>
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-label="Précision des quiz"
+          aria-valuenow="78"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="progress-fill progress-fill--alt" style="width: 78%"></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

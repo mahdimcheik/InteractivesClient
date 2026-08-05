@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduSlide - Interactive Presentations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-container": "#fefcff",
+                        "on-surface-variant": "#424754",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-variant": "#dce2f3",
+                        "error-container": "#ffdad6",
+                        "background": "#f9f9ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e2e8f8",
+                        "on-secondary-container": "#fffbff",
+                        "on-tertiary-container": "#f5fff6",
+                        "secondary-fixed": "#e2dfff",
+                        "on-surface": "#151c27",
+                        "inverse-primary": "#adc6ff",
+                        "tertiary-container": "#00855b",
+                        "inverse-surface": "#2a313d",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "primary-fixed-dim": "#adc6ff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2170e4",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#002113",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#4b41e1",
+                        "surface-tint": "#005ac2",
+                        "surface-container-highest": "#dce2f3",
+                        "on-background": "#151c27",
+                        "primary-fixed": "#d8e2ff",
+                        "on-error": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "on-primary-fixed": "#001a42",
+                        "outline": "#727785",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-low": "#f0f3ff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#ebf1ff",
+                        "secondary-container": "#645efb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#0f0069",
+                        "surface-container": "#e7eefe",
+                        "primary": "#0058be",
+                        "outline-variant": "#c2c6d6",
+                        "surface-dim": "#d3daea",
+                        "tertiary": "#006947"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "cell-padding": "24px",
+                        "container-margin": "32px",
+                        "base": "8px",
+                        "gutter": "20px"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["30px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f9f9ff; }
+        .bento-card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border: 1px solid #0058be;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 1199px) {
+            .bento-grid { gap: 16px; }
+        }
+        @media (max-width: 767px) {
+            .bento-grid { 
+                grid-template-columns: 1fr;
+                gap: 12px; 
+            }
+            .bento-card {
+                grid-column: span 1 !important;
+            }
+        }
+        
+        .bento-card-large { grid-column: span 8; grid-row: span 2; }
+        .bento-card-medium-v { grid-column: span 4; grid-row: span 2; }
+        .bento-card-medium-h { grid-column: span 6; }
+        .bento-card-small { grid-column: span 4; }
+        
+        /* Nav Layout specific styles based on JSON */
+        nav.top-nav {
+            position: fixed; top: 0; width: 100%; z-index: 50;
+            background: rgba(249, 249, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(194, 198, 214, 0.3);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md text-on-surface antialiased pt-[80px]">
+<!-- TopNavBar -->
+<nav class="top-nav flex justify-between items-center px-container-margin py-base max-w-full bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm transition-all">
+<div class="flex items-center gap-8">
+<a class="font-headline-md text-headline-md font-bold text-primary active:scale-95 duration-100" href="#">EduSlide</a>
+<div class="hidden md:flex gap-6">
+<a class="text-primary font-bold border-b-2 border-primary py-2 hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary py-2 hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200" href="#">Editor</a>
+<a class="text-on-surface-variant hover:text-primary py-2 hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200" href="#">Resources</a>
+<a class="text-on-surface-variant hover:text-primary py-2 hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary py-2 hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200" href="#">Contact</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-on-surface-variant font-label-md text-label-md hover:bg-primary/5 hover:text-primary px-4 py-2 rounded-full transition-all duration-200 active:scale-95">Join Room</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-full shadow hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 active:scale-95">Go Live</button>
+<img alt="User profile photo" class="w-10 h-10 rounded-full object-cover border border-outline-variant/50 hidden md:block" data-alt="A diverse professional user profile headshot, smiling warmly in a well-lit modern educational setting, soft studio lighting, professional corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDClOQ2CGb42uvnnLB8OfKhIwW2iIQfxxqicNFAVQk_S6QLEV_JPNkGPXlzrXOyWaciwYECcPS0ClZ7mNY6_ubZ44xT_vsS_Q1dA2-EZD_b0wQvDasNnWiIBcHzZl6nRhFVnQ4yEDtXm4kzEcI1BlCtAP4JYwpGSpH6nkUkCC2vDLf_9B12zuDqpTqgWSB2kPws0S4vTIJ5IFka3qs0cjH2uCpZPpZa8UxMxrFAfzj3y3Gp3rsM8uzajA"/>
+</div>
+</nav>
+<main class="max-w-[1440px] mx-auto px-container-margin py-12">
+<!-- Hero Section Header -->
+<div class="text-center max-w-3xl mx-auto mb-16">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-6 md:hidden font-display-lg-mobile text-display-lg-mobile">
+                Presentations, <span class="text-primary">Evolved</span>.
+            </h1>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-6 hidden md:block">
+                Presentations, <span class="text-primary">Evolved</span>.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
+                Transform static slides into interactive learning experiences. Engage your audience in real-time with live polling, collaborative whiteboards, and seamless integrations.
+            </p>
+<div class="flex flex-col sm:flex-row justify-center gap-4">
+<button class="bg-primary text-on-primary font-label-md text-label-md px-8 py-4 rounded-full shadow hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 active:scale-95">Get Started Free</button>
+<button class="border border-secondary text-secondary font-label-md text-label-md px-8 py-4 rounded-full hover:bg-secondary/5 hover:scale-[1.02] transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_circle</span> Watch Demo
+                </button>
+</div>
+</div>
+<!-- Bento Grid Hero Content -->
+<div class="bento-grid">
+<!-- Main Interactive Feature Card (Large) -->
+<div class="bento-card bento-card-large flex flex-col justify-between group cursor-pointer">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Live Audience Interaction</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Embed polls, Q&amp;A sessions, and quizzes directly into your slides. Watch responses update in real-time as your audience participates from any device.</p>
+</div>
+<div class="mt-8 rounded-xl overflow-hidden h-64 bg-surface-container relative">
+<div class="bg-cover bg-center w-full h-full absolute inset-0 opacity-90 transition-transform duration-700 group-hover:scale-105" data-alt="A high-fidelity modern UI mockup showing a live presentation interface with a bar chart dynamically updating, vibrant primary blue and subtle secondary colors, clean modern minimalist dashboard design aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJXbtPa0NHMCExbDJIW_qjnqEkAgmkPU9vDJgMUr4sX_w7dOrRQkw9W7NOWQJuEr3mOjNIKyn7FCXZxO-7b21vmRQcLJRr6A1TCnYJCSePeLTUVf-Jt2vBzuLn5mAFGHFLUlO98r4DY5syVXZNMgkxsynV-RUZ1SU-DrV8nLLMisBRHg94BX7Wh2X8yvY3DqaCrfyckVmxbdGMqB5RZ27gqUImjF2ea6CnGKes1NKsDeCJYsVd-ZW3BQ')"></div>
+<!-- Decorative overlay -->
+<div class="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-lg border border-outline-variant/30 flex items-center gap-2 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">1,248 Connected</span>
+</div>
+</div>
+<button class="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Collaboration Card (Medium Vertical) -->
+<div class="bento-card bento-card-medium-v flex flex-col group cursor-pointer bg-secondary-fixed">
+<div class="flex-grow">
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed-variant mb-2">Real-time Collaboration</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Co-author presentations with your team or students simultaneously.</p>
+<div class="flex -space-x-4 mb-6">
+<img class="w-12 h-12 rounded-full border-2 border-secondary-fixed object-cover" data-alt="A professional headshot of an educator, smiling, modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtkhvjdVdb9QfHrHdQDpJMBMClYKRGFPCzzdx0mQpE9zfo56INcmppl_3eDP4B4n1xmOgDJK3Qe7V6_ngw2KpB6AeehvLxDNG5VUR6aT4Ky0T1xk1imKqTveJ4xhJMhtiAC2m50GwQuBp6Qk2SgGeWwMMH1WMZlpykb5tWWKkvbfb7BFO360A3acHNLVEAN-gxa-uSwMeezxqa9mOgCLzncttvffrR65mSg8YMnY0qaf1PPSvki3OBrA"/>
+<img class="w-12 h-12 rounded-full border-2 border-secondary-fixed object-cover" data-alt="A professional headshot of a student, focused, modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr_VepzhvoEx5L1vNbFbaSBJHoTmHqvCi73DxKuEFw_bCA2su-u2QvWh7KB-7vAbWl80bpWwBiYRPAHKSIwL5awgJoqfFZTvo-y-DubmmqnDOpRhwXamdfqhQ7A4ms2FGZtBSl_IiVa41gC1ApNFGKwVBYrIyXg6S_yym0DvHO5IGPbnuvKFSp7Yrski1wSix2NxJfQpTK1lEctEI4FPzoDOiP8m9dmXOs9JeWPn5Nr8W-putsEDAg5w"/>
+<img class="w-12 h-12 rounded-full border-2 border-secondary-fixed object-cover" data-alt="A professional headshot of a designer, creative, modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuhyyi6I7b_x8pMvdPv15oPlxWtGGNxG9hJS2rqcD3ePvgzxusz5QEH0s9ut8y3cxcNErjAhkeMJHiFlnJUv3zeU3dGj67iLiN5vpqbo_ZvzrK2tzi1FdHuuoFRgdLpGxlI45-Jb1_5qiWRvJqlIUfOl_a9CIT1mH9sRZ-hzuKBEgu-_cIJk3MJd2DEyyxW6fteJ8HDdqJUW6FaKPl-IGpAMCmz-thJyD_kzi8AsV2eTqlo4rFRycKnQ"/>
+<div class="w-12 h-12 rounded-full border-2 border-secondary-fixed bg-secondary-fixed-dim flex items-center justify-center text-on-secondary-fixed-variant font-label-sm text-label-sm">+3</div>
+</div>
+</div>
+<div class="h-32 rounded-xl bg-surface/50 backdrop-blur-sm border border-secondary-fixed-dim p-4 flex items-center justify-center relative overflow-hidden">
+<div class="absolute w-3 h-3 bg-primary rounded-full top-4 left-8 animate-bounce" style="animation-delay: 0s;"></div>
+<div class="absolute w-3 h-3 bg-tertiary rounded-full bottom-6 right-10 animate-bounce" style="animation-delay: 0.2s;"></div>
+<div class="absolute w-3 h-3 bg-secondary rounded-full top-10 right-8 animate-bounce" style="animation-delay: 0.4s;"></div>
+<span class="font-label-md text-label-md text-on-secondary-fixed-variant opacity-70">Live Cursors Active</span>
+</div>
+</div>
+<!-- Templates Card (Medium Horizontal) -->
+<div class="bento-card bento-card-medium-h group cursor-pointer flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Smart Templates</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Start strong with hundreds of education-focused layouts designed for maximum retention.</p>
+</div>
+<div class="mt-6 grid grid-cols-3 gap-4">
+<div class="h-24 rounded-lg bg-surface-container-high border border-outline-variant/20 hover:border-primary transition-colors overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sleek presentation template thumbnail featuring science graphics, modern corporate training aesthetic, blue and white colors." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBk4HZ5CfOOeqES2x2nDB62WF7gkTR3Qppm8lA1qmfpZXADktvJ7IhHqH7ad-hWNn3mvvK9vf_rbD7_KpUBWGwueRxX4l--Z72rruz_IXfe7C1H72hH7ijIGdklU2B3NVnioj2OdussG85gd_qtUecqq80CShhQrYkT44RSpsQVMfQw0mXzxoY3_1TJpmd4oGICySIdy495Ze822slzIOD1aW8nxego1S6U17F2dEYYrFFuHyU3e2h2-w')"></div>
+</div>
+<div class="h-24 rounded-lg bg-surface-container-high border border-outline-variant/20 hover:border-primary transition-colors overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sleek presentation template thumbnail featuring history timeline, modern corporate training aesthetic, warm earthy tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBL_GxFSVV1gBouQbdpfYXtQ3WEZEzzhAF0QyeoOCs4DUhAIAGkcKjewDKLCaxyC1He1jafAZOTVCJtJLAfdAFz9YD0oBCV72aMNC6NWHkyOBo5d2dWibhdPBlhFc2FJHr3WSgGD95PBieIMfDmKwZrARiwqphSnwId-It9sGX25Vs2KMtYS5Fa5lbkJRBxuqmu1j58nXZ7a3LbC5Rb-Ok36D1aHhFsTTZMykRGIRgrCUMhlPzleE89rg')"></div>
+</div>
+<div class="h-24 rounded-lg bg-surface-container-high border border-outline-variant/20 hover:border-primary transition-colors overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sleek presentation template thumbnail featuring math formulas and charts, modern corporate training aesthetic, high contrast." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8U5Pk2QaGvTT1dc5AX13XsUSmgrcevBJGqe0zWrqFkPT6P3_YF1Mk3SlQXxY0y1Wg5G1I2_JgWLwH58QVYoVHUk02atLcFDsMZsz8w7CArLeH0_80Y0kMXeXLvrvaGEJt4X3jW0szZugU8AmalA-LDvkbkTJ5S6Z3swbXo4FxSfRQhz0grqBzlAYIT1yaQOMC08ED7yNRkefHOBG_htw28WP88hTstgQvYbnM7Seg0siTCZdCsNY44g')"></div>
+</div>
+</div>
+</div>
+<!-- Analytics Card (Medium Horizontal) -->
+<div class="bento-card bento-card-medium-h group cursor-pointer bg-primary-container text-on-primary-container">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md mb-2">Instant Analytics</h3>
+<p class="font-body-md text-body-md opacity-90 max-w-sm">Track engagement scores and comprehension metrics immediately after your session ends.</p>
+</div>
+<span class="material-symbols-outlined text-[32px] opacity-80">monitoring</span>
+</div>
+<div class="mt-6 space-y-3">
+<div>
+<div class="flex justify-between text-label-sm font-label-sm mb-1">
+<span>Overall Engagement</span>
+<span>92%</span>
+</div>
+<div class="h-2 bg-on-primary-container/20 rounded-full overflow-hidden">
+<div class="h-full bg-on-primary-container rounded-full w-[92%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-sm font-label-sm mb-1">
+<span>Quiz Accuracy</span>
+<span>78%</span>
+</div>
+<div class="h-2 bg-on-primary-container/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed rounded-full w-[78%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-surface-container-lowest border-t border-outline-variant transition-all mt-12">
+<div class="max-w-7xl mx-auto px-container-margin grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div>
+<a class="font-headline-md text-headline-md font-bold text-on-surface block mb-2" href="#">EduSlide</a>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 EduSlide Interactive. Built for the future of learning.</p>
+</div>
+<div class="flex flex-wrap md:justify-end gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">Help Center</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary hover:underline transition-all" href="#">Community</a>
+</div>
+</div>
+</footer>
+</body></html>

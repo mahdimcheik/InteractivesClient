@@ -1,0 +1,333 @@
+@layer app {
+  .hero {
+    max-width: 48rem;
+    margin: 0 auto 4rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-highlight {
+    color: var(--app-primary-color);
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--app-text-muted-color);
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    @media (min-width: 40rem) {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.25rem;
+  }
+
+  .bento-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    padding: 1.5rem;
+    background: var(--app-background);
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--app-radius);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgb(0 0 0 / 8%);
+      border-color: var(--app-primary-color);
+    }
+  }
+
+  .bento-card-large {
+    grid-column: span 8;
+    grid-row: span 2;
+    padding-bottom: 4.5rem;
+  }
+
+  .bento-card-medium-v {
+    grid-column: span 4;
+    grid-row: span 2;
+  }
+
+  .bento-card-medium-h {
+    grid-column: span 6;
+  }
+
+  .bento-card--accent {
+    background: var(--app-accent-background);
+  }
+
+  .bento-card--success {
+    background: var(--app-success-background);
+  }
+
+  .bento-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+
+  .bento-card-text {
+    color: var(--app-text-muted-color);
+    margin: 0;
+  }
+
+  .placeholder-visual {
+    position: relative;
+    margin-top: 2rem;
+    height: 16rem;
+    border-radius: calc(var(--app-radius) - 0.125rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    .pi {
+      font-size: 3rem;
+      opacity: 0.5;
+    }
+  }
+
+  .placeholder-visual--primary {
+    background: linear-gradient(135deg, var(--app-highlight-background), var(--app-surface-subtle));
+    color: var(--app-primary-color);
+  }
+
+  .live-badge {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--app-background);
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--app-radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-text-color);
+  }
+
+  .live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--app-success-color);
+    animation: app-pulse 2s ease-in-out infinite;
+  }
+
+  .bento-card-arrow {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .avatar-stack {
+    display: flex;
+    margin-top: 1.5rem;
+  }
+
+  .avatar-circle {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--app-accent-background);
+    background: var(--app-background);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-accent-color);
+
+    &:not(:first-child) {
+      margin-left: -0.75rem;
+    }
+  }
+
+  .avatar-circle--more {
+    background: var(--app-accent-color);
+    color: var(--app-primary-contrast-color);
+  }
+
+  .cursor-panel {
+    position: relative;
+    margin-top: 1.5rem;
+    height: 8rem;
+    border-radius: calc(var(--app-radius) - 0.125rem);
+    background: var(--app-background);
+    border: 1px solid var(--app-accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cursor-panel-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-accent-color);
+    opacity: 0.7;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--app-accent-color);
+    animation: app-bounce 1.4s ease-in-out infinite;
+
+    &:nth-child(1) {
+      top: 1rem;
+      left: 2rem;
+    }
+
+    &:nth-child(2) {
+      bottom: 1.5rem;
+      right: 2.5rem;
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      top: 2.5rem;
+      right: 2rem;
+      animation-delay: 0.4s;
+    }
+  }
+
+  .thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .thumb {
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--app-surface-subtle);
+    border: 1px solid var(--app-border-color);
+    border-radius: calc(var(--app-radius) - 0.25rem);
+    color: var(--app-text-muted-color);
+    font-size: 1.5rem;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--app-primary-color);
+    }
+  }
+
+  .analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .analytics-icon {
+    font-size: 2rem;
+    color: var(--app-success-color);
+    opacity: 0.8;
+  }
+
+  .progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .progress-track {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--app-background);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--app-success-color);
+  }
+
+  .progress-fill--alt {
+    background: var(--app-primary-color);
+  }
+
+  @keyframes app-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes app-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.375rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot,
+    .cursor-dot {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .bento-card-large,
+    .bento-card-medium-v,
+    .bento-card-medium-h {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .bento-card-large {
+      padding-bottom: 1.5rem;
+    }
+  }
+}
