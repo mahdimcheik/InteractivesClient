@@ -3,6 +3,8 @@ import { PLATFORM_ID, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 import { Store } from '../services/store';
+import { AuthMirrorService } from '../services';
+import { firstValueFrom, switchMap } from 'rxjs';
 
 /**
  * Sur le serveur il n'y a pas de session : on laisse passer et c'est le rendu
@@ -12,13 +14,23 @@ import { Store } from '../services/store';
 const isServer = (): boolean => isPlatformServer(inject(PLATFORM_ID));
 
 /** Réserve la route aux utilisateurs connectés. */
-export const authGuard: CanActivateFn = (_route, state) => {
+export const authGuard: CanActivateFn = async (_route, state) => {
+  const store = inject(Store);
+  const authService = inject(AuthMirrorService);
+
   if (isServer()) {
     return true;
   }
 
-  if (inject(Store).isAuthenticated()) {
+  if (store.isAuthenticated()) {
     return true;
+  } else if (store.refreshToken() !== null) {
+    const refreshed = await firstValueFrom(authService.refreshSession());
+    if (!refreshed) {
+      return inject(Router).createUrlTree(['/connexion'], {
+        queryParams: { returnUrl: state.url },
+      });
+    }
   }
 
   return inject(Router).createUrlTree(['/connexion'], {

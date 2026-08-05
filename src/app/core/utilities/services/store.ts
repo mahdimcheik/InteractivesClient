@@ -11,6 +11,17 @@ export class Store {
 
   /** Source de vérité des guards et des layouts. */
   readonly isAuthenticated = computed(() => this.user() !== undefined);
+  readonly isAdmin = computed(
+    () => this.user()?.roles?.some((role) => role.name?.toLocaleLowerCase() === 'admin') ?? false,
+  );
+  readonly isProfessionnal = computed(
+    () =>
+      this.user()?.roles?.some((role) => role.name?.toLocaleLowerCase() === 'professionnel') ??
+      false,
+  );
+  readonly isClient = computed(
+    () => this.user()?.roles?.some((role) => role.name?.toLocaleLowerCase() === 'client') ?? false,
+  );
 
   persistData(data: LoginResponse | undefined): void {
     this.user.set(data?.user);
