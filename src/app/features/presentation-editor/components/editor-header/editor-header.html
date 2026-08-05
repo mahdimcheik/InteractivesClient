@@ -1,25 +1,25 @@
 <header class="editor-header">
   <div class="header-left">
-    <a routerLink="/" class="brand">
-      <span class="brand-mark">E</span>
-      <span class="brand-name">EduSlide</span>
-    </a>
-
-    <div class="header-divider" aria-hidden="true"></div>
-
     <div class="presentation-info">
       <div class="presentation-title-row">
         <span class="presentation-title">{{ presentationTitle() }}</span>
-        <i class="pi pi-pencil edit-icon" aria-hidden="true"></i>
+        <button
+          type="button"
+          ejs-button
+          cssClass="e-flat e-round e-icon-btn edit-icon-button"
+          title="Renommer la présentation"
+          aria-label="Renommer la présentation"
+          (click)="rename.emit()"
+        >
+          <i class="pi pi-pencil edit-icon" aria-hidden="true"></i>
+        </button>
       </div>
-      <span class="presentation-status">Enregistré dans le cloud à l'instant</span>
     </div>
   </div>
 
   <nav class="header-nav" aria-label="Navigation de l'éditeur">
-    <a routerLink="/dashboard" class="nav-link">Tableau de bord</a>
+    <a routerLink="/dashboard/presentations" class="nav-link">Mes présentations</a>
     <span class="nav-link nav-link-active" aria-current="page">Éditeur</span>
-    <span class="nav-link">Ressources</span>
   </nav>
 
   <div class="header-actions">

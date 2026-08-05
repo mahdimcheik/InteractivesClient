@@ -1,0 +1,52 @@
+<ejs-dialog
+  [(visible)]="visible"
+  [isModal]="true"
+  [closeOnEscape]="dismissible()"
+  [showCloseIcon]="dismissible()"
+  [allowDragging]="false"
+  [enableResize]="false"
+  [width]="'min(90vw, 420px)'"
+  cssClass="presentation-name-modal"
+  (close)="close()"
+  (overlayClick)="close()"
+>
+  <ng-template #header>
+    <h3 class="modal-title">{{ heading() }}</h3>
+  </ng-template>
+
+  <ng-template #content>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="presentation-title">Nom de la présentation</label>
+        <ejs-textbox
+          type="text"
+          formControlName="title"
+          placeholder="Ex. Biologie 101 : Structure de la cellule"
+          [htmlAttributes]="fieldAttrs()"
+        />
+        @if (showError()) {
+          <p id="presentation-title-error" class="field-error" role="alert">
+            Donnez un nom à votre présentation.
+          </p>
+        }
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #footerTemplate>
+    <div class="modal-footer">
+      @if (dismissible()) {
+        <button type="button" ejs-button cssClass="e-outline" (click)="close()">Annuler</button>
+      }
+      <button
+        type="button"
+        ejs-button
+        cssClass="!bg-[var(--app-primary-color)] !text-[var(--app-primary-contrast-color)]"
+        [disabled]="saving()"
+        (click)="submit()"
+      >
+        {{ saving() ? 'Enregistrement…' : confirmLabel() }}
+      </button>
+    </div>
+  </ng-template>
+</ejs-dialog>

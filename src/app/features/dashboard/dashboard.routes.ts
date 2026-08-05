@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { DashboardLayout } from '../../layout/dashboard-layout/dashboard-layout';
+import { authGuard } from '@app/core/utilities/guards/auth.guard';
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -21,6 +22,22 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'parametres',
         title: 'Paramètres',
         loadComponent: () => import('./settings/settings').then((m) => m.Settings),
+      },
+      {
+        path: 'editeur/:presentationId',
+        title: 'Éditeur',
+        loadComponent: () =>
+          import('../../features/presentation-editor/presentation-editor').then(
+            (m) => m.PresentationEditor,
+          ),
+      },
+      {
+        path: 'presentations',
+        title: 'Présentations',
+        loadComponent: () =>
+          import('../../features/presentation-editor/my-presentations/my-presentations').then(
+            (m) => m.MyPresentations,
+          ),
       },
       // teacher routes
       // {

@@ -1,5 +1,5 @@
 <div class="editor-shell">
-  <app-editor-header />
+  <app-editor-header [presentationTitle]="presentationTitle()" (rename)="openRenameModal()" />
   <app-editor-toolbar />
 
   <main class="editor-workspace">
@@ -11,3 +11,13 @@
     <app-properties-panel />
   </main>
 </div>
+
+<app-presentation-name-modal
+  [(visible)]="isNameModalOpen"
+  [initialTitle]="nameModalInitialTitle()"
+  [heading]="isNewPresentation() ? 'Nommer votre présentation' : 'Renommer la présentation'"
+  [confirmLabel]="isNewPresentation() ? 'Créer' : 'Enregistrer'"
+  [dismissible]="!isNewPresentation()"
+  [saving]="savingName()"
+  (confirmed)="saveName($event)"
+/>

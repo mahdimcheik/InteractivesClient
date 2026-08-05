@@ -7,9 +7,12 @@
   </div>
 
   <div class="thumbnail-list">
-    @for (slide of slides; track $index) {
+    @for (slide of slides(); track $index) {
       <div class="thumbnail-row">
-        <div class="thumbnail-index" [class.thumbnail-index-active]="$index === selectedSlideIndex()">
+        <div
+          class="thumbnail-index"
+          [class.thumbnail-index-active]="$index === selectedSlideIndex()"
+        >
           {{ $index + 1 }}
         </div>
         <button
@@ -22,36 +25,15 @@
             <div class="thumbnail-active-bar" aria-hidden="true"></div>
           }
 
-          @switch (slide.kind) {
-            @case ('title') {
-              <div class="thumbnail-content thumbnail-content-centered">
-                <div class="thumbnail-line thumbnail-line-wide"></div>
-                <div class="thumbnail-line thumbnail-line-narrow"></div>
-              </div>
-            }
-            @case ('content') {
-              <div class="thumbnail-content thumbnail-content-split">
-                <div class="thumbnail-image-block"></div>
-                <div class="thumbnail-text-block">
-                  <div class="thumbnail-line thumbnail-line-full"></div>
-                  <div class="thumbnail-line thumbnail-line-wide"></div>
-                  <div class="thumbnail-line thumbnail-line-medium"></div>
-                </div>
-              </div>
-            }
-            @case ('poll') {
-              <div class="thumbnail-content thumbnail-content-centered">
-                <div class="thumbnail-poll-icon">
-                  <i class="pi pi-chart-bar" aria-hidden="true"></i>
-                </div>
-              </div>
-            }
-          }
+          <div class="thumbnail-content thumbnail-content-split">
+            <div class="thumbnail-image-block"></div>
+            <div class="thumbnail-text-block"></div>
+          </div>
         </button>
       </div>
     }
 
-    <button type="button" class="new-slide-button">
+    <button type="button" class="new-slide-button" aria-label="Nouvelle diapositive">
       <i class="pi pi-plus" aria-hidden="true"></i>
       Nouvelle diapositive
     </button>

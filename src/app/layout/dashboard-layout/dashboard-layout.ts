@@ -78,6 +78,7 @@ export class DashboardLayout {
   protected readonly links: readonly SidebarLink[] = [
     { path: '/dashboard', label: "Vue d'ensemble", icon: 'pi-home', exact: true },
     { path: '/dashboard/profil', label: 'Profil', icon: 'pi-user', exact: false },
+    { path: '/dashboard/presentations', label: 'Éditeur', icon: 'pi-th-large ', exact: false },
     { path: '/dashboard/parametres', label: 'Paramètres', icon: 'pi-cog', exact: false },
   ];
 

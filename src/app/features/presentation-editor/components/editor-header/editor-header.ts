@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 
@@ -11,4 +11,5 @@ import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 })
 export class EditorHeader {
   readonly presentationTitle = input('Biologie 101 : Structure de la cellule');
+  readonly rename = output<void>();
 }

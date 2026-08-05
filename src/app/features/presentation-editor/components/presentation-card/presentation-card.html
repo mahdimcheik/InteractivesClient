@@ -1,0 +1,17 @@
+<a class="presentation-card" [routerLink]="['/dashboard/editeur', presentation().id]">
+  <div class="card-thumbnail">
+    <i class="pi pi-file" aria-hidden="true"></i>
+  </div>
+
+  <div class="card-body">
+    <p class="card-title">{{ presentation().title || 'Sans titre' }}</p>
+    <p class="card-meta">
+      {{ presentation().slideCount ?? 0 }}
+      {{ presentation().slideCount === 1 ? 'diapositive' : 'diapositives' }}
+      @if (presentation().updatedAt) {
+        <span aria-hidden="true"> · </span>
+        <span>Modifié le {{ presentation().updatedAt | date: 'dd/MM/yyyy' }}</span>
+      }
+    </p>
+  </div>
+</a>

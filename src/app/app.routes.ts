@@ -45,9 +45,7 @@ export const routes: Routes = [
         title: 'Mot de passe oublié',
         canActivate: [guestGuard],
         loadComponent: () =>
-          import('./features/auth/forgot-password/forgot-password').then(
-            (m) => m.ForgotPassword,
-          ),
+          import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
       },
       {
         path: 'reinitialiser-mot-de-passe',
@@ -72,15 +70,7 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
   },
-  {
-    path: 'editeur',
-    title: 'Éditeur',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/presentation-editor/presentation-editor').then(
-        (m) => m.PresentationEditor,
-      ),
-  },
+
   {
     path: '**',
     title: 'Page introuvable',

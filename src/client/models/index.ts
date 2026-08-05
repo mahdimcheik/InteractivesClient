@@ -121,6 +121,7 @@ export interface PresentationDetails {
     creatorId?: string;
     createdAt?: Date;
     updatedAt?: Date | null;
+    slides?: Array<SlideDetails>;
 }
 
 export interface PresentationDetailsResponse {
@@ -185,6 +186,7 @@ export interface SlideDetails {
     order?: number;
     backgroundColor?: string | null;
     elementCount?: number;
+    elements?: Array<ElementDetails>;
 }
 
 export interface SlideDetailsListResponse {

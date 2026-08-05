@@ -71,14 +71,21 @@
     white-space: nowrap;
   }
 
-  .edit-icon {
-    font-size: 0.875rem;
-    color: var(--app-text-muted-color);
-    cursor: pointer;
+  .edit-icon-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    padding: 0;
+  }
 
-    &:hover {
-      color: var(--app-primary-color);
-    }
+  .edit-icon {
+    font-size: 0.75rem;
+    color: var(--app-text-muted-color);
+  }
+
+  .edit-icon-button:hover .edit-icon,
+  .edit-icon-button:focus-visible .edit-icon {
+    color: var(--app-primary-color);
   }
 
   .presentation-status {

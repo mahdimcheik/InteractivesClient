@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { LoginResponse, UserDetails } from '@client';
+import { LoginResponse, PresentationDetails, PresentationSummary, UserDetails } from '@client';
 
 import { StorageService } from './storage.service';
 
@@ -16,6 +16,10 @@ export class Store {
   user = signal<UserDetails | undefined>(undefined);
   token = signal<string | null>(null);
   refreshToken = signal<string | null>(null);
+
+  /** `null` = jamais chargée, `[]` = chargée et vide. */
+  presentations = signal<PresentationSummary[] | null>(null);
+  presentationDetails = signal<ReadonlyMap<string, PresentationDetails>>(new Map());
 
   /** Source de vérité des guards et des layouts. */
   readonly isAuthenticated = computed(() => this.user() !== undefined);
@@ -55,6 +59,8 @@ export class Store {
     this.storage.remove(AUTH_USER_KEY);
     this.storage.remove(AUTH_TOKEN_KEY);
     this.storage.remove(AUTH_REFRESH_TOKEN_KEY);
+
+    this.clearPresentations();
   }
 
   /** Utilisé au boot pour savoir s'il vaut la peine de tenter un refresh silencieux. */
@@ -64,5 +70,54 @@ export class Store {
     }
     const token = this.storage.get(AUTH_TOKEN_KEY);
     return token !== null && token !== '' && token !== undefined;
+  }
+
+  setPresentations(presentations: PresentationSummary[]): void {
+    this.presentations.set(presentations);
+  }
+
+  /** Met à jour le cache détail et resynchronise le résumé correspondant dans le cache liste. */
+  upsertPresentationDetails(details: PresentationDetails): void {
+    if (!details.id) {
+      return;
+    }
+
+    this.presentationDetails.update((cache) => new Map(cache).set(details.id!, details));
+
+    const summary: PresentationSummary = {
+      id: details.id,
+      title: details.title,
+      creatorId: details.creatorId,
+      slideCount: details.slides?.length ?? 0,
+      createdAt: details.createdAt,
+      updatedAt: details.updatedAt,
+    };
+
+    this.presentations.update((list) => {
+      if (!list) {
+        return list;
+      }
+      const index = list.findIndex((p) => p.id === details.id);
+      if (index === -1) {
+        return [summary, ...list];
+      }
+      const next = [...list];
+      next[index] = summary;
+      return next;
+    });
+  }
+
+  removePresentation(presentationId: string): void {
+    this.presentationDetails.update((cache) => {
+      const next = new Map(cache);
+      next.delete(presentationId);
+      return next;
+    });
+    this.presentations.update((list) => list?.filter((p) => p.id !== presentationId) ?? list);
+  }
+
+  clearPresentations(): void {
+    this.presentations.set(null);
+    this.presentationDetails.set(new Map());
   }
 }

@@ -1,0 +1,30 @@
+<section class="my-presentations">
+  <header class="page-header">
+    <div class="page-heading">
+      <h1>Mes présentations</h1>
+      <p>Retrouvez et gérez toutes vos présentations.</p>
+    </div>
+
+    <button
+      type="button"
+      ejs-button
+      cssClass="!bg-[var(--app-primary-color)] !text-[var(--app-primary-contrast-color)] !px-4 !py-2 !rounded-lg"
+      (click)="createPresentation()"
+    >
+      <i class="pi pi-plus" aria-hidden="true"></i>
+      Nouvelle présentation
+    </button>
+  </header>
+
+  @if (presentations() === null) {
+    <p class="status-message">Chargement des présentations…</p>
+  } @else if (presentations()!.length === 0) {
+    <p class="status-message">Aucune présentation pour le moment. Créez-en une pour commencer.</p>
+  } @else {
+    <div class="presentation-grid">
+      @for (presentation of presentations(); track presentation.id) {
+        <app-presentation-card [presentation]="presentation" />
+      }
+    </div>
+  }
+</section>

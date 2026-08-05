@@ -1,0 +1,34 @@
+@layer app {
+  .my-presentations {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .page-heading h1 {
+    margin: 0;
+  }
+
+  .page-heading p {
+    margin: 0.25rem 0 0;
+    color: var(--app-text-muted-color);
+  }
+
+  .status-message {
+    color: var(--app-text-muted-color);
+  }
+
+  .presentation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1.25rem;
+  }
+}

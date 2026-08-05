@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  linkedSignal,
+  model,
+  output,
+} from '@angular/core';
+import { PresentationDetails, SlideDetails } from '@client/models';
 
 interface SlideThumbnail {
   kind: 'title' | 'content' | 'poll';
@@ -12,11 +20,7 @@ interface SlideThumbnail {
 })
 export class SlidePanel {
   readonly selectedSlideIndex = input(0);
+  presentation = model<PresentationDetails>();
+  slides = linkedSignal<SlideDetails[]>(() => this.presentation()?.slides ?? []);
   readonly slideSelected = output<number>();
-
-  protected readonly slides: SlideThumbnail[] = [
-    { kind: 'title' },
-    { kind: 'content' },
-    { kind: 'poll' },
-  ];
 }

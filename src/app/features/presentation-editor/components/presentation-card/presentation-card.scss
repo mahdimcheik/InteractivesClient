@@ -1,0 +1,48 @@
+@layer app {
+  .presentation-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--app-radius);
+    border: 1px solid var(--app-border-color);
+    background: var(--app-background);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--app-primary-color) 50%, transparent);
+      box-shadow: 0 10px 30px rgb(0 0 0 / 8%);
+    }
+  }
+
+  .card-thumbnail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    background: var(--app-surface-subtle);
+    color: var(--app-text-muted-color);
+    font-size: 1.75rem;
+  }
+
+  .card-body {
+    padding: 0.75rem 1rem;
+  }
+
+  .card-title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .card-meta {
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--app-text-muted-color);
+  }
+}
