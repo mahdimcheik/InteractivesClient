@@ -6,15 +6,18 @@
     class="sidebar-button"
     ejs-button
     cssClass="e-flat e-round e-icon-btn"
+    #toggleButtonEl
     aria-controls="navigation-dashboard"
-    [attr.aria-expanded]="sidebarOpen()"
-    [attr.aria-label]="sidebarOpen() ? 'Fermer le menu' : 'Ouvrir le menu'"
+    [attr.aria-expanded]="toggleAriaExpanded()"
+    [attr.aria-label]="toggleAriaLabel()"
     (click)="toggleSidebar()"
   >
     <i
       class="pi"
-      [class.pi-bars]="!sidebarOpen()"
-      [class.pi-times]="sidebarOpen()"
+      [class.pi-bars]="isMobile() && !mobileOpen()"
+      [class.pi-times]="isMobile() && mobileOpen()"
+      [class.pi-chevron-left]="!isMobile() && !desktopCollapsed()"
+      [class.pi-chevron-right]="!isMobile() && desktopCollapsed()"
       aria-hidden="true"
     ></i>
   </button>
@@ -29,12 +32,17 @@
 </header>
 
 <div class="shell">
+  <div class="sidebar-backdrop" [hidden]="!isOverlayVisible()" (click)="closeMobileMenu(true)"></div>
+
   <nav
     id="navigation-dashboard"
     class="sidebar"
+    #navPanel
+    tabindex="-1"
     aria-label="Navigation du tableau de bord"
-    [class.is-open]="sidebarOpen()"
-    [hidden]="!shouldShowSidebar()"
+    [class.is-open]="mobileOpen()"
+    [class.is-collapsed]="isIconOnly()"
+    [hidden]="!isNavVisible()"
   >
     <ul>
       @for (link of links; track link.path) {
@@ -43,11 +51,14 @@
             [routerLink]="link.path"
             routerLinkActive="is-active"
             #active="routerLinkActive"
+            class="!min-h-12 w-auto"
             [routerLinkActiveOptions]="{ exact: link.exact }"
             [attr.aria-current]="active.isActive ? 'page' : null"
+            [attr.title]="isIconOnly() ? link.label : null"
+            (click)="closeMobileMenu(false)"
           >
             <i class="pi" [class]="link.icon" aria-hidden="true"></i>
-            {{ link.label }}
+            <span class="link-label">{{ link.label }}</span>
           </a>
         </li>
       }
@@ -58,3 +69,53 @@
     <router-outlet />
   </main>
 </div>
+
+<!--
+  The markup below is the Syncfusion "dock sidebar" sample that had temporarily replaced the
+  real dashboard shell above. Its component (see dashboard-layout.ts) can't be instantiated in
+  this app, so this template was dead. Kept here, disabled, for reference rather than deleted.
+
+<div class="control-section" id="wrapper">
+  <div>
+    <ejs-toolbar cssClass="dockToolbar" id="dockToolbar" (clicked)="toolbarCliked($event)">
+      <e-items>
+        <e-item prefixIcon="e-tbar-menu-icon tb-icons" tooltipText="Menu"></e-item>
+        <e-item>
+          <ng-template #template>
+            <div class="e-folder">
+              <div class="e-folder-name">Angular Documentation</div>
+            </div>
+          </ng-template>
+        </e-item>
+      </e-items>
+    </ejs-toolbar>
+  </div>
+  <div id="main-content" class="container-fluid col-md-12 dockmaincontent">
+    <div>
+      <div id="dockContent" class="dockcontent">
+        {{ ListData && ListData[selectedIndex] ? ListData[selectedIndex]['description'] : '' }}
+      </div>
+    </div>
+  </div>
+  <ejs-sidebar
+    id="dockSidebar"
+    #dockBar
+    class="dockSidebar"
+    width="220px"
+    dockSize="60px"
+    target=".dockmaincontent"
+    [enableDock]="enableDock"
+    type="Auto"
+  >
+    <ejs-listview
+      id="dockList"
+      [dataSource]="ListData"
+      cssClass="e-template-list"
+      [showIcon]="showIcon"
+      [fields]="listFields"
+      (select)="onSelect($event)"
+    >
+    </ejs-listview>
+  </ejs-sidebar>
+</div>
+-->

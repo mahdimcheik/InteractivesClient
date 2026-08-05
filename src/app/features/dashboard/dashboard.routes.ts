@@ -22,6 +22,22 @@ export const DASHBOARD_ROUTES: Routes = [
         title: 'Paramètres',
         loadComponent: () => import('./settings/settings').then((m) => m.Settings),
       },
+      // teacher routes
+      // {
+      //   path: 'cours',
+      //   title: 'Cours',
+      //   // loadComponent: () => import('./courses/courses').then((m) => m.Courses),
+      // },
+      // {
+      //   path: 'cours/:courseId',
+      //   title: 'Cours',
+      //   // loadComponent: () => import('./course/course').then((m) => m.Course),
+      // },
+      // {
+      //   path: 'cours/eidtion/:editionId',
+      //   title: 'Édition de cours',
+      //   // loadComponent: () => import('./edition/edition').then((m) => m.Edition),
+      // },
     ],
   },
 ];
