@@ -3,8 +3,6 @@ import { PLATFORM_ID, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 import { Store } from '../services/store';
-import { AuthMirrorService } from '../services';
-import { firstValueFrom, switchMap } from 'rxjs';
 
 /**
  * Sur le serveur il n'y a pas de session : on laisse passer et c'est le rendu
@@ -13,29 +11,19 @@ import { firstValueFrom, switchMap } from 'rxjs';
  */
 const isServer = (): boolean => isPlatformServer(inject(PLATFORM_ID));
 
-/** Réserve la route aux utilisateurs connectés. */
-export const authGuard: CanActivateFn = async (_route, state) => {
-  const store = inject(Store);
-  const authService = inject(AuthMirrorService);
-
+/**
+ * Réserve la route aux utilisateurs connectés. La restauration de session (refresh
+ * silencieux via le `refreshToken` persisté) est faite une seule fois, globalement,
+ * par l'app initializer avant le premier rendu — ce guard n'a donc qu'à lire l'état.
+ */
+export const authGuard: CanActivateFn = (_route, state) => {
   if (isServer()) {
     return true;
   }
 
-  if (store.isAuthenticated()) {
-    return true;
-  } else if (store.refreshToken() !== null) {
-    const refreshed = await firstValueFrom(authService.refreshSession());
-    if (!refreshed) {
-      return inject(Router).createUrlTree(['/connexion'], {
-        queryParams: { returnUrl: state.url },
-      });
-    }
-  }
-
-  return inject(Router).createUrlTree(['/connexion'], {
-    queryParams: { returnUrl: state.url },
-  });
+  return inject(Store).isAuthenticated()
+    ? true
+    : inject(Router).createUrlTree(['/connexion'], { queryParams: { returnUrl: state.url } });
 };
 
 /** Réserve la route aux visiteurs anonymes (connexion, inscription). */

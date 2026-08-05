@@ -1,13 +1,21 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { provideDefaultClient } from '@client';
 import { environment } from '@env/environment';
 
 import { authInterceptor } from './core/utilities/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/utilities/interceptors/error.interceptor';
+import { AuthMirrorService } from './core/utilities/services';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +33,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
     provideClientHydration(withEventReplay()),
     // Restaure la session avant le premier rendu, pour que les guards voient l'état réel.
-    // provideAppInitializer(() => firstValueFrom(inject(AuthService).restoreSession())),
+    provideAppInitializer(() => firstValueFrom(inject(AuthMirrorService).restoreSession())),
   ],
 };

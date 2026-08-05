@@ -1,4 +1,4 @@
-# BoilerPlateClient
+# InteractivesClient
 
 Base Angular 21 (SSR) réutilisable : site public prérendu, zone client protégée,
 authentification JWT mockable, thème clair/sombre persistant.
@@ -37,16 +37,16 @@ Alias TypeScript disponibles : `@app/*`, `@core/*`, `@env/*`.
 
 `src/app/app.routes.server.ts` fixe le mode par route :
 
-| Route | Mode | Pourquoi |
-| --- | --- | --- |
-| `/`, `/a-propos`, `/contact` | `Prerender` | HTML statique, SEO et perf |
-| `/connexion`, `/inscription` | `Client` | dépend de l'état d'auth |
-| `/dashboard/**` | `Client` | aucune donnée authentifiée côté serveur |
-| `**` | `Server` | rendu à la demande |
+| Route                        | Mode        | Pourquoi                                |
+| ---------------------------- | ----------- | --------------------------------------- |
+| `/`, `/a-propos`, `/contact` | `Prerender` | HTML statique, SEO et perf              |
+| `/connexion`, `/inscription` | `Client`    | dépend de l'état d'auth                 |
+| `/dashboard/**`              | `Client`    | aucune donnée authentifiée côté serveur |
+| `**`                         | `Server`    | rendu à la demande                      |
 
 ```bash
 npm run build
-npm run serve:ssr:BoilerPlateClient   # http://localhost:4000
+npm run serve:ssr:InteractivesClient   # http://localhost:4000
 ```
 
 ⚠️ `angular.json` → `security.allowedHosts` n'autorise que `localhost` et `127.0.0.1`.

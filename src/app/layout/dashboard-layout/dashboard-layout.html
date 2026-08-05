@@ -22,7 +22,7 @@
     ></i>
   </button>
 
-  <a routerLink="/" class="brand">BoilerPlate</a>
+  <a routerLink="/" class="brand">Interactives</a>
 
   <div class="topbar-actions">
     <span class="user-name">{{ fullName() }}</span>
@@ -32,7 +32,11 @@
 </header>
 
 <div class="shell">
-  <div class="sidebar-backdrop" [hidden]="!isOverlayVisible()" (click)="closeMobileMenu(true)"></div>
+  <div
+    class="sidebar-backdrop"
+    [hidden]="!isOverlayVisible()"
+    (click)="closeMobileMenu(true)"
+  ></div>
 
   <nav
     id="navigation-dashboard"

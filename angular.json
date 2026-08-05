@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "BoilerPlateClient": {
+    "InteractivesClient": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -116,10 +116,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "BoilerPlateClient:build:production"
+              "buildTarget": "InteractivesClient:build:production"
             },
             "development": {
-              "buildTarget": "BoilerPlateClient:build:development"
+              "buildTarget": "InteractivesClient:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -127,7 +127,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "buildTarget": "BoilerPlateClient:build:development",
+            "buildTarget": "InteractivesClient:build:development",
             "runner": "vitest",
             "tsConfig": "tsconfig.spec.json"
           }

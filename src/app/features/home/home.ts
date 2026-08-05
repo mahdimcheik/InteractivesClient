@@ -7,7 +7,7 @@ import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
   imports: [RouterLink, ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <h1>Bienvenue sur le boilerplate</h1>
+    <h1>Bienvenue sur Interactives</h1>
     <p>
       Cette page est rendue côté serveur puis hydratée. Remplacez ce contenu par la page d'accueil
       du projet.

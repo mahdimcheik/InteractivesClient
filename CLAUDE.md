@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm start                 # dev server, http://localhost:4200
-npm run build             # production build (SSR, outputMode: server) -> dist/BoilerPlateClient
+npm run build             # production build (SSR, outputMode: server) -> dist/InteractivesClient
 npm run watch             # development build in watch mode
 npx ng test               # unit tests (see below — there is no `npm test` script)
 npm run gen-api           # regenerate the OpenAPI client (requires the API running)
@@ -25,7 +25,7 @@ Serve the built SSR bundle (no npm script for this — the README's `serve:ssr:*
 not exist):
 
 ```bash
-node dist/BoilerPlateClient/server/server.mjs   # http://localhost:4000, override with PORT
+node dist/InteractivesClient/server/server.mjs   # http://localhost:4000, override with PORT
 ```
 
 There is no linter configured. Formatting is Prettier (`.prettierrc`: 100 cols, single quotes).
@@ -61,7 +61,7 @@ Two interceptors, registered in that order:
   `NotificationService` (`core/utilities/services/notification.service.ts`), which bridges to the
   `<ejs-toast>` hosted in `app.html`/`app.ts` (Syncfusion has no global message-bus service like
   PrimeNG's `MessageService`, so this adapter keeps the same `add({severity, summary, detail,
-  life})` call shape at every call site). 401/409/422 are deliberately silent (handled by the auth
+life})` call shape at every call site). 401/409/422 are deliberately silent (handled by the auth
   interceptor / shown inline on forms).
 
 `authGuard` / `guestGuard` **return `true` on the server** (`isPlatformServer`), because there is
@@ -157,8 +157,8 @@ add a `@client` path alias to `tsconfig.json`, and uncomment
   underlying element (see `fieldHtmlAttrs()` in `configurable-form.component.ts`) — but
   `ColorPickerComponent` (`[ejs-colorpicker]`) does not; it enhances a real `<input>` directly, so
   bind `id`/`aria-*` straight onto that `<input>` instead.
-- `BoilerPlateClient/` at the repo root is a stray nested git repo containing only a README.
-- The README documents `npm test` and `npm run serve:ssr:BoilerPlateClient`; neither script exists.
+- `InteractivesClient/` at the repo root is a stray nested git repo containing only a README.
+- The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
 
 # Services
 

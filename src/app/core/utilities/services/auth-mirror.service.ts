@@ -1,5 +1,5 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { catchError, finalize, map, Observable, shareReplay, tap, throwError } from 'rxjs';
+import { catchError, finalize, map, Observable, of, shareReplay, tap, throwError } from 'rxjs';
 
 import {
   AuthService as GeneratedAuthService,
@@ -63,6 +63,19 @@ export class AuthMirrorService {
 
   refreshTokenCall(): Observable<LoginResponseResponse> {
     return this.api.authRefreshTokenGet();
+  }
+
+  /**
+   * Restaure la session au démarrage à partir du `refreshToken` persisté, sans jamais
+   * faire échouer l'app initializer (un refresh silencieux raté équivaut juste à
+   * une session absente).
+   */
+  restoreSession(): Observable<string | null> {
+    if (!this.store.hasPersistedSession()) {
+      return of(null);
+    }
+
+    return this.refreshSession().pipe(catchError(() => of(null)));
   }
 
   /**
