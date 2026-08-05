@@ -20,6 +20,65 @@ export interface BooleanResponse {
     count?: number | null;
 }
 
+export interface CreateElementRequest {
+    type: ElementTypeEnum;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation?: number;
+    zIndex?: number | null;
+    locked?: boolean;
+    visible?: boolean;
+    configuration: string;
+}
+
+export interface CreatePresentationRequest {
+    title: string;
+}
+
+export interface CreateSlideRequest {
+    order?: number | null;
+    backgroundColor?: string | null;
+}
+
+export interface ElementDetails {
+    id?: string;
+    slideId?: string;
+    type?: ElementTypeEnum;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    rotation?: number;
+    zIndex?: number;
+    locked?: boolean;
+    visible?: boolean;
+    configuration?: string | null;
+    createdAt?: Date;
+    updatedAt?: Date | null;
+}
+
+export interface ElementDetailsListResponse {
+    message: string;
+    status: number;
+    data?: Array<ElementDetails>;
+    count?: number | null;
+}
+
+export interface ElementDetailsResponse {
+    message: string;
+    status: number;
+    data?: ElementDetails;
+    count?: number | null;
+}
+
+export enum ElementTypeEnum {
+    Text = "Text",
+    Image = "Image",
+    Quiz = "Quiz"
+}
+
 export interface ForgotPasswordRequest {
     email: string;
 }
@@ -56,6 +115,37 @@ export interface ObjectResponse {
     count?: number | null;
 }
 
+export interface PresentationDetails {
+    id?: string;
+    title?: string | null;
+    creatorId?: string;
+    createdAt?: Date;
+    updatedAt?: Date | null;
+}
+
+export interface PresentationDetailsResponse {
+    message: string;
+    status: number;
+    data?: PresentationDetails;
+    count?: number | null;
+}
+
+export interface PresentationSummary {
+    id?: string;
+    title?: string | null;
+    creatorId?: string;
+    slideCount?: number;
+    createdAt?: Date;
+    updatedAt?: Date | null;
+}
+
+export interface PresentationSummaryListResponse {
+    message: string;
+    status: number;
+    data?: Array<PresentationSummary>;
+    count?: number | null;
+}
+
 export interface RegisterRequest {
     email: string;
     password: string;
@@ -67,6 +157,10 @@ export interface RegisterRequest {
     privacyPolicyConsent: boolean;
 }
 
+export interface ReorderSlidesRequest {
+    slideIds: Array<string>;
+}
+
 export interface ResetPasswordRequest {
     userId: string;
     token: string;
@@ -75,14 +169,36 @@ export interface ResetPasswordRequest {
 }
 
 export interface RoleDetails {
-    id?: string;
     name?: string | null;
 }
 
 export enum RoleEnum {
     SuperAdmin = "SuperAdmin",
     Admin = "Admin",
-    Client = "Client"
+    Client = "Client",
+    Professionnal = "Professionnal"
+}
+
+export interface SlideDetails {
+    id?: string;
+    presentationId?: string;
+    order?: number;
+    backgroundColor?: string | null;
+    elementCount?: number;
+}
+
+export interface SlideDetailsListResponse {
+    message: string;
+    status: number;
+    data?: Array<SlideDetails>;
+    count?: number | null;
+}
+
+export interface SlideDetailsResponse {
+    message: string;
+    status: number;
+    data?: SlideDetails;
+    count?: number | null;
 }
 
 export enum StorageProviderEnum {
@@ -117,6 +233,26 @@ export interface StringResponse {
     status: number;
     data?: string | null;
     count?: number | null;
+}
+
+export interface UpdateElementRequest {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation?: number;
+    zIndex?: number;
+    locked?: boolean;
+    visible?: boolean;
+    configuration: string;
+}
+
+export interface UpdatePresentationRequest {
+    title: string;
+}
+
+export interface UpdateSlideRequest {
+    backgroundColor?: string | null;
 }
 
 export interface UserDetails {
