@@ -59,6 +59,10 @@ export class Store {
 
   /** Utilisé au boot pour savoir s'il vaut la peine de tenter un refresh silencieux. */
   hasPersistedSession(): boolean {
-    return this.storage.get(AUTH_REFRESH_TOKEN_KEY) !== null;
+    if (this.user() !== undefined) {
+      return true;
+    }
+    const refreshToken = localStorage.getItem(AUTH_REFRESH_TOKEN_KEY);
+    return refreshToken !== null && refreshToken !== '' && refreshToken !== undefined;
   }
 }

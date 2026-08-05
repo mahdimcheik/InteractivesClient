@@ -13,10 +13,13 @@ import { firstValueFrom } from 'rxjs';
 import { provideDefaultClient } from '@client';
 import { environment } from '@env/environment';
 
-import { authInterceptor } from './core/utilities/interceptors/auth.interceptor';
-import { errorInterceptor } from './core/utilities/interceptors/error.interceptor';
 import { AuthMirrorService } from './core/utilities/services';
 import { routes } from './app.routes';
+import { TokenInterceptor } from './core/utilities/interceptors/token.interceptor';
+import { cookiesInterceptor } from './core/utilities/interceptors/cookies.interceptor';
+import { errorHandlerInterceptor } from './core/utilities/interceptors/error-handler.interceptor';
+import { exceptionLoaderInterceptor } from './core/utilities/interceptors/exception-loader.interceptor';
+import { loaderInterceptor } from './core/utilities/interceptors/loader.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +33,16 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
     ),
     // withFetch() est requis en SSR (transfer state HTTP, pas de XHR côté serveur).
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([
+        TokenInterceptor,
+        cookiesInterceptor,
+        errorHandlerInterceptor,
+        exceptionLoaderInterceptor,
+        loaderInterceptor,
+      ]),
+    ),
     provideClientHydration(withEventReplay()),
     // Restaure la session avant le premier rendu, pour que les guards voient l'état réel.
     provideAppInitializer(() => firstValueFrom(inject(AuthMirrorService).restoreSession())),
