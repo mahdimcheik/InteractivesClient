@@ -28,20 +28,11 @@
         type="button"
         ejs-button
         cssClass="e-flat e-round e-icon-btn"
-        title="Annuler"
+        [title]="label()"
         aria-label="Annuler"
+        (click)="toggleMode()"
       >
         <i class="pi pi-undo" aria-hidden="true"></i>
-      </button>
-      <button
-        type="button"
-        ejs-button
-        cssClass="e-flat e-round e-icon-btn"
-        title="Rétablir"
-        aria-label="Rétablir"
-        disabled
-      >
-        <i class="pi pi-replay" aria-hidden="true"></i>
       </button>
     </div>
 

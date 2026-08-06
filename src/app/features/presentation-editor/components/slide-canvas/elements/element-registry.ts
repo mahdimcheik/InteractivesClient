@@ -15,6 +15,6 @@ export const ELEMENT_DEFAULTS: Partial<
   [ElementTypeEnum.Text]: {
     width: 320,
     height: 80,
-    configuration: JSON.stringify({ text: 'Nouveau texte' } satisfies TextElementConfig),
+    configuration: JSON.stringify({ content: 'Nouveau texte' } satisfies TextElementConfig),
   },
 };

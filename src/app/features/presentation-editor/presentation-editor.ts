@@ -45,7 +45,7 @@ export class PresentationEditor {
   private readonly slidesMirror = inject(SlidesMirrorService);
 
   protected readonly selectedSlideIndex = signal(0);
-  protected readonly editorMode = PresentationMode.Edit;
+  editorMode = signal<PresentationMode>(PresentationMode.Edit);
   protected readonly isNameModalOpen = signal(false);
   protected readonly savingName = signal(false);
 

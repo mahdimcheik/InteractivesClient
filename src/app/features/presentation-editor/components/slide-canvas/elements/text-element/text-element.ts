@@ -11,6 +11,7 @@ import { TextElementConfig } from './text-element.model';
   template: `
     <div
       class="text-element"
+      [class.is-editable]="isEditable()"
       [attr.contenteditable]="isEditable() ? 'true' : null"
       (blur)="onBlur($event)"
     >

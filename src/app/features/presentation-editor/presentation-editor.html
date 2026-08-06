@@ -1,5 +1,9 @@
 <div class="editor-shell">
-  <app-editor-header [presentationTitle]="presentationTitle()" (rename)="openRenameModal()" />
+  <app-editor-header
+    [presentationTitle]="presentationTitle()"
+    (rename)="openRenameModal()"
+    [(mode)]="editorMode"
+  ></app-editor-header>
   <app-editor-toolbar />
 
   <main class="editor-workspace">
@@ -11,7 +15,7 @@
     <app-slide-canvas
       [(presentation)]="presentation"
       [selectedSlideIndex]="selectedSlideIndex()"
-      [mode]="editorMode"
+      [mode]="editorMode()"
     />
     <app-properties-panel />
   </main>
