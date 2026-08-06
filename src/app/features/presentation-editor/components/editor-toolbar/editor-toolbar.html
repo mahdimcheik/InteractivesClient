@@ -8,8 +8,20 @@
     </button>
   </div>
 
-  <div class="tool-group">
-    <button type="button" class="tool-button" title="Zone de texte">
+  <div
+    class="tool-group"
+    cdkDropList
+    id="elementPalette"
+    [cdkDropListConnectedTo]="['slideCanvasDropList']"
+    [cdkDropListEnterPredicate]="blockDrop"
+  >
+    <button
+      type="button"
+      class="tool-button"
+      title="Zone de texte"
+      cdkDrag
+      [cdkDragData]="ElementTypeEnum.Text"
+    >
       <i class="pi pi-text" aria-hidden="true"></i>
     </button>
     <button type="button" class="tool-button" title="Image">

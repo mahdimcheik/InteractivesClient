@@ -6,18 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm start                 # dev server, http://localhost:4200
+npm run dev               # HTTPS dev server, https://localhost:4201 (needs key.pem/cert.pem)
 npm run build             # production build (SSR, outputMode: server) -> dist/InteractivesClient
 npm run watch             # development build in watch mode
 npx ng test               # unit tests (see below — there is no `npm test` script)
-npm run gen-api           # regenerate the OpenAPI client (requires the API running)
+npm run gen-api           # regenerate the OpenAPI client into src/client (requires the API running)
 ```
 
 Tests use the `@angular/build:unit-test` builder with **Vitest + jsdom** (config lives in
 `angular.json` → `test`, not in a `vitest.config.ts`):
 
 ```bash
-npx ng test --include src/app/core/auth/auth.service.spec.ts   # a single spec file
-npx ng test --filter "^AuthService"                            # by suite/test name regex
+npx ng test --include src/app/layout/dashboard-layout/dashboard-layout.spec.ts   # a single spec file
+npx ng test --filter "^DashboardLayout"                                          # by suite/test name regex
 npx ng test --watch --coverage
 ```
 
@@ -41,43 +42,54 @@ Path aliases: `@app/*` → `src/app/*`, `@core/*` → `src/app/core/*`, `@env/*`
 
 ### Auth is the spine of the app
 
-`AuthApi` (`src/app/core/auth/auth-api.ts`) is an abstract class with two implementations,
-`MockAuthApi` and `HttpAuthApi`. **`app.config.ts` picks one from `environment.useMockAuth`** —
-that provider line is the single switch between demo mode and a real backend. Demo account:
-`demo@example.com` / `demo1234`.
+Auth runs on the generated OpenAPI client (`src/client`, see "API client generation" below) via
+a mirror-service + store pair — the same pattern used for every other API area (see "Services"):
 
-Token model (deliberate, documented at the top of `auth.service.ts`): the access token lives
-only in a signal in memory; the refresh token goes to `localStorage` via `StorageService`.
-`provideAppInitializer` runs `AuthService.restoreSession()` before the first render so guards
-see real state. `AuthService.refresh()` de-duplicates concurrent refreshes through a single
-`refreshInFlight` observable shared with `authInterceptor`.
+- **`Store`** (`core/utilities/services/store.ts`) — single signal-based store holding `user`,
+  `token`, `refreshToken`, plus the presentation/slide caches used by the presentation editor.
+  `isAuthenticated`, `isAdmin`, `isProfessionnal`, `isClient` are `computed()` off `user`.
+  `persistData()`/`clearData()` write/clear `user`, `token`, **and** `refreshToken` all to
+  `localStorage` via `StorageService` (both tokens are persisted, not just the refresh token).
+- **`AuthMirrorService`** (`core/utilities/services/auth-mirror.service.ts`) — mirrors the
+  generated `AuthService` from `@client` with readable method names (`login`, `register`,
+  `loginWithGoogle`, `forgotPassword`, `resetPassword`, `logout`, `confirmEmail`) and writes
+  results into `Store`. `refreshSession()` de-duplicates concurrent refreshes through a single
+  `refreshInFlight` observable (`shareReplay(1)`). `restoreSession()` is called from
+  `provideAppInitializer` in `app.config.ts` before the first render so guards see real state.
 
-Two interceptors, registered in that order:
+Interceptor chain, registered in this order in `app.config.ts`
+(`core/utilities/interceptors/*.interceptor.ts`):
 
-- `core/auth/auth.interceptor.ts` — attaches the Bearer, retries once after a refresh on 401.
-  It skips `/auth/login|register|refresh|logout` entirely to avoid a refresh loop; if you rename
-  those backend paths, update `AUTH_ENDPOINTS` too.
-- `core/utilities/interceptors/error.interceptor.ts` — turns HTTP errors into toasts via
-  `NotificationService` (`core/utilities/services/notification.service.ts`), which bridges to the
-  `<ejs-toast>` hosted in `app.html`/`app.ts` (Syncfusion has no global message-bus service like
-  PrimeNG's `MessageService`, so this adapter keeps the same `add({severity, summary, detail,
-life})` call shape at every call site). 401/409/422 are deliberately silent (handled by the auth
-  interceptor / shown inline on forms).
+- `token.interceptor.ts` (`TokenInterceptor`) — attaches `Bearer ${store.token()}`.
+- `cookies.interceptor.ts` — forces `withCredentials: true` (except calls to
+  `api-adresse.data.gouv.fr` made with `withCredentials: false`).
+- `error-handler.interceptor.ts` — retries once after a refresh on 401 via
+  `AuthMirrorService.refreshSession()`, clearing the store on refresh failure. It does not
+  special-case 409/422, and does not call `NotificationService`.
+- `exception-loader.interceptor.ts` / `loader.interceptor.ts` — toggle a loading indicator,
+  skipping URLs listed in `exception-url.ts`.
 
-`authGuard` / `guestGuard` **return `true` on the server** (`isPlatformServer`), because there is
-no session during prerender; the client-side render decides. Removing that check would redirect
-every prerendered visitor to `/connexion`.
+`NotificationService` (`core/utilities/services/notification.service.ts`) still bridges to the
+`<ejs-toast>` hosted in `app.html`/`app.ts` (Syncfusion has no global message-bus service like
+PrimeNG's `MessageService`, so this adapter keeps the same `add({severity, summary, detail,
+life})` call shape at every call site) — but it's now called directly from feature components
+(e.g. `features/auth/register`, `features/dashboard/profile`, `features/contact`) rather than
+centrally from an interceptor.
+
+`authGuard` / `guestGuard` (`core/utilities/guards/auth.guard.ts`) **return `true` on the
+server** (`isPlatformServer`), because there is no session during prerender; the client-side
+render decides. Removing that check would redirect every prerendered visitor to `/connexion`.
 
 ### SSR render modes are a security boundary
 
 `src/app/app.routes.server.ts` pairs with `app.routes.ts`:
 
-| Route                        | Mode        | Why                                             |
-| ---------------------------- | ----------- | ----------------------------------------------- |
-| `/`, `/a-propos`, `/contact` | `Prerender` | static HTML, SEO                                |
-| `/connexion`, `/inscription` | `Client`    | depends on auth state                           |
-| `/dashboard/**`              | `Client`    | no authenticated data touches the render server |
-| `**`                         | `Server`    | on demand                                       |
+| Route                                                                                                        | Mode        | Why                                             |
+| ------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
+| `/`, `/a-propos`, `/contact`                                                                                 | `Prerender` | static HTML, SEO                                |
+| `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/confirmation-compte` | `Client`    | depends on auth state                           |
+| `/dashboard/**`                                                                                              | `Client`    | no authenticated data touches the render server |
+| `**`                                                                                                         | `Server`    | on demand                                       |
 
 Adding an authenticated route means adding it to **both** files. `angular.json` →
 `security.allowedHosts` only lists `localhost` / `127.0.0.1`; a production domain must be added
@@ -137,10 +149,26 @@ message keys there so every form picks them up.
 
 ### API client generation
 
-`openapi.config.ts` generates a typed client from `http://localhost:5113/swagger/v1/swagger.json`
-into `src/client`. That directory is **not generated yet**: run `npm run gen-api` with the API up,
-add a `@client` path alias to `tsconfig.json`, and uncomment
-`provideDefaultClient({ basePath: environment.apiUrl })` in `app.config.ts` (see the comment there).
+`npm run gen-api` (config in `openapi.config.ts`) regenerates the typed `src/client` from
+`http://localhost:5113/swagger/v1/swagger.json` (requires the API running). It's wired in: the
+`@client`/`@client/*` path aliases live in `tsconfig.json`, and
+`provideDefaultClient({ basePath: environment.apiUrl })` is active in `app.config.ts`.
+
+### Domain models under `core/utilities/models`
+
+Plain TS types/enums/abstract classes shared across features — distinct from the
+`related-models.ts` pattern used by `ConfigurableFormComponent`. Currently: `enumerators.ts`
+(`PresentationMode`, `TypeElement`) and `abstract-base-element.ts` (`AbstractBaseElement`,
+implementing `IAbstractBaseElement`), scaffolding for the slide-element type hierarchy used by
+the presentation editor (see below).
+
+### The presentation editor
+
+`src/app/features/presentation-editor/` (`slide-panel`, `slide-canvas`, `slide-modal`, and
+`my-presentations` components) is the slide/presentation-building feature at the center of the
+app. It's backed by `presentations-mirror.service.ts` / `slides-mirror.service.ts` and the
+`Store`'s `presentations` / `presentationDetails` cache (upsert/reorder/remove helpers for
+slides within a cached presentation).
 
 ## Gotchas
 
@@ -159,8 +187,19 @@ add a `@client` path alias to `tsconfig.json`, and uncomment
   bind `id`/`aria-*` straight onto that `<input>` instead.
 - `InteractivesClient/` at the repo root is a stray nested git repo containing only a README.
 - The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
+- `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) and `environment.useMockAuth` are
+  vestigial — not referenced anywhere in `app.config.ts`. Real auth is `AuthMirrorService` +
+  `Store` (see "Auth is the spine of the app").
+- `token.interceptor.ts`'s own doc comment marks `TokenInterceptor` `@obsolete Pour le
+  developpement uniquement`, despite it being actively registered in `app.config.ts`'s
+  interceptor chain — resolve the contradiction (drop the comment or replace the interceptor)
+  rather than leaving it.
 
 # Services
 
-- For each generated service, create a corresponding mirror service that wraps its methods and handles caching whenever applicable.
-- Create a single store service responsible for managing the cache used by all mirror services.
+Every generated `@client` service gets a mirror service under `core/utilities/services/`
+(`auth-mirror.service.ts`, `medias-mirror.service.ts`, `presentations-mirror.service.ts`,
+`slides-mirror.service.ts`, barrel-exported from `index.ts`) that wraps its methods with
+readable names and handles caching. A single store service, `Store` (`store.ts`), holds the
+cache used by all mirror services (session + presentation/slide data). Follow this pattern for
+any newly generated service.

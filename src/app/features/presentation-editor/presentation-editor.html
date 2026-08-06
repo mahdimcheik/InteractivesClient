@@ -8,7 +8,11 @@
       [selectedSlideIndex]="selectedSlideIndex()"
       (slideSelected)="selectedSlideIndex.set($event)"
     />
-    <app-slide-canvas />
+    <app-slide-canvas
+      [(presentation)]="presentation"
+      [selectedSlideIndex]="selectedSlideIndex()"
+      [mode]="editorMode"
+    />
     <app-properties-panel />
   </main>
 </div>

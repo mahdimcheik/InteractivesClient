@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 
 import { PresentationDetails } from '@client';
+import { PresentationMode } from '@core/utilities/models/enumerators';
 import { PresentationsMirrorService } from '@core/utilities/services/presentations-mirror.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 
@@ -44,6 +45,7 @@ export class PresentationEditor {
   private readonly slidesMirror = inject(SlidesMirrorService);
 
   protected readonly selectedSlideIndex = signal(0);
+  protected readonly editorMode = PresentationMode.Edit;
   protected readonly isNameModalOpen = signal(false);
   protected readonly savingName = signal(false);
 
