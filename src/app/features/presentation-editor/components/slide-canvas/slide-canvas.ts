@@ -36,7 +36,6 @@ export class SlideCanvas {
 
   readonly presentation = input<PresentationDetails>();
   readonly selectedSlideIndex = input(0);
-  readonly mode = input<PresentationMode>(PresentationMode.Edit);
 
   protected readonly stage = viewChild(SlideStage);
 
@@ -44,12 +43,8 @@ export class SlideCanvas {
   protected readonly slide = computed(
     () => this.presentation()?.slides?.[this.selectedSlideIndex()],
   );
-  protected readonly isEditMode = computed(() => this.mode() === PresentationMode.Edit);
-  /** Hors édition, un élément masqué n'est pas rendu du tout. */
-  protected readonly renderedElements = computed(() => {
-    const elements = this.slide()?.elements ?? [];
-    return this.isEditMode() ? elements : elements.filter((e) => e.visible !== false);
-  });
+  /** Le canvas est la surface d'édition ; la lecture seule passe par `SlideView`. */
+  protected readonly editMode = PresentationMode.Edit;
   /** Pilotée par l'éditeur, qui la partage avec le panneau de propriétés. */
   readonly selectedElementId = model<string | null>(null);
   protected readonly slideBackground = computed(

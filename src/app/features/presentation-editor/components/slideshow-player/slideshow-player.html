@@ -1,0 +1,33 @@
+<!-- Clic : raccourci souris pour « suivante » ; au clavier, flèches et espace (hôte du lecteur). -->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<div class="player-slide" (click)="next()">
+  @if (current(); as slide) {
+    <app-slide-view
+      [slide]="slide"
+      [presentationId]="presentation().id!"
+      [mode]="presentationMode"
+    />
+  }
+</div>
+
+<p class="app-visually-hidden" aria-live="polite">
+  Diapositive {{ index() + 1 }} sur {{ slides().length }}
+</p>
+
+<div class="player-controls">
+  <button
+    type="button"
+    aria-label="Diapositive précédente"
+    [disabled]="isFirst()"
+    (click)="previous()"
+  >
+    <i class="pi pi-chevron-left" aria-hidden="true"></i>
+  </button>
+  <span class="player-counter" aria-hidden="true">{{ index() + 1 }} / {{ slides().length }}</span>
+  <button type="button" aria-label="Diapositive suivante" [disabled]="isLast()" (click)="next()">
+    <i class="pi pi-chevron-right" aria-hidden="true"></i>
+  </button>
+  <button type="button" aria-label="Quitter la présentation" (click)="close()">
+    <i class="pi pi-times" aria-hidden="true"></i>
+  </button>
+</div>

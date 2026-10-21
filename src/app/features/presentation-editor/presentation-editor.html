@@ -1,8 +1,9 @@
 <div class="editor-shell">
   <app-editor-header
     [presentationTitle]="presentationTitle()"
+    [canPresent]="!!presentation()?.slides?.length"
     (rename)="openRenameModal()"
-    [(mode)]="editorMode"
+    (present)="isPresenting.set(true)"
   ></app-editor-header>
   <app-editor-toolbar />
 
@@ -15,16 +16,13 @@
     <app-slide-canvas
       [presentation]="presentation()"
       [selectedSlideIndex]="selectedSlideIndex()"
-      [mode]="editorMode()"
       [(selectedElementId)]="selectedElementId"
     />
-    @if (editorMode() === editMode) {
-      <app-properties-panel
-        [presentationId]="presentation()?.id"
-        [slide]="selectedSlide()"
-        [element]="selectedElement()"
-      />
-    }
+    <app-properties-panel
+      [presentationId]="presentation()?.id"
+      [slide]="selectedSlide()"
+      [element]="selectedElement()"
+    />
   </main>
 </div>
 
@@ -37,3 +35,11 @@
   [saving]="savingName()"
   (confirmed)="saveName($event)"
 />
+
+@if (isPresenting() && presentation(); as p) {
+  <app-slideshow-player
+    [presentation]="p"
+    [startIndex]="selectedSlideIndex()"
+    (closed)="stopPresenting($event)"
+  />
+}

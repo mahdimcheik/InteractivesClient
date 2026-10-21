@@ -1,6 +1,9 @@
 import { toSignal } from '@angular/core/rxjs-interop';
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  Injector,
+  afterNextRender,
   Component,
   computed,
   effect,
@@ -13,7 +16,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 
 import { PresentationDetails } from '@client';
-import { PresentationMode } from '@core/utilities/models/enumerators';
 import { PresentationsMirrorService } from '@core/utilities/services/presentations-mirror.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 
@@ -23,6 +25,7 @@ import { PresentationNameModal } from './components/presentation-name-modal/pres
 import { PropertiesPanel } from './components/properties-panel/properties-panel';
 import { SlideCanvas } from './components/slide-canvas/slide-canvas';
 import { SlidePanel } from './components/slide-panel/slide-panel';
+import { SlideshowPlayer } from './components/slideshow-player/slideshow-player';
 
 const NEW_PRESENTATION_ID = 'new';
 
@@ -35,6 +38,7 @@ const NEW_PRESENTATION_ID = 'new';
     SlideCanvas,
     PropertiesPanel,
     PresentationNameModal,
+    SlideshowPlayer,
   ],
   templateUrl: './presentation-editor.html',
   styleUrl: './presentation-editor.scss',
@@ -45,10 +49,11 @@ export class PresentationEditor {
   private readonly router = inject(Router);
   private readonly presentationsMirror = inject(PresentationsMirrorService);
   private readonly slidesMirror = inject(SlidesMirrorService);
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
 
   protected readonly selectedSlideIndex = signal(0);
-  editorMode = signal<PresentationMode>(PresentationMode.Edit);
-  protected readonly editMode = PresentationMode.Edit;
+  protected readonly isPresenting = signal(false);
   protected readonly isNameModalOpen = signal(false);
   protected readonly savingName = signal(false);
 
@@ -72,9 +77,9 @@ export class PresentationEditor {
   protected readonly selectedSlide = computed(
     () => this.presentation()?.slides?.[this.selectedSlideIndex()],
   );
-  /** Effacée quand on change de diapositive ou de mode. */
-  protected readonly selectedElementId = linkedSignal<string, string | null>({
-    source: () => `${this.selectedSlide()?.id}|${this.editorMode()}`,
+  /** Effacée quand on change de diapositive. */
+  protected readonly selectedElementId = linkedSignal<string | undefined, string | null>({
+    source: () => this.selectedSlide()?.id,
     computation: () => null,
   });
   protected readonly selectedElement = computed(() => {
@@ -106,6 +111,15 @@ export class PresentationEditor {
       if (id) {
         untracked(() => this.presentationsMirror.get(id).subscribe());
       }
+    });
+  }
+
+  protected stopPresenting(lastIndex: number): void {
+    this.isPresenting.set(false);
+    this.selectedSlideIndex.set(lastIndex);
+    // Le focus revient au bouton qui a lancé la présentation.
+    afterNextRender(() => this.document.getElementById('editor-present-button')?.focus(), {
+      injector: this.injector,
     });
   }
 

@@ -27,6 +27,21 @@ Un même composant d'élément est affiché dans plusieurs contextes, donnés pa
 la synchronisation en direct simple : l'hôte n'a qu'à diffuser l'index de la diapositive courante,
 chaque client rend les mêmes composants en mode `Client`.
 
+Deux surfaces rendent une diapositive :
+
+- `SlideCanvas` — la surface d'édition, toujours en mode `Edit` (cadres, sélection, dépôt) ;
+- `SlideView` (`components/slide-view/`) — la lecture seule, pour tous les autres modes : même
+  `SlideStage`, arrière-plan de la diapositive, éléments masqués absents. En `Thumbnail`, elle
+  est `inert` et retirée de l'arbre d'accessibilité : c'est le bouton qui la contient qui la
+  nomme (« Diapositive 3 »).
+
+Le lecteur de l'hôte (`SlideshowPlayer`, bouton « Présenter » de l'en-tête) affiche une
+`SlideView` en `Presentation`, en plein écran : suivante avec flèche droite / bas, espace,
+Entrée ou Page suivante ; précédente avec flèche gauche / haut ou Page précédente ; Début / Fin ;
+`Échap` pour quitter (le focus revient au bouton « Présenter », l'éditeur reprend sur la
+dernière diapositive affichée). Un test vérifie que chaque élément du registre ne rend aucun
+contrôle d'édition (`contenteditable`, champ, bouton) hors du mode `Edit`.
+
 ## Le repère de la diapositive
 
 Positions et tailles (`x`, `y`, `width`, `height`) sont stockées dans un repère logique de

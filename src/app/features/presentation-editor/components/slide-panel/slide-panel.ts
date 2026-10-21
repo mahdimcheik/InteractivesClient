@@ -15,16 +15,18 @@ import {
   signal,
 } from '@angular/core';
 import { PresentationDetails, SlideDetails } from '@client/models';
+import { PresentationMode } from '@core/utilities/models/enumerators';
 import { NotificationService } from '@core/utilities/services/notification.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 import { Store } from '@core/utilities/services/store';
 
 import { ConfirmDeleteModal } from '../confirm-delete-modal/confirm-delete-modal';
 import { SlideModal } from '../slide-modal/slide-modal';
+import { SlideView } from '../slide-view/slide-view';
 
 @Component({
   selector: 'app-slide-panel',
-  imports: [SlideModal, ConfirmDeleteModal, CdkDropList, CdkDrag, CdkDragHandle],
+  imports: [SlideModal, SlideView, ConfirmDeleteModal, CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './slide-panel.html',
   styleUrl: './slide-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +42,7 @@ export class SlidePanel {
   readonly slideSelected = output<number>();
 
   protected readonly presentationId = computed(() => this.presentation()?.id);
+  protected readonly thumbnailMode = PresentationMode.Thumbnail;
   protected readonly slideModalVisible = signal(false);
   protected readonly slideModalMode = signal<'add' | 'edit'>('add');
   protected readonly editingSlide = signal<SlideDetails | undefined>(undefined);

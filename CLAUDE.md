@@ -212,7 +212,11 @@ built from a component's copy of the element.
   to defaults, so old rows stay valid) — and `saveConfig(patch)`, which sends the merged
   configuration through `ElementsMirrorService.patch` and notifies on error.
 - Rendering must depend only on `config()` + `mode()`, with no edit affordances outside `Edit` —
-  that's what lets participants render the same components in `Client` mode.
+  that's what lets participants render the same components in `Client` mode
+  (`element-registry.spec.ts` asserts it for every registered component). Two surfaces render
+  a slide: `SlideCanvas` (always `Edit`, with frames) and `SlideView` (`components/slide-view/`,
+  read-only, hides `visible: false` elements, `inert` + `aria-hidden` in `Thumbnail`). The host's
+  full-screen player `SlideshowPlayer` shows a `SlideView` in `Presentation` mode.
 - Geometry lives in a **logical 1280 × 720 frame** (`core/utilities/models/slide-geometry.ts`),
   scaled on screen by `SlideStage` (`components/slide-stage/`, `transform: scale`, exposes
   `--slide-scale` and `toSlidePoint`). Size slide content in logical `px`, never `rem`; edit-only

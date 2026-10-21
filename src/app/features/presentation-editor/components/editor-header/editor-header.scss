@@ -127,20 +127,6 @@
     gap: 1rem;
   }
 
-  .history-actions {
-    display: none;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    border-radius: var(--app-radius);
-    background: var(--app-surface-subtle);
-    border: 1px solid var(--app-border-color);
-
-    @media (min-width: 48rem) {
-      display: flex;
-    }
-  }
-
   .join-room-button {
     display: none;
 

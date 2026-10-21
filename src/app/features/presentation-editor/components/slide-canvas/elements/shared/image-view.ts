@@ -6,7 +6,8 @@ import { ImageConfig } from '../image-element/image-element.model';
 import { ImagePicker } from './image-picker';
 
 /**
- * Affiche une image configurée, ou le sélecteur si aucune image n'est encore choisie (édition).
+ * Affiche une image configurée, ou le sélecteur si aucune image n'est encore choisie (édition) ;
+ * hors édition, une image vide ne rend rien.
  * En édition : remplacement de l'image et saisie du texte alternatif.
  */
 @Component({
@@ -35,10 +36,6 @@ import { ImagePicker } from './image-picker';
       }
     } @else if (editable()) {
       <app-image-picker [presentationId]="presentationId()" (picked)="picked.emit($event)" />
-    } @else {
-      <div class="image-placeholder" aria-hidden="true">
-        <i class="pi pi-image"></i>
-      </div>
     }
   `,
   styleUrl: './image-view.scss',

@@ -1,0 +1,78 @@
+// Le lecteur est volontairement noir dans les deux thèmes : c'est le cadre de la diapositive, pas
+// l'interface de l'application.
+@layer app {
+  :host {
+    --player-backdrop: #000000;
+    --player-control-color: #ffffff;
+    --player-control-background: rgb(0 0 0 / 60%);
+
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--player-backdrop);
+    outline: none;
+  }
+
+  .player-slide {
+    width: min(100vw, calc(100vh * 16 / 9));
+    cursor: pointer;
+  }
+
+  .player-controls {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    background: var(--player-control-background);
+    color: var(--player-control-color);
+    opacity: 0;
+    transition: opacity 150ms ease;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: none;
+      border-radius: 9999px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--player-control-color);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  :host(:hover) .player-controls,
+  .player-controls:focus-within {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .player-controls {
+      opacity: 1;
+    }
+  }
+
+  .player-counter {
+    min-width: 3.5rem;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+}

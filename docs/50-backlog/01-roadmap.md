@@ -72,16 +72,20 @@ avec l'API redémarrée (Image et Titre + texte + image).
 texte de l'élément Titre + texte + image ; boutons encore factices de la barre d'outils
 (diapositive, mise en page, formes, sondage, quiz).
 
-## Lot 5 — Mode présentation de l'hôte
+## Lot 5 — Mode présentation de l'hôte — **livré, à vérifier dans le navigateur**
 
-Présenter seul, sans participants : tout ce que le direct réutilisera.
+- `SlideView` : rendu en lecture seule partagé (lecteur, miniatures, participants au lot 6) ;
+  `SlideCanvas` ne sert plus qu'à l'édition.
+- Lecteur plein écran (`SlideshowPlayer`), ouvert par « Présenter » — qui remplace le bouton
+  « Annuler » qui servait en fait à basculer de mode. Clavier, commandes au survol, annonce de
+  la diapositive courante, retour du focus.
+- Miniatures réelles dans le panneau des diapositives (mode `Thumbnail`).
+- Test : aucun élément du registre ne rend de contrôle d'édition hors du mode `Edit`. Une image
+  vide ne rend plus rien hors édition (elle affichait une icône aux couleurs du thème).
 
-- Lecteur plein écran en mode `Presentation` : diapositive suivante / précédente au clavier
-  (flèches, espace, `Échap` pour quitter), mise à l'échelle sur tout l'écran.
-- Miniatures réelles dans le panneau des diapositives, rendues par les mêmes composants en mode
-  `Thumbnail`.
-- Aucune affordance d'édition hors du mode `Edit` (déjà la règle du contrat — vérifiée ici sur
-  chaque élément).
+**Pour le lot 6 :** `SlideView`, `SlideStage` et le registre des éléments vivent dans
+`features/presentation-editor/` ; la page participant devra les importer de là ou les déplacer
+dans un dossier partagé.
 
 ## Lot 6 — Séance en direct
 

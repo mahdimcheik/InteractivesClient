@@ -53,16 +53,20 @@
           type="button"
           class="thumbnail"
           [class.thumbnail-active]="$index === selectedSlideIndex()"
+          [attr.aria-label]="'Diapositive ' + ($index + 1)"
+          [attr.aria-current]="$index === selectedSlideIndex() ? 'true' : null"
           (click)="slideSelected.emit($index)"
         >
           @if ($index === selectedSlideIndex()) {
             <div class="thumbnail-active-bar" aria-hidden="true"></div>
           }
 
-          <div class="thumbnail-content thumbnail-content-split">
-            <div class="thumbnail-image-block"></div>
-            <div class="thumbnail-text-block"></div>
-          </div>
+          <app-slide-view
+            class="thumbnail-content"
+            [slide]="slide"
+            [presentationId]="presentationId()!"
+            [mode]="thumbnailMode"
+          />
         </button>
       </div>
     }

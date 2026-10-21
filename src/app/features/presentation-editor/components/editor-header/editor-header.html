@@ -23,18 +23,17 @@
   </nav>
 
   <div class="header-actions">
-    <div class="history-actions">
-      <button
-        type="button"
-        ejs-button
-        cssClass="e-flat e-round e-icon-btn"
-        [title]="label()"
-        aria-label="Annuler"
-        (click)="toggleMode()"
-      >
-        <i class="pi pi-undo" aria-hidden="true"></i>
-      </button>
-    </div>
+    <button
+      id="editor-present-button"
+      type="button"
+      ejs-button
+      cssClass="e-outline !px-4 !py-2 !rounded-lg"
+      [disabled]="!canPresent()"
+      (click)="present.emit()"
+    >
+      <i class="pi pi-desktop" aria-hidden="true"></i>
+      Présenter
+    </button>
 
     <button
       type="button"
