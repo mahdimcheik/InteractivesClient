@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
@@ -58,7 +59,13 @@ export class PresentationEditor {
     () => this.presentationId() === NEW_PRESENTATION_ID,
   );
 
-  protected readonly presentation = signal<PresentationDetails | undefined>(undefined);
+  /** Lu dans le Store : toutes les modifications passent par les services miroir. */
+  protected readonly presentation = computed<PresentationDetails | undefined>(() => {
+    const id = this.presentationId();
+    return id && id !== NEW_PRESENTATION_ID
+      ? this.presentationsMirror.presentationDetails().get(id)
+      : undefined;
+  });
 
   protected readonly presentationTitle = computed(() => {
     const title = this.presentation()?.title;
@@ -77,15 +84,13 @@ export class PresentationEditor {
     // ouvre la modale de nommage pour la créer.
     effect(() => {
       const id = this.presentationId();
-      if (!id || id === NEW_PRESENTATION_ID) {
-        this.presentation.set(undefined);
-        if (id === NEW_PRESENTATION_ID) {
-          this.isNameModalOpen.set(true);
-        }
+      if (id === NEW_PRESENTATION_ID) {
+        this.isNameModalOpen.set(true);
         return;
       }
-
-      this.presentationsMirror.get(id).subscribe((details) => this.presentation.set(details));
+      if (id) {
+        untracked(() => this.presentationsMirror.get(id).subscribe());
+      }
     });
   }
 
@@ -103,18 +108,12 @@ export class PresentationEditor {
         if (!details?.id) {
           return;
         }
-        this.presentation.set(details);
         this.isNameModalOpen.set(false);
 
         // Diapositive de départ ajoutée en best-effort : une présentation vide reste
         // utilisable, et le bouton "Nouvelle diapositive" permet de réessayer.
         try {
-          const slide = await firstValueFrom(this.slidesMirror.create(details.id));
-          if (slide) {
-            this.presentation.update((p) =>
-              p ? { ...p, slides: [...(p.slides ?? []), slide] } : p,
-            );
-          }
+          await firstValueFrom(this.slidesMirror.create(details.id));
         } catch {
           // Ignoré : l'utilisateur peut ajouter une diapositive manuellement.
         }
@@ -134,11 +133,8 @@ export class PresentationEditor {
     }
 
     this.presentationsMirror.update(id, { title }).subscribe({
-      next: (details) => {
+      next: () => {
         this.savingName.set(false);
-        if (details) {
-          this.presentation.set(details);
-        }
         this.isNameModalOpen.set(false);
       },
       error: () => this.savingName.set(false),

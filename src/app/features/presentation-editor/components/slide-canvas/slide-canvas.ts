@@ -7,7 +7,6 @@ import {
   computed,
   inject,
   input,
-  model,
   viewChild,
 } from '@angular/core';
 import { PresentationDetails } from '@client';
@@ -28,7 +27,7 @@ export class SlideCanvas {
   private readonly elementsMirror = inject(ElementsMirrorService);
   private readonly notifications = inject(NotificationService);
 
-  presentation = model<PresentationDetails>();
+  readonly presentation = input<PresentationDetails>();
   readonly selectedSlideIndex = input(0);
   readonly mode = input<PresentationMode>(PresentationMode.Edit);
 
@@ -64,22 +63,6 @@ export class SlideCanvas {
         configuration: preset.configuration,
       })
       .subscribe({
-        next: (created) => {
-          if (!created) {
-            return;
-          }
-          this.presentation.update((p) => {
-            if (!p) {
-              return p;
-            }
-            return {
-              ...p,
-              slides: (p.slides ?? []).map((s) =>
-                s.id === slide.id ? { ...s, elements: [...(s.elements ?? []), created] } : s,
-              ),
-            };
-          });
-        },
         error: () =>
           this.notifications.add({
             severity: 'error',

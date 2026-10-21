@@ -11,14 +11,13 @@ import {
   computed,
   inject,
   input,
-  linkedSignal,
-  model,
   output,
   signal,
 } from '@angular/core';
 import { PresentationDetails, SlideDetails } from '@client/models';
 import { NotificationService } from '@core/utilities/services/notification.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
+import { Store } from '@core/utilities/services/store';
 
 import { SlideModal } from '../slide-modal/slide-modal';
 
@@ -32,10 +31,11 @@ import { SlideModal } from '../slide-modal/slide-modal';
 export class SlidePanel {
   private readonly slidesMirror = inject(SlidesMirrorService);
   private readonly notifications = inject(NotificationService);
+  private readonly store = inject(Store);
 
   readonly selectedSlideIndex = input(0);
-  presentation = model<PresentationDetails>();
-  slides = linkedSignal<SlideDetails[]>(() => this.presentation()?.slides ?? []);
+  readonly presentation = input<PresentationDetails>();
+  protected readonly slides = computed<SlideDetails[]>(() => this.presentation()?.slides ?? []);
   readonly slideSelected = output<number>();
 
   protected readonly presentationId = computed(() => this.presentation()?.id);
@@ -71,11 +71,9 @@ export class SlidePanel {
       this.slidesMirror.create(presentationId, { backgroundColor }).subscribe({
         next: (slide) => {
           this.savingSlide.set(false);
-          if (!slide) {
-            return;
+          if (slide) {
+            this.slideModalVisible.set(false);
           }
-          this.presentation.update((p) => (p ? { ...p, slides: [...(p.slides ?? []), slide] } : p));
-          this.slideModalVisible.set(false);
         },
         error: () => {
           this.savingSlide.set(false);
@@ -98,13 +96,9 @@ export class SlidePanel {
     this.slidesMirror.update(presentationId, slideId, { backgroundColor }).subscribe({
       next: (slide) => {
         this.savingSlide.set(false);
-        if (!slide) {
-          return;
+        if (slide) {
+          this.slideModalVisible.set(false);
         }
-        this.presentation.update((p) =>
-          p ? { ...p, slides: (p.slides ?? []).map((s) => (s.id === slide.id ? slide : s)) } : p,
-        );
-        this.slideModalVisible.set(false);
       },
       error: () => {
         this.savingSlide.set(false);
@@ -126,7 +120,7 @@ export class SlidePanel {
     const previous = this.slides();
     const reordered = [...previous];
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
-    this.presentation.update((p) => (p ? { ...p, slides: reordered } : p));
+    this.store.setSlidesForPresentationDetails(presentationId, reordered);
 
     if (this.selectedSlideIndex() === event.previousIndex) {
       this.slideSelected.emit(event.currentIndex);
@@ -139,7 +133,7 @@ export class SlidePanel {
       )
       .subscribe({
         error: () => {
-          this.presentation.update((p) => (p ? { ...p, slides: previous } : p));
+          this.store.setSlidesForPresentationDetails(presentationId, previous);
           this.notifications.add({
             severity: 'error',
             summary: 'Échec de la réorganisation',

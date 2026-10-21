@@ -1,5 +1,5 @@
-import { Directive, computed, inject, input, linkedSignal } from '@angular/core';
-import { ElementDetails, UpdateElementRequest } from '@client';
+import { Directive, computed, inject, input } from '@angular/core';
+import { ElementDetails } from '@client';
 
 import { ElementsMirrorService } from '../services/elements-mirror.service';
 import { NotificationService } from '../services/notification.service';
@@ -41,42 +41,30 @@ export abstract class SlideElementBase<TConfig extends object> {
 
   protected readonly isEditable = computed(() => this.mode() === PresentationMode.Edit);
 
-  /** Modifiable localement pour un rendu optimiste : `element()` n'est pas rafraîchi après `update`. */
-  protected readonly config = linkedSignal(() =>
+  protected readonly config = computed(() =>
     parseElementConfig(this.element().configuration, this.defaultConfig),
   );
 
+  /**
+   * Enregistre la configuration fusionnée. Le {@link Store} est mis à jour avant la réponse (et
+   * rétabli en cas d'échec) : `element()`, rendu depuis le Store, suit sans copie locale.
+   */
   protected saveConfig(patch: Partial<TConfig>): void {
     const el = this.element();
     if (!el.id || !el.slideId) {
       return;
     }
 
-    const previous = this.config();
-    const next = { ...previous, ...patch };
-    this.config.set(next);
-
-    const payload: UpdateElementRequest = {
-      x: el.x ?? 0,
-      y: el.y ?? 0,
-      width: el.width ?? 0,
-      height: el.height ?? 0,
-      rotation: el.rotation,
-      zIndex: el.zIndex,
-      locked: el.locked,
-      visible: el.visible,
-      configuration: JSON.stringify(next),
-    };
-
-    this.elementsMirror.update(this.presentationId(), el.slideId, el.id, payload).subscribe({
-      error: () => {
-        this.config.set(previous);
-        this.notifications.add({
-          severity: 'error',
-          summary: 'Échec de l’enregistrement',
-          detail: 'La modification n’a pas pu être enregistrée.',
-        });
-      },
-    });
+    const configuration = JSON.stringify({ ...this.config(), ...patch });
+    this.elementsMirror
+      .patch(this.presentationId(), el.slideId, el.id, { configuration })
+      .subscribe({
+        error: () =>
+          this.notifications.add({
+            severity: 'error',
+            summary: 'Échec de l’enregistrement',
+            detail: 'La modification n’a pas pu être enregistrée.',
+          }),
+      });
   }
 }

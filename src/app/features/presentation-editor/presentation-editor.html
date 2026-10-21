@@ -8,12 +8,12 @@
 
   <main class="editor-workspace">
     <app-slide-panel
-      [(presentation)]="presentation"
+      [presentation]="presentation()"
       [selectedSlideIndex]="selectedSlideIndex()"
       (slideSelected)="selectedSlideIndex.set($event)"
     />
     <app-slide-canvas
-      [(presentation)]="presentation"
+      [presentation]="presentation()"
       [selectedSlideIndex]="selectedSlideIndex()"
       [mode]="editorMode()"
     />

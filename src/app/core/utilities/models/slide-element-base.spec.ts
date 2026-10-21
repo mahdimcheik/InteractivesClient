@@ -54,13 +54,13 @@ describe('SlideElementBase', () => {
     height: 50,
     configuration: '{"content":"Avant"}',
   };
-  const update = vi.fn();
+  const patch = vi.fn();
   const add = vi.fn();
 
   function create() {
     TestBed.configureTestingModule({
       providers: [
-        { provide: ElementsMirrorService, useValue: { update } },
+        { provide: ElementsMirrorService, useValue: { patch } },
         { provide: NotificationService, useValue: { add } },
       ],
     });
@@ -68,40 +68,37 @@ describe('SlideElementBase', () => {
     fixture.componentRef.setInput('element', element);
     fixture.componentRef.setInput('mode', PresentationMode.Edit);
     fixture.componentRef.setInput('presentationId', 'pres-1');
-    return fixture.componentInstance;
+    return fixture;
   }
 
   beforeEach(() => {
-    update.mockReset();
+    patch.mockReset();
     add.mockReset();
   });
 
-  it('enregistre la configuration fusionnée et la garde en local', () => {
-    update.mockReturnValue(of(element));
-    const component = create();
+  it('lit la configuration de l’élément, fusionnée avec les défauts', () => {
+    const fixture = create();
+    expect(fixture.componentInstance.current()).toEqual({ content: 'Avant', role: 'body' });
 
-    component.save({ content: 'Après' });
-
-    expect(component.current()).toEqual({ content: 'Après', role: 'body' });
-    expect(update).toHaveBeenCalledWith(
-      'pres-1',
-      'slide-1',
-      'el-1',
-      expect.objectContaining({
-        x: 10,
-        y: 20,
-        configuration: JSON.stringify({ content: 'Après', role: 'body' }),
-      }),
-    );
+    fixture.componentRef.setInput('element', { ...element, configuration: '{"role":"title"}' });
+    expect(fixture.componentInstance.current()).toEqual({ content: '', role: 'title' });
   });
 
-  it('restaure la configuration précédente et notifie en cas d’échec', () => {
-    update.mockReturnValue(throwError(() => new Error('500')));
-    const component = create();
+  it('envoie la configuration fusionnée par patch', () => {
+    patch.mockReturnValue(of(element));
+    const component = create().componentInstance;
 
     component.save({ content: 'Après' });
 
-    expect(component.current()).toEqual({ content: 'Avant', role: 'body' });
+    expect(patch).toHaveBeenCalledWith('pres-1', 'slide-1', 'el-1', {
+      configuration: JSON.stringify({ content: 'Après', role: 'body' }),
+    });
+  });
+
+  it('notifie en cas d’échec', () => {
+    patch.mockReturnValue(throwError(() => new Error('500')));
+    create().componentInstance.save({ content: 'Après' });
+
     expect(add).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }));
   });
 });

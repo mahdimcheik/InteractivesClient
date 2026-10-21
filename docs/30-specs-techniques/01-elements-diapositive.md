@@ -38,9 +38,14 @@ Tout élément est un composant qui étend `SlideElementBase<TConfig>`
 - `config()` — la configuration typée : le JSON `element.configuration` fusionné avec
   `defaultConfig` (un JSON invalide ou un champ manquant retombe sur les défauts, ce qui garde
   valides les éléments créés avant l'ajout d'un champ) ;
-- `saveConfig(patch)` — applique le patch tout de suite (rendu optimiste), l'enregistre via
-  `ElementsMirrorService.update`, et en cas d'échec restaure l'ancienne configuration et affiche
-  une notification d'erreur.
+- `saveConfig(patch)` — envoie la configuration fusionnée par `ElementsMirrorService.patch`, et
+  affiche une notification d'erreur en cas d'échec.
+
+Le `Store` est la seule source de vérité de l'éditeur : le canvas rend les éléments depuis le
+cache, et `patch` y applique la modification avant la réponse de l'API, puis rétablit les seuls
+champs modifiés en cas d'échec. L'API remplaçant l'élément entier à chaque `PUT`, `patch` part
+toujours de la dernière version en cache — un déplacement et une modification de texte
+simultanés ne s'écrasent donc pas. Aucun composant ne garde sa propre copie d'un élément.
 
 Le composant n'a qu'à déclarer `protected readonly defaultConfig` et son template.
 

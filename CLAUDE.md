@@ -193,17 +193,24 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
 `presentations` / `presentationDetails` cache (upsert/reorder/remove helpers for slides, and
 `setElementsForSlide` etc. for elements nested inside a cached presentation's slides).
 
+**The `Store` is the editor's single source of truth.** `PresentationEditor.presentation` is a
+`computed` over `presentationDetails`; `SlidePanel` and `SlideCanvas` take it as a plain input and
+never hold their own copy — every change goes through a mirror service, which writes the `Store`.
+Element changes go through `ElementsMirrorService.patch(…, changes)`: because the API's `PUT`
+replaces the whole element, `patch` builds the request from the latest cached element, applies it
+to the `Store` before the response, and on failure restores only the fields it changed (so a
+move and a text edit in flight never overwrite each other). Don't call `update` with a payload
+built from a component's copy of the element.
+
 **Slide elements: one contract, one registry.** Full write-up (French) in
 [docs/30-specs-techniques/01-elements-diapositive.md](docs/30-specs-techniques/01-elements-diapositive.md). In short:
 
 - Every element component extends `SlideElementBase<TConfig>` and only declares
   `protected readonly defaultConfig` plus its template. The base provides the `element` / `mode`
-  / `presentationId` inputs, `isEditable()` (mode is `Edit`), `config()` — a `linkedSignal` of the
+  / `presentationId` inputs, `isEditable()` (mode is `Edit`), `config()` — a `computed` of the
   `element.configuration` JSON merged over `defaultConfig` (bad JSON or missing fields fall back
-  to defaults, so old rows stay valid) — and `saveConfig(patch)`, which updates `config`
-  optimistically, persists through `ElementsMirrorService.update`, and rolls back + notifies on
-  error. The optimistic local copy matters: the canvas renders from the editor's `presentation`
-  signal, not the `Store`, so `element()` is not refreshed after an update.
+  to defaults, so old rows stay valid) — and `saveConfig(patch)`, which sends the merged
+  configuration through `ElementsMirrorService.patch` and notifies on error.
 - Rendering must depend only on `config()` + `mode()`, with no edit affordances outside `Edit` —
   that's what lets participants render the same components in `Client` mode.
 - `slide-canvas/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →

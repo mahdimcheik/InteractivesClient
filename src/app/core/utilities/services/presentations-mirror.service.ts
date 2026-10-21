@@ -66,7 +66,16 @@ export class PresentationsMirrorService {
   ): Observable<PresentationDetails | undefined> {
     return this.api.presentationsPresentationIdPut(presentationId, payload).pipe(
       map((res) => res.data),
-      tap((details) => details && this.store.upsertPresentationDetails(details)),
+      tap((details) => {
+        if (!details) {
+          return;
+        }
+        // Seuls les champs de la présentation changent : on garde les diapositives en cache.
+        const cached = this.store.presentationDetails().get(presentationId);
+        this.store.upsertPresentationDetails(
+          cached ? { ...cached, ...details, slides: cached.slides } : details,
+        );
+      }),
     );
   }
 

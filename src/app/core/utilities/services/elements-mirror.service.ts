@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { map, Observable, of, tap } from 'rxjs';
+import { catchError, defer, map, Observable, of, tap, throwError } from 'rxjs';
 
 import {
   CreateElementRequest,
@@ -11,6 +11,28 @@ import {
 
 import { CacheOptions } from './presentations-mirror.service';
 import { Store } from './store';
+
+/** Champs modifiables d'un élément (le type est figé à la création). */
+export type ElementChanges = Partial<
+  Pick<
+    ElementDetails,
+    'x' | 'y' | 'width' | 'height' | 'rotation' | 'zIndex' | 'locked' | 'visible' | 'configuration'
+  >
+>;
+
+function toUpdateRequest(element: ElementDetails): UpdateElementRequest {
+  return {
+    x: element.x ?? 0,
+    y: element.y ?? 0,
+    width: element.width ?? 0,
+    height: element.height ?? 0,
+    rotation: element.rotation ?? 0,
+    zIndex: element.zIndex ?? 0,
+    locked: element.locked ?? false,
+    visible: element.visible ?? true,
+    configuration: element.configuration ?? '{}',
+  };
+}
 
 /**
  * Miroir de `ElementsService` (client généré `src/client`) : noms lisibles et
@@ -48,11 +70,7 @@ export class ElementsMirrorService {
     elementId: string,
     options?: CacheOptions,
   ): Observable<ElementDetails | undefined> {
-    const cached = this.store
-      .presentationDetails()
-      .get(presentationId)
-      ?.slides?.find((s) => s.id === slideId)
-      ?.elements?.find((e) => e.id === elementId);
+    const cached = this.findCached(presentationId, slideId, elementId);
     if (cached && !options?.force) {
       return of(cached);
     }
@@ -101,6 +119,53 @@ export class ElementsMirrorService {
       );
   }
 
+  /**
+   * Modifie une partie d'un élément en cache : appliqué tout de suite dans le {@link Store}, puis
+   * envoyé. L'API remplaçant l'élément entier, la requête part toujours de la dernière version en
+   * cache. En cas d'échec, seuls les champs modifiés reprennent leur valeur précédente, pour ne
+   * pas défaire une autre modification arrivée entre-temps. La réponse n'est pas réécrite dans le
+   * cache : une réponse lente écraserait une modification plus récente.
+   */
+  patch(
+    presentationId: string,
+    slideId: string,
+    elementId: string,
+    changes: ElementChanges,
+  ): Observable<ElementDetails | undefined> {
+    return defer(() => {
+      const current = this.findCached(presentationId, slideId, elementId);
+      if (!current) {
+        return throwError(() => new Error(`Élément ${elementId} absent du cache.`));
+      }
+
+      const previous: ElementChanges = {};
+      for (const key of Object.keys(changes) as (keyof ElementChanges)[]) {
+        Object.assign(previous, { [key]: current[key] });
+      }
+
+      const next = { ...current, ...changes };
+      this.store.upsertElementInSlide(presentationId, slideId, next);
+
+      return this.api
+        .presentationsPresentationIdSlidesSlideIdElementsElementIdPut(
+          presentationId,
+          slideId,
+          elementId,
+          toUpdateRequest(next),
+        )
+        .pipe(
+          map((res) => res.data),
+          catchError((err: unknown) => {
+            const latest = this.findCached(presentationId, slideId, elementId);
+            if (latest) {
+              this.store.upsertElementInSlide(presentationId, slideId, { ...latest, ...previous });
+            }
+            return throwError(() => err);
+          }),
+        );
+    });
+  }
+
   remove(presentationId: string, slideId: string, elementId: string): Observable<ObjectResponse> {
     return this.api
       .presentationsPresentationIdSlidesSlideIdElementsElementIdDelete(
@@ -109,5 +174,17 @@ export class ElementsMirrorService {
         elementId,
       )
       .pipe(tap(() => this.store.removeElementFromSlide(presentationId, slideId, elementId)));
+  }
+
+  private findCached(
+    presentationId: string,
+    slideId: string,
+    elementId: string,
+  ): ElementDetails | undefined {
+    return this.store
+      .presentationDetails()
+      .get(presentationId)
+      ?.slides?.find((s) => s.id === slideId)
+      ?.elements?.find((e) => e.id === elementId);
   }
 }
