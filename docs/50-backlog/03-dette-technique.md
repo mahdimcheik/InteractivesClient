@@ -22,8 +22,6 @@
 - **C2 — Restes de l'authentification simulée.** `core/auth/` n'est importé nulle part ;
   `environment.useMockAuth` ne sert plus qu'à `ContactService`, qui simule l'envoi du
   formulaire de contact en développement. → Lot 2.
-- **C3 — Maquettes HTML dans `src/app/design-dev/`.** Références visuelles, ni importées ni
-  construites : leur place est hors du code de l'application. → Lot 2.
 - **C4 — Deux sources de vérité dans l'éditeur.** Le canvas rend depuis le signal
   `presentation` de `PresentationEditor`, alors que les services miroir mettent à jour le
   `Store`. D'où la copie locale optimiste de `SlideElementBase.config` et les mises à jour

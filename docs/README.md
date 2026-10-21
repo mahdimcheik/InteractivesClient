@@ -9,6 +9,11 @@ Le modèle de données côté serveur est décrit dans le dépôt `InteractivesA
 
 ## Index
 
+### 20 — Spécifications fonctionnelles
+
+- [Maquettes](20-specs-fonctionnelles/maquettes/) — pages HTML statiques (accueil, éditeur,
+  inscription) servant de référence visuelle ; ni importées ni construites.
+
 ### 30 — Spécifications techniques
 
 - [Éléments de diapositive](30-specs-techniques/01-elements-diapositive.md) — contrat commun,

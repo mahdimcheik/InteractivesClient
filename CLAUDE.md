@@ -234,8 +234,8 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   underlying element (see `fieldHtmlAttrs()` in `configurable-form.component.ts`) — but
   `ColorPickerComponent` (`[ejs-colorpicker]`) does not; it enhances a real `<input>` directly, so
   bind `id`/`aria-*` straight onto that `<input>` instead.
-- `src/app/design-dev/*.html` are static HTML design mockups (home, editor, sign-up) used as
-  visual references; nothing imports or builds them. `src/app/core/api/` is currently empty.
+- `docs/20-specs-fonctionnelles/maquettes/*.html` are static HTML design mockups (home, editor,
+  sign-up) used as visual references; nothing imports or builds them.
 - The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
 - `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) is vestigial — nothing imports it. Real
   auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").
