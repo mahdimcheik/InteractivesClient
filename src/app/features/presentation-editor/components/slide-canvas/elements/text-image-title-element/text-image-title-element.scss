@@ -1,0 +1,40 @@
+@layer app {
+  :host {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'title title'
+      'body image';
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+
+    &.image-left {
+      grid-template-areas:
+        'title title'
+        'image body';
+    }
+  }
+
+  .title {
+    grid-area: title;
+    height: auto;
+  }
+
+  .body {
+    grid-area: body;
+    min-height: 0;
+  }
+
+  .image {
+    grid-area: image;
+    min-height: 0;
+  }
+}

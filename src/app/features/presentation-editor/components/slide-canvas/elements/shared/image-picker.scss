@@ -1,0 +1,48 @@
+@layer app {
+  :host {
+    display: block;
+  }
+
+  .image-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed var(--app-border-color);
+    border-radius: 0.5rem;
+    background: var(--app-surface-subtle);
+    color: var(--app-text-muted-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-within {
+      border-color: var(--app-primary-color);
+      color: var(--app-primary-color);
+    }
+
+    &:focus-within {
+      outline: 2px solid var(--app-primary-color);
+      outline-offset: 2px;
+    }
+
+    &.is-busy {
+      cursor: progress;
+    }
+
+    &.is-compact {
+      flex-direction: row;
+      width: auto;
+      height: auto;
+      padding: 0.25rem 0.625rem;
+      border-style: solid;
+      border-width: 1px;
+      background: var(--app-background);
+      color: var(--app-text-color);
+      font-size: 0.75rem;
+    }
+  }
+}

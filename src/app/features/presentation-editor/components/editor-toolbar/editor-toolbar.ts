@@ -1,6 +1,7 @@
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ElementTypeEnum } from '@client';
+
+import { ELEMENT_PRESETS } from '../slide-canvas/elements/element-registry';
 
 @Component({
   selector: 'app-editor-toolbar',
@@ -11,7 +12,7 @@ import { ElementTypeEnum } from '@client';
 })
 export class EditorToolbar {
   protected readonly fonts = ['Inter', 'Roboto', 'Open Sans'];
-  protected readonly ElementTypeEnum = ElementTypeEnum;
+  protected readonly presets = ELEMENT_PRESETS;
 
   /** La palette est une source de glisser-déposer pure ; rien ne peut y être déposé. */
   protected readonly blockDrop = () => false;

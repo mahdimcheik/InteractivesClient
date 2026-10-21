@@ -10,12 +10,12 @@ import {
   model,
   viewChild,
 } from '@angular/core';
-import { ElementTypeEnum, PresentationDetails } from '@client';
+import { PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
 import { ElementsMirrorService } from '@core/utilities/services/elements-mirror.service';
 import { NotificationService } from '@core/utilities/services/notification.service';
 
-import { ELEMENT_COMPONENTS, ELEMENT_DEFAULTS } from './elements/element-registry';
+import { ELEMENT_COMPONENTS, findElementPreset } from './elements/element-registry';
 
 @Component({
   selector: 'app-slide-canvas',
@@ -40,12 +40,12 @@ export class SlideCanvas {
   );
   protected readonly elementComponents = ELEMENT_COMPONENTS;
 
-  protected onElementDropped(event: CdkDragDrop<unknown, unknown, ElementTypeEnum>): void {
+  protected onElementDropped(event: CdkDragDrop<unknown, unknown, string>): void {
     const presentationId = this.presentationId();
     const slide = this.slide();
     const slideRef = this.slideRef();
-    const defaults = ELEMENT_DEFAULTS[event.item.data];
-    if (!presentationId || !slide?.id || !slideRef || !defaults) {
+    const preset = findElementPreset(event.item.data);
+    if (!presentationId || !slide?.id || !slideRef || !preset) {
       return;
     }
 
@@ -55,13 +55,13 @@ export class SlideCanvas {
 
     this.elementsMirror
       .create(presentationId, slide.id, {
-        type: event.item.data,
+        type: preset.type,
         x,
         y,
-        width: defaults.width,
-        height: defaults.height,
+        width: preset.size.width,
+        height: preset.size.height,
         zIndex: slide.elements?.length ?? 0,
-        configuration: defaults.configuration,
+        configuration: preset.configuration,
       })
       .subscribe({
         next: (created) => {

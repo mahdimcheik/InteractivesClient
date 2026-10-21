@@ -15,18 +15,18 @@
     [cdkDropListConnectedTo]="['slideCanvasDropList']"
     [cdkDropListEnterPredicate]="blockDrop"
   >
-    <button
-      type="button"
-      class="tool-button"
-      title="Zone de texte"
-      cdkDrag
-      [cdkDragData]="ElementTypeEnum.Text"
-    >
-      <i class="pi pi-text" aria-hidden="true"></i>
-    </button>
-    <button type="button" class="tool-button" title="Image">
-      <i class="pi pi-image" aria-hidden="true"></i>
-    </button>
+    @for (preset of presets; track preset.id) {
+      <button
+        type="button"
+        class="tool-button"
+        [title]="preset.label"
+        [attr.aria-label]="preset.label"
+        cdkDrag
+        [cdkDragData]="preset.id"
+      >
+        <i class="pi" [class]="preset.icon" aria-hidden="true"></i>
+      </button>
+    }
     <button type="button" class="tool-button" title="Formes">
       <i class="pi pi-objects-column" aria-hidden="true"></i>
     </button>
