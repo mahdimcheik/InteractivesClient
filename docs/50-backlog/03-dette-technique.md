@@ -24,11 +24,6 @@ _Aucun écart ouvert._
 
 ## Interface
 
-- **I1 — Clé de thème désalignée.** Le script avant première peinture de `src/index.html` lit
-  `bp_theme` ; `ThemeService` écrit `environment.storagePrefix + 'theme'`, soit
-  `interactives_theme` en développement (`bp_` en production, reste du gabarit d'origine). La
-  préférence n'est donc pas vue avant la première peinture en développement. Aligner les
-  préfixes. → Lot 2.
 - **I2 — Pas de thème sombre pour Syncfusion.** Le thème sombre utilise les mêmes sélecteurs
   que le clair : il faut une bascule de feuille de style pilotée par `ThemeService`. → Lot 8.
 

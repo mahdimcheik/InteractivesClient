@@ -8,7 +8,7 @@ export type ResolvedTheme = 'light' | 'dark';
 
 const STORAGE_KEY = 'theme';
 
-/** Doit rester aligné avec `darkModeSelector` dans `app.config.ts` et le script inline de `index.html`. */
+/** Doit rester aligné avec le script inline de `index.html` et `@custom-variant dark` de `styles.scss`. */
 const DARK_CLASS = 'app-dark';
 
 /**

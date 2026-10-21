@@ -134,11 +134,9 @@ the same class `ThemeService` toggles, and a `@theme { --color-surface-*: ... }`
 app's existing `surface-*` class naming (inherited from PrimeNG's old semantic scale) to real
 color values.
 
-**Known mismatch:** the inline script hard-codes `bp_theme`, but `ThemeService` writes
-`environment.storagePrefix` + `theme`, and the prefix differs per environment (`interactives_` in
-`environment.ts`, `bp_` in `environment.production.ts`). So the pre-paint script only sees the
-stored preference in production builds; in dev it always misses. Fix by aligning the prefixes (or
-the key in `index.html`).
+The inline script hard-codes the key `interactives_theme`, which must equal
+`environment.storagePrefix + 'theme'` (what `ThemeService` writes through `StorageService`); both
+environments use the `interactives_` prefix. `theme-key.spec.ts` fails if they drift apart.
 
 **Never hard-code a color** — use the `--app-*` tokens defined in `:root`/`.app-dark` at the top
 of `styles.scss` (`--app-text-color`, `--app-background`, `--app-border-color`,

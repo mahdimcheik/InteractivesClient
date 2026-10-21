@@ -29,16 +29,19 @@ texte alternatif) et Titre + texte + image (`TextImageTitle`). Briques partagée
 migration) ; `ElementConfigurationValidator` attend `url` pour une image au lieu de `assetId`, qui
 faisait refuser toute création d'élément Image.
 
-## Lot 2 — Filet de sécurité
+## Lot 2 — Filet de sécurité — **livré**
 
 Avant d'empiler les lots suivants, de quoi détecter les régressions.
 
-- Réparer `dashboard-layout.spec.ts`, qui empêche toute exécution de `npx ng test` (O2).
-- ESLint (`angular-eslint`) et vérification Prettier ; intégration continue sur chaque demande
-  de fusion : lint, format, tests, build `production` (O1).
-- README aligné sur les scripts réels (O3).
-- Ménage : intercepteur de jeton marqué obsolète (C1), `core/auth` et `useMockAuth` (C2),
-  maquettes `design-dev` hors de `src/app` (C3), clé de thème avant première peinture (I1).
+- `dashboard-layout.spec.ts` réécrit ; `vitest-base.config.ts` rend testables les composants
+  Syncfusion (O2). Au passage : le focus revient au bouton du menu mobile après `Échap`.
+- ESLint (`angular-eslint`), vérification Prettier, intégration continue GitHub Actions sur
+  chaque demande de fusion : lint, format, tests, build `production` (O1).
+- README réécrit sur l'état réel du projet (O3).
+- Jeton d'accès réservé aux requêtes vers l'API (C1) ; `core/auth` supprimé, `useMockAuth`
+  devenu `simulateContact` (C2) ; maquettes déplacées dans `docs/20-specs-fonctionnelles/`
+  (C3) ; clé de thème alignée, vérifiée par un test (I1).
+- Découvert : l'API n'a pas de route `/contact` (C5, lot 8).
 
 ## Lot 3 — Manipuler les éléments
 
