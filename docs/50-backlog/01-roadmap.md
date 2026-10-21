@@ -121,6 +121,7 @@ la configuration servie en mode participant doit en être expurgée.
 - Thème Syncfusion chargé par route, sous le budget initial (R1) ; thème sombre Syncfusion
   branché sur `ThemeService` (I2).
 - Session : plus de jeton de renouvellement en `localStorage` (S1).
+- Formulaire de contact réellement envoyé (C5) — **côté API :** route `POST /contact`.
 
 ## Plus tard (non ordonné)
 

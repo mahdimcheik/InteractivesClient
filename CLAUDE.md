@@ -159,7 +159,7 @@ which is not yet implemented.
 
 ### Two code styles coexist
 
-- `src/app/{features,layout}` and `core/auth`, `core/utilities` — the house style described in
+- `src/app/{features,layout}` and `core/utilities` — the house style described in
   [.claude/CLAUDE.md](.claude/CLAUDE.md): 2-space indent, `OnPush`, `protected readonly` members,
   no redundant `standalone: true`, `app-` selector prefix.
 - `src/app/core/components/*` — an imported Syncfusion component library: 4-space indent, `bp-`
@@ -243,10 +243,9 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   bind `id`/`aria-*` straight onto that `<input>` instead.
 - `docs/20-specs-fonctionnelles/maquettes/*.html` are static HTML design mockups (home, editor,
   sign-up) used as visual references; nothing imports or builds them.
-- `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) is vestigial — nothing imports it. Real
-  auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").
-  `environment.useMockAuth` no longer affects auth, but `ContactService` still reads it to fake
-  the contact-form submission (it's `true` in `environment.ts`, so dev never hits `/contact`).
+- `environment.simulateContact` (`true` in dev) makes `ContactService` fake the contact-form
+  submission: `InteractivesAPI` has no `/contact` route yet, so in production the form fails
+  (debt C5).
 
 # Services
 

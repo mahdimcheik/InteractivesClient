@@ -14,8 +14,7 @@ export class ContactService {
   private readonly http = inject(HttpClient);
 
   send(payload: ContactMessage): Observable<void> {
-    if (environment.useMockAuth) {
-      // Pas d'API en mode démo : on simule l'envoi.
+    if (environment.simulateContact) {
       console.info('[ContactService] message simulé', payload);
       return of(undefined as void).pipe(delay(400));
     }

@@ -13,13 +13,14 @@ _Aucun écart ouvert._
 
 ## Code
 
-- **C2 — Restes de l'authentification simulée.** `core/auth/` n'est importé nulle part ;
-  `environment.useMockAuth` ne sert plus qu'à `ContactService`, qui simule l'envoi du
-  formulaire de contact en développement. → Lot 2.
 - **C4 — Deux sources de vérité dans l'éditeur.** Le canvas rend depuis le signal
   `presentation` de `PresentationEditor`, alors que les services miroir mettent à jour le
   `Store`. D'où la copie locale optimiste de `SlideElementBase.config` et les mises à jour
   manuelles du modèle dans `SlideCanvas`. À unifier quand l'éditeur grandit (lots 3 et 4).
+
+- **C5 — Formulaire de contact sans route API.** `ContactService` poste sur
+  `${apiUrl}/contact`, qui n'existe pas dans `InteractivesAPI` : en production
+  (`simulateContact: false`) l'envoi échoue ; en développement il est simulé. → Lot 8.
 
 ## Interface
 
