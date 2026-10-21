@@ -213,6 +213,10 @@ built from a component's copy of the element.
   configuration through `ElementsMirrorService.patch` and notifies on error.
 - Rendering must depend only on `config()` + `mode()`, with no edit affordances outside `Edit` —
   that's what lets participants render the same components in `Client` mode.
+- Geometry lives in a **logical 1280 × 720 frame** (`core/utilities/models/slide-geometry.ts`),
+  scaled on screen by `SlideStage` (`components/slide-stage/`, `transform: scale`, exposes
+  `--slide-scale` and `toSlidePoint`). Size slide content in logical `px`, never `rem`; edit-only
+  controls divide their sizes by `var(--slide-scale)` to stay readable.
 - `slide-canvas/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →
   component; `ELEMENT_PRESETS` is the editor palette (label, primeicons class, type, size,
   initial configuration JSON). Palette ≠ types: "Titre" and "Zone de texte" are both `Text`

@@ -3,19 +3,22 @@
     display: block;
   }
 
+  // Contrôle d'édition : tailles divisées par l'échelle de la scène, lisibles à l'écran.
   .image-picker {
+    --s: var(--slide-scale, 1);
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: calc(0.5rem / var(--s));
     width: 100%;
     height: 100%;
-    border: 2px dashed var(--app-border-color);
-    border-radius: 0.5rem;
+    border: calc(2px / var(--s)) dashed var(--app-border-color);
+    border-radius: calc(0.5rem / var(--s));
     background: var(--app-surface-subtle);
     color: var(--app-text-muted-color);
-    font-size: 0.875rem;
+    font-size: calc(0.875rem / var(--s));
     cursor: pointer;
 
     &:hover,
@@ -25,8 +28,8 @@
     }
 
     &:focus-within {
-      outline: 2px solid var(--app-primary-color);
-      outline-offset: 2px;
+      outline: calc(2px / var(--s)) solid var(--app-primary-color);
+      outline-offset: calc(2px / var(--s));
     }
 
     &.is-busy {
@@ -37,12 +40,12 @@
       flex-direction: row;
       width: auto;
       height: auto;
-      padding: 0.25rem 0.625rem;
+      padding: calc(0.25rem / var(--s)) calc(0.625rem / var(--s));
       border-style: solid;
-      border-width: 1px;
+      border-width: calc(1px / var(--s));
       background: var(--app-background);
       color: var(--app-text-color);
-      font-size: 0.75rem;
+      font-size: calc(0.75rem / var(--s));
     }
   }
 }

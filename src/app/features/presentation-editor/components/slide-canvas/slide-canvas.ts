@@ -3,7 +3,6 @@ import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   computed,
   inject,
   input,
@@ -11,14 +10,16 @@ import {
 } from '@angular/core';
 import { PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
+import { clampRect } from '@core/utilities/models/slide-geometry';
 import { ElementsMirrorService } from '@core/utilities/services/elements-mirror.service';
 import { NotificationService } from '@core/utilities/services/notification.service';
 
+import { SlideStage } from '../slide-stage/slide-stage';
 import { ELEMENT_COMPONENTS, findElementPreset } from './elements/element-registry';
 
 @Component({
   selector: 'app-slide-canvas',
-  imports: [CdkDropList, NgComponentOutlet],
+  imports: [CdkDropList, NgComponentOutlet, SlideStage],
   templateUrl: './slide-canvas.html',
   styleUrl: './slide-canvas.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,7 @@ export class SlideCanvas {
   readonly selectedSlideIndex = input(0);
   readonly mode = input<PresentationMode>(PresentationMode.Edit);
 
-  private readonly slideRef = viewChild<ElementRef<HTMLDivElement>>('slideRef');
+  private readonly stage = viewChild(SlideStage);
 
   protected readonly presentationId = computed(() => this.presentation()?.id);
   protected readonly slide = computed(
@@ -42,23 +43,24 @@ export class SlideCanvas {
   protected onElementDropped(event: CdkDragDrop<unknown, unknown, string>): void {
     const presentationId = this.presentationId();
     const slide = this.slide();
-    const slideRef = this.slideRef();
+    const stage = this.stage();
     const preset = findElementPreset(event.item.data);
-    if (!presentationId || !slide?.id || !slideRef || !preset) {
+    if (!presentationId || !slide?.id || !stage || !preset) {
       return;
     }
 
-    const rect = slideRef.nativeElement.getBoundingClientRect();
-    const x = Math.round(event.dropPoint.x - rect.left);
-    const y = Math.round(event.dropPoint.y - rect.top);
+    // Centré sur le point de dépôt, puis ramené dans la diapositive.
+    const point = stage.toSlidePoint(event.dropPoint.x, event.dropPoint.y);
+    const rect = clampRect({
+      x: point.x - preset.size.width / 2,
+      y: point.y - preset.size.height / 2,
+      ...preset.size,
+    });
 
     this.elementsMirror
       .create(presentationId, slide.id, {
         type: preset.type,
-        x,
-        y,
-        width: preset.size.width,
-        height: preset.size.height,
+        ...rect,
         zIndex: slide.elements?.length ?? 0,
         configuration: preset.configuration,
       })

@@ -27,6 +27,25 @@ Un même composant d'élément est affiché dans plusieurs contextes, donnés pa
 la synchronisation en direct simple : l'hôte n'a qu'à diffuser l'index de la diapositive courante,
 chaque client rend les mêmes composants en mode `Client`.
 
+## Le repère de la diapositive
+
+Positions et tailles (`x`, `y`, `width`, `height`) sont stockées dans un repère logique de
+**1280 × 720** (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
+en pixels d'écran. `SlideStage` (`components/slide-stage/`) occupe la largeur disponible au
+format 16:9 et met son contenu à l'échelle (`transform: scale`) ; `toSlidePoint` convertit un
+point de l'écran en coordonnées logiques. Une diapositive se rend ainsi à l'identique dans
+l'éditeur, en présentation, chez chaque participant et en miniature.
+
+Conséquences pour un élément :
+
+- le **contenu** est dimensionné en px logiques (`font-size: 32px`), jamais en `rem` : il suit
+  l'échelle et ne dépend pas de la taille de police du navigateur du participant ;
+- les **contrôles d'édition** (choix d'image, texte alternatif) divisent leurs tailles par
+  `var(--slide-scale)`, posée par `SlideStage`, pour rester lisibles à l'écran.
+
+Les éléments créés avant ce repère (diapositive de 800 px de large) apparaissent 1,6 fois plus
+petits : aucune migration, ce n'étaient que des données de développement.
+
 ## Le contrat commun : `SlideElementBase<TConfig>`
 
 Tout élément est un composant qui étend `SlideElementBase<TConfig>`

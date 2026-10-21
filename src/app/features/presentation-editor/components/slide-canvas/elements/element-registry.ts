@@ -27,6 +27,7 @@ export interface ElementPreset {
   /** Classe primeicons. */
   icon: string;
   type: ElementTypeEnum;
+  /** Taille initiale, en unités logiques de diapositive (`SLIDE_WIDTH` × `SLIDE_HEIGHT`). */
   size: { width: number; height: number };
   configuration: string;
 }
@@ -37,7 +38,7 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     label: 'Titre',
     icon: 'pi-heading',
     type: ElementTypeEnum.Text,
-    size: { width: 560, height: 80 },
+    size: { width: 896, height: 128 },
     configuration: JSON.stringify({
       ...TEXT_DEFAULT_CONFIG,
       content: 'Titre',
@@ -49,7 +50,7 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     label: 'Zone de texte',
     icon: 'pi-align-left',
     type: ElementTypeEnum.Text,
-    size: { width: 320, height: 120 },
+    size: { width: 512, height: 192 },
     configuration: JSON.stringify({
       ...TEXT_DEFAULT_CONFIG,
       content: 'Nouveau texte',
@@ -60,7 +61,7 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     label: 'Image',
     icon: 'pi-image',
     type: ElementTypeEnum.Image,
-    size: { width: 320, height: 200 },
+    size: { width: 512, height: 320 },
     configuration: JSON.stringify(IMAGE_DEFAULT_CONFIG satisfies ImageConfig),
   },
   {
@@ -68,7 +69,7 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     label: 'Titre, texte et image',
     icon: 'pi-th-large',
     type: ElementTypeEnum.TextImageTitle,
-    size: { width: 720, height: 360 },
+    size: { width: 1152, height: 576 },
     configuration: JSON.stringify(TEXT_IMAGE_TITLE_DEFAULT_CONFIG satisfies TextImageTitleConfig),
   },
 ];

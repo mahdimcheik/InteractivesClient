@@ -2,30 +2,35 @@
   <div class="canvas-scroll-area">
     <div
       class="slide"
-      #slideRef
       cdkDropList
       id="slideCanvasDropList"
       [cdkDropListConnectedTo]="['elementPalette']"
       (cdkDropListDropped)="onElementDropped($event)"
     >
-      @if (!slide()?.elements?.length) {
-        <p class="slide-empty-hint">Glissez un élément depuis la barre d'outils</p>
-      }
-      @for (element of slide()?.elements ?? []; track element.id) {
-        <div
-          class="slide-element"
-          [style.left.px]="element.x"
-          [style.top.px]="element.y"
-          [style.width.px]="element.width"
-          [style.height.px]="element.height"
-          [style.zIndex]="element.zIndex ?? 0"
-        >
-          <ng-container
-            [ngComponentOutlet]="elementComponents[element.type!] ?? null"
-            [ngComponentOutletInputs]="{ element, mode: mode(), presentationId: presentationId() }"
-          />
-        </div>
-      }
+      <app-slide-stage>
+        @if (!slide()?.elements?.length) {
+          <p class="slide-empty-hint">Glissez un élément depuis la barre d'outils</p>
+        }
+        @for (element of slide()?.elements ?? []; track element.id) {
+          <div
+            class="slide-element"
+            [style.left.px]="element.x"
+            [style.top.px]="element.y"
+            [style.width.px]="element.width"
+            [style.height.px]="element.height"
+            [style.zIndex]="element.zIndex ?? 0"
+          >
+            <ng-container
+              [ngComponentOutlet]="elementComponents[element.type!] ?? null"
+              [ngComponentOutletInputs]="{
+                element,
+                mode: mode(),
+                presentationId: presentationId(),
+              }"
+            />
+          </div>
+        }
+      </app-slide-stage>
     </div>
   </div>
 
