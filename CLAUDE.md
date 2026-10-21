@@ -236,9 +236,18 @@ built from a component's copy of the element.
 - The API's `ElementConfigurationValidator` (`InteractivesAPI`) rejects with 400 any
   configuration missing its minimal fields (`content` for `Text`, `url` for `Image`, `title` /
   `body` / `image.url` for `TextImageTitle`) — keep new config fields compatible with it.
+- Slide content has its **own colors**, independent of the app theme (decided in lot 4): defaults
+  in `core/utilities/models/slide-style.ts` (`SLIDE_DEFAULT_BACKGROUND`,
+  `SLIDE_DEFAULT_TEXT_COLOR`, `SLIDE_FONTS`, three generic stacks stored by key). Never use
+  `--app-*` tokens for slide content; edit controls keep using them.
+- `PropertiesPanel` follows the selection (lifted into `PresentationEditor`, two-way bound to
+  `SlideCanvas.selectedElementId`): slide background with nothing selected; otherwise common
+  position/size, then the type's own panel from `ELEMENT_PANELS`. Panels extend
+  `ElementConfigEditor<TConfig>` — the base `SlideElementBase` itself extends, providing
+  `element`/`presentationId`, `config()` and `saveConfig()`.
 - Adding an element: (new API type → backend + `gen-api`), then `elements/<name>/` with
-  `<name>.model.ts` (config interface + `…_DEFAULT_CONFIG`) and the component, then a
-  `ELEMENT_COMPONENTS` entry and a preset. `element-registry.spec.ts` checks every preset has a
+  `<name>.model.ts` (config interface + `…_DEFAULT_CONFIG`), the component, optionally a
+  `<name>-panel.ts`, then `ELEMENT_COMPONENTS` / `ELEMENT_PANELS` entries and a preset. `element-registry.spec.ts` checks every preset has a
   component.
 
 ## Gotchas

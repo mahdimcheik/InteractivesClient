@@ -11,7 +11,6 @@ import { ELEMENT_PRESETS } from '../slide-canvas/elements/element-registry';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorToolbar {
-  protected readonly fonts = ['Inter', 'Roboto', 'Open Sans'];
   protected readonly presets = ELEMENT_PRESETS;
 
   /** La palette est une source de glisser-déposer pure ; rien ne peut y être déposé. */

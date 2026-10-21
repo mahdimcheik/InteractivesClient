@@ -16,13 +16,10 @@
     overflow: hidden;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    color: var(--app-text-color);
-    font-size: 32px;
+    // Police, taille, couleur, graisse et alignement viennent de `appearance` (styles en ligne).
     line-height: 1.4;
 
     &.is-heading {
-      font-size: 64px;
-      font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
@@ -38,7 +35,7 @@
 
       &:empty::before {
         content: attr(data-placeholder);
-        color: var(--app-text-muted-color);
+        color: var(--slide-placeholder-color);
       }
     }
   }

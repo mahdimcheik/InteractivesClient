@@ -55,6 +55,10 @@
     --app-accent-background: #ede9fe;
     --app-success-color: #16a34a;
     --app-success-background: #f0fdf4;
+
+    // Contenu des diapositives : volontairement absent de `.app-dark`. Une diapositive a ses
+    // propres couleurs (`slide-style.ts`) et se rend à l'identique quel que soit le thème.
+    --slide-placeholder-color: #6b7280;
   }
 
   .app-dark {

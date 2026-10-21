@@ -6,12 +6,13 @@ import {
   computed,
   inject,
   input,
-  linkedSignal,
+  model,
   viewChild,
 } from '@angular/core';
 import { ElementDetails, PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
 import { SlideRect, clampRect } from '@core/utilities/models/slide-geometry';
+import { SLIDE_DEFAULT_BACKGROUND } from '@core/utilities/models/slide-style';
 import {
   ElementChanges,
   ElementsMirrorService,
@@ -49,11 +50,11 @@ export class SlideCanvas {
     const elements = this.slide()?.elements ?? [];
     return this.isEditMode() ? elements : elements.filter((e) => e.visible !== false);
   });
-  /** Effacée quand on change de diapositive ou de mode. */
-  protected readonly selectedElementId = linkedSignal<string, string | null>({
-    source: () => `${this.slide()?.id}|${this.mode()}`,
-    computation: () => null,
-  });
+  /** Pilotée par l'éditeur, qui la partage avec le panneau de propriétés. */
+  readonly selectedElementId = model<string | null>(null);
+  protected readonly slideBackground = computed(
+    () => this.slide()?.backgroundColor || SLIDE_DEFAULT_BACKGROUND,
+  );
   protected readonly elementComponents = ELEMENT_COMPONENTS;
   protected readonly elementLabel = elementLabel;
 

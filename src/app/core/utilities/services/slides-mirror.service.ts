@@ -71,7 +71,20 @@ export class SlidesMirrorService {
       .presentationsPresentationIdSlidesSlideIdPut(presentationId, slideId, payload)
       .pipe(
         map((res) => res.data),
-        tap((slide) => slide && this.store.upsertSlideInPresentationDetails(presentationId, slide)),
+        tap((slide) => {
+          if (!slide) {
+            return;
+          }
+          // Seuls les champs de la diapositive changent : on garde ses éléments en cache.
+          const cached = this.store
+            .presentationDetails()
+            .get(presentationId)
+            ?.slides?.find((s) => s.id === slideId);
+          this.store.upsertSlideInPresentationDetails(
+            presentationId,
+            cached ? { ...cached, ...slide, elements: cached.elements } : slide,
+          );
+        }),
       );
   }
 

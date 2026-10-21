@@ -5,6 +5,7 @@ import {
   computed,
   effect,
   inject,
+  linkedSignal,
   signal,
   untracked,
 } from '@angular/core';
@@ -47,6 +48,7 @@ export class PresentationEditor {
 
   protected readonly selectedSlideIndex = signal(0);
   editorMode = signal<PresentationMode>(PresentationMode.Edit);
+  protected readonly editMode = PresentationMode.Edit;
   protected readonly isNameModalOpen = signal(false);
   protected readonly savingName = signal(false);
 
@@ -65,6 +67,19 @@ export class PresentationEditor {
     return id && id !== NEW_PRESENTATION_ID
       ? this.presentationsMirror.presentationDetails().get(id)
       : undefined;
+  });
+
+  protected readonly selectedSlide = computed(
+    () => this.presentation()?.slides?.[this.selectedSlideIndex()],
+  );
+  /** Effacée quand on change de diapositive ou de mode. */
+  protected readonly selectedElementId = linkedSignal<string, string | null>({
+    source: () => `${this.selectedSlide()?.id}|${this.editorMode()}`,
+    computation: () => null,
+  });
+  protected readonly selectedElement = computed(() => {
+    const id = this.selectedElementId();
+    return id ? this.selectedSlide()?.elements?.find((e) => e.id === id) : undefined;
   });
 
   protected readonly presentationTitle = computed(() => {

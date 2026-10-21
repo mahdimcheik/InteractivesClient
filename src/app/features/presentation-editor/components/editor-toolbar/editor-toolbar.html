@@ -32,35 +32,6 @@
     </button>
   </div>
 
-  <div class="tool-group font-group">
-    <select class="font-select" aria-label="Police de caractère">
-      @for (font of fonts; track font) {
-        <option>{{ font }}</option>
-      }
-    </select>
-    <div class="font-size-stepper">
-      <button type="button" class="stepper-button" aria-label="Réduire la taille">-</button>
-      <input class="stepper-input" type="text" value="32" aria-label="Taille de police" />
-      <button type="button" class="stepper-button" aria-label="Augmenter la taille">+</button>
-    </div>
-  </div>
-
-  <div class="tool-group format-group">
-    <button type="button" class="format-button format-bold" title="Gras">B</button>
-    <button type="button" class="format-button format-italic" title="Italique">I</button>
-    <button type="button" class="format-button format-underline" title="Souligné">U</button>
-    <div class="format-divider" aria-hidden="true"></div>
-    <button type="button" class="tool-button" title="Couleur du texte">
-      <i class="pi pi-text-color" aria-hidden="true"></i>
-    </button>
-    <button type="button" class="tool-button" title="Aligner à gauche">
-      <i class="pi pi-align-left" aria-hidden="true"></i>
-    </button>
-    <button type="button" class="tool-button" title="Centrer">
-      <i class="pi pi-align-center" aria-hidden="true"></i>
-    </button>
-  </div>
-
   <div class="tool-group insert-group">
     <button type="button" class="insert-button insert-button-poll">
       <i class="pi pi-chart-bar" aria-hidden="true"></i>

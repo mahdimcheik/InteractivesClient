@@ -30,8 +30,7 @@ chaque client rend les mêmes composants en mode `Client`.
 ## Le repère de la diapositive
 
 Positions et tailles (`x`, `y`, `width`, `height`) sont stockées dans un repère logique de
-**1280 × 720**, format 16:9 uniquement (choix par défaut au lot 3, à confirmer : en changer
-demandera de convertir les éléments existants) (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
+**1280 × 720**, format 16:9 uniquement (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
 en pixels d'écran. `SlideStage` (`components/slide-stage/`) occupe la largeur disponible au
 format 16:9 et met son contenu à l'échelle (`transform: scale`) ; `toSlidePoint` convertit un
 point de l'écran en coordonnées logiques. Une diapositive se rend ainsi à l'identique dans
@@ -61,6 +60,27 @@ Les calculs (`moveRect`, `resizeRect`, `clampRect`) sont des fonctions pures de
 
 Les éléments créés avant ce repère (diapositive de 800 px de large) apparaissent 1,6 fois plus
 petits : aucune migration, ce n'étaient que des données de développement.
+
+## Apparence de la diapositive et panneau de propriétés
+
+Une diapositive a ses **propres couleurs**, indépendantes du thème clair / sombre de
+l'application : l'hôte et chaque participant voient la même chose. Arrière-plan blanc et texte
+sombre par défaut (`SLIDE_DEFAULT_BACKGROUND`, `SLIDE_DEFAULT_TEXT_COLOR` dans
+`core/utilities/models/slide-style.ts`) ; l'arrière-plan se choisit par diapositive, la couleur
+du texte par élément. Les polices sont trois familles génériques (`SLIDE_FONTS` : sans
+empattement, avec empattement, chasse fixe), stockées par clé : aucune police web n'est chargée.
+
+Le panneau de propriétés suit la sélection, remontée dans `PresentationEditor` et partagée avec
+le canvas :
+
+- sans sélection : propriétés de la diapositive (arrière-plan) ;
+- avec sélection : position et taille (communes, bornées à la diapositive), puis le panneau
+  propre au type, déclaré dans `ELEMENT_PANELS`. Un panneau étend `ElementConfigEditor<TConfig>`,
+  la même base que le composant de rendu : il lit `config()` et enregistre par `saveConfig()`.
+
+Mise en forme du texte (`TextElementConfig`) : police, taille, couleur, gras, italique,
+souligné, alignement. `fontSize` et `bold` à `null` suivent le rôle (un titre fait 64 et est en
+gras, un texte 32) ; les éléments créés avant la mise en forme restent donc identiques.
 
 ## Le contrat commun : `SlideElementBase<TConfig>`
 
@@ -132,15 +152,19 @@ la diapositive, le canvas crée l'élément avec son type, sa taille et sa confi
 2. Créer `elements/<nom>/` avec :
    - `<nom>.model.ts` — l'interface de configuration et sa constante `…_DEFAULT_CONFIG` ;
    - `<nom>.ts` — le composant, qui étend `SlideElementBase<…Config>` et déclare
-     `defaultConfig`.
-3. Dans `element-registry.ts` : ajouter le composant à `ELEMENT_COMPONENTS` et au moins un preset
-   à `ELEMENT_PRESETS`.
+     `defaultConfig` ;
+   - `<nom>-panel.ts` (facultatif) — son panneau de propriétés, qui étend
+     `ElementConfigEditor<…Config>` (position et taille sont déjà gérées par le panneau commun).
+3. Dans `element-registry.ts` : ajouter le composant à `ELEMENT_COMPONENTS`, son panneau à
+   `ELEMENT_PANELS`, et au moins un preset à `ELEMENT_PRESETS`.
 
 Règles à respecter :
 
 - aucune affordance d'édition hors du mode `Edit` (se baser sur `isEditable()`) ;
 - toute image a un texte alternatif ; les contrôles d'édition sont accessibles au clavier ;
-- couleurs uniquement via les tokens `--app-*` de `styles.scss` (sinon le mode sombre casse) ;
+- le **contenu** de la diapositive a ses propres couleurs (`slide-style.ts`), choisies par
+  l'auteur et indépendantes du thème : jamais de jeton `--app-*` pour le contenu ; les
+  **contrôles d'édition**, eux, utilisent les jetons `--app-*` ;
 - réutiliser les briques de `shared/` plutôt que de recoder l'édition de texte ou l'envoi d'image.
 
 ## À venir

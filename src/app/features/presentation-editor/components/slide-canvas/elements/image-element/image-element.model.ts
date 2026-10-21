@@ -14,3 +14,8 @@ export const IMAGE_DEFAULT_CONFIG: ImageConfig = {
   alt: '',
   fit: 'contain',
 };
+
+export const IMAGE_FITS: readonly { value: ImageFit; label: string }[] = [
+  { value: 'contain', label: 'Image entière' },
+  { value: 'cover', label: 'Remplir le cadre' },
+];

@@ -55,18 +55,22 @@ Avant d'empiler les lots suivants, de quoi détecter les régressions.
 Testé unitairement (géométrie, `patch`, cadre) ; le parcours complet reste à faire à la main,
 avec l'API redémarrée (Image et Titre + texte + image).
 
-## Lot 4 — Propriétés et mise en forme
+## Lot 4 — Propriétés et mise en forme — **livré, à vérifier dans le navigateur**
 
-Le panneau de propriétés et les boutons de mise en forme de la barre d'outils sont aujourd'hui
-des maquettes statiques.
+- Tranché : une diapositive a ses propres couleurs, indépendantes du thème du spectateur ;
+  repère 1280 × 720 en 16:9 confirmé.
+- Panneau de propriétés piloté par la sélection (remontée dans l'éditeur) : position et taille
+  communes, puis panneau propre au type (`ELEMENT_PANELS`, base `ElementConfigEditor`). Sans
+  sélection : arrière-plan de la diapositive, désormais rendu sur le canvas.
+- Texte : police (trois familles génériques), taille, couleur, gras / italique / souligné,
+  alignement ; anciens éléments inchangés (taille et graisse suivent le rôle par défaut).
+- Image : ajustement ; Titre + texte + image : côté et ajustement de l'image.
+- Maquettes retirées : police et mise en forme de la barre d'outils, onglet « Interactions »,
+  opacité, effets, modèle de mise en page et notes du présentateur du panneau.
 
-- Panneau de propriétés piloté par l'élément sélectionné : chaque élément fournit son propre
-  panneau (le « plugin » du modèle de données de l'API), le cadre commun gère position et
-  taille. Sans sélection : propriétés de la diapositive (arrière-plan).
-- Texte : police, taille, couleur, gras / italique / souligné, alignement — champs ajoutés à
-  `TextElementConfig`, anciens éléments valides grâce aux valeurs par défaut.
-- Image : ajustement (`contain` / `cover`) ; Titre + texte + image : côté de l'image.
-- Contrôles accessibles : libellés associés, navigation clavier, contrastes AA.
+**Reste hors lot :** notes du présentateur (champ API à créer) ; mise en forme du titre et du
+texte de l'élément Titre + texte + image ; boutons encore factices de la barre d'outils
+(diapositive, mise en page, formes, sondage, quiz).
 
 ## Lot 5 — Mode présentation de l'hôte
 

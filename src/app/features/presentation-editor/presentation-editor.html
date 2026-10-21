@@ -16,8 +16,15 @@
       [presentation]="presentation()"
       [selectedSlideIndex]="selectedSlideIndex()"
       [mode]="editorMode()"
+      [(selectedElementId)]="selectedElementId"
     />
-    <app-properties-panel />
+    @if (editorMode() === editMode) {
+      <app-properties-panel
+        [presentationId]="presentation()?.id"
+        [slide]="selectedSlide()"
+        [element]="selectedElement()"
+      />
+    }
   </main>
 </div>
 

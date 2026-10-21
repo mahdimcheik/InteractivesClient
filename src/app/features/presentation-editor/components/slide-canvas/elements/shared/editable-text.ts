@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { SLIDE_FONTS } from '@core/utilities/models/slide-style';
+
+import { TextAppearance } from './text-appearance';
 
 /**
  * Texte éditable en place (`contenteditable`) en mode édition, statique sinon.
@@ -18,6 +21,13 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       [attr.aria-multiline]="editable() && !heading() ? 'true' : null"
       [attr.aria-label]="editable() ? label() : null"
       [attr.data-placeholder]="placeholder()"
+      [style.font-family]="fonts[appearance().font].stack"
+      [style.font-size.px]="appearance().fontSize"
+      [style.color]="appearance().color"
+      [style.font-weight]="appearance().bold ? 700 : 400"
+      [style.font-style]="appearance().italic ? 'italic' : 'normal'"
+      [style.text-decoration]="appearance().underline ? 'underline' : 'none'"
+      [style.text-align]="appearance().align"
       [textContent]="text()"
       (blur)="onBlur($event)"
     ></div>
@@ -27,12 +37,15 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class EditableText {
   readonly text = input.required<string>();
+  readonly appearance = input.required<TextAppearance>();
   readonly editable = input(false);
   readonly heading = input(false);
   readonly label = input('Texte');
   readonly placeholder = input('');
 
   readonly committed = output<string>();
+
+  protected readonly fonts = SLIDE_FONTS;
 
   protected onBlur(event: FocusEvent): void {
     if (!this.editable()) {

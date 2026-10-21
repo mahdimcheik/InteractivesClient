@@ -1,128 +1,59 @@
-<aside class="properties-panel">
-  <div class="tabs" role="tablist">
-    <button
-      type="button"
-      role="tab"
-      class="tab-button"
-      [class.tab-button-active]="activeTab() === 'properties'"
-      [attr.aria-selected]="activeTab() === 'properties'"
-      (click)="setActiveTab('properties')"
-    >
-      Propriétés
-    </button>
-    <button
-      type="button"
-      role="tab"
-      class="tab-button"
-      [class.tab-button-active]="activeTab() === 'interactions'"
-      [attr.aria-selected]="activeTab() === 'interactions'"
-      (click)="setActiveTab('interactions')"
-    >
-      Interactions
-    </button>
-  </div>
-
+<aside class="properties-panel" aria-labelledby="properties-panel-title">
   <div class="panel-content">
-    @if (activeTab() === 'properties') {
-      <div class="bento-card">
-        <h3 class="bento-card-title">
-          Paramètres de la diapositive
+    <h2 id="properties-panel-title" class="app-visually-hidden">Propriétés</h2>
+
+    @if (element(); as el) {
+      <section class="bento-card" aria-labelledby="prop-geometry-title">
+        <h3 id="prop-geometry-title" class="bento-card-title">
+          Position et taille
+          <i class="pi pi-arrows-alt" aria-hidden="true"></i>
+        </h3>
+        <div class="position-grid">
+          @for (field of geometryFields; track field.key) {
+            <div class="field">
+              <label class="field-label" [for]="'prop-' + field.key">{{ field.label }}</label>
+              <input
+                class="number-input"
+                type="number"
+                [id]="'prop-' + field.key"
+                [value]="rect()?.[field.key]"
+                [disabled]="el.locked"
+                (change)="saveGeometry(el, field.key, $any($event.target).valueAsNumber)"
+              />
+            </div>
+          }
+        </div>
+      </section>
+
+      @if (elementPanel(); as panel) {
+        <section class="bento-card" aria-labelledby="prop-element-title">
+          <h3 id="prop-element-title" class="bento-card-title">{{ elementLabel(el) }}</h3>
+          <ng-container
+            [ngComponentOutlet]="panel"
+            [ngComponentOutletInputs]="{ element: el, presentationId: presentationId() }"
+          />
+        </section>
+      }
+    } @else if (slide(); as s) {
+      <section class="bento-card" aria-labelledby="prop-slide-title">
+        <h3 id="prop-slide-title" class="bento-card-title">
+          Diapositive
           <i class="pi pi-sliders-h" aria-hidden="true"></i>
         </h3>
-
-        <div class="field-group">
-          <span class="field-label">Arrière-plan</span>
-          <div class="swatch-row">
-            @for (swatch of backgroundSwatches; track swatch) {
-              <button
-                type="button"
-                class="swatch"
-                [class]="'swatch-' + swatch"
-                [class.swatch-active]="swatch === 'blanc'"
-                [attr.aria-label]="'Arrière-plan ' + swatch"
-              ></button>
-            }
-            <button type="button" class="swatch swatch-add" aria-label="Ajouter une couleur">
-              <i class="pi pi-plus" aria-hidden="true"></i>
-            </button>
-          </div>
+        <div class="field">
+          <label class="field-label" for="prop-slide-background">Arrière-plan</label>
+          <input
+            id="prop-slide-background"
+            class="color-input"
+            type="color"
+            [value]="s.backgroundColor || defaultBackground"
+            (change)="saveBackground(s, $any($event.target).value)"
+          />
         </div>
-
-        <div class="field-group">
-          <span class="field-label">Modèle de mise en page</span>
-          <div class="layout-grid">
-            <div class="layout-option layout-option-active"></div>
-            <div class="layout-option"></div>
-            <div class="layout-option"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bento-card bento-card-accented">
-        <h3 class="bento-card-title bento-card-title-indented">
-          Propriétés du texte
-          <i class="pi pi-text" aria-hidden="true"></i>
-        </h3>
-
-        <div class="field-stack">
-          <div class="position-grid">
-            <div class="field-group">
-              <label class="field-label field-label-tiny" for="prop-x">X (px)</label>
-              <input id="prop-x" class="number-input" type="number" value="120" />
-            </div>
-            <div class="field-group">
-              <label class="field-label field-label-tiny" for="prop-y">Y (px)</label>
-              <input id="prop-y" class="number-input" type="number" value="85" />
-            </div>
-            <div class="field-group">
-              <label class="field-label field-label-tiny" for="prop-l">L (px)</label>
-              <input id="prop-l" class="number-input" type="number" value="340" />
-            </div>
-            <div class="field-group">
-              <label class="field-label field-label-tiny" for="prop-h">H (px)</label>
-              <input id="prop-h" class="number-input" type="number" value="400" />
-            </div>
-          </div>
-
-          <hr class="divider" />
-
-          <div class="field-group">
-            <div class="opacity-row">
-              <label class="field-label" for="prop-opacite">Opacité</label>
-              <span class="opacity-value">100%</span>
-            </div>
-            <input
-              id="prop-opacite"
-              class="opacity-slider"
-              type="range"
-              min="0"
-              max="100"
-              value="100"
-            />
-          </div>
-
-          <div class="field-group">
-            <span class="field-label">Effets</span>
-            <button type="button" class="add-effect-button">
-              <i class="pi pi-plus" aria-hidden="true"></i>
-              Ajouter une ombre
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="notes-card">
-        <h3 class="bento-card-title">
-          Notes du présentateur
-          <i class="pi pi-note-sticky" aria-hidden="true"></i>
-        </h3>
-        <textarea
-          class="notes-textarea"
-          placeholder="Ajouter des notes pour cette diapositive..."
-        ></textarea>
-      </div>
+      </section>
+      <p class="empty-state">Sélectionnez un élément pour modifier ses propriétés.</p>
     } @else {
-      <p class="empty-state">Aucune interaction configurée pour cet élément.</p>
+      <p class="empty-state">Aucune diapositive.</p>
     }
   </div>
 </aside>

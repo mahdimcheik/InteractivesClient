@@ -22,24 +22,18 @@ export function parseElementConfig<TConfig extends object>(
 }
 
 /**
- * Contrat commun de tout élément de diapositive.
- *
- * Le rendu ne dépend que de `config()` et `mode()` : le même composant sert à l'éditeur (`Edit`),
- * à l'hôte (`Presentation`), aux participants (`Client`) et aux miniatures (`Thumbnail`).
- * Aucune affordance d'édition hors du mode `Edit`.
+ * Lecture et enregistrement de la configuration typée d'un élément. Partagé par le composant de
+ * rendu ({@link SlideElementBase}) et par le panneau de propriétés de chaque élément.
  */
 @Directive()
-export abstract class SlideElementBase<TConfig extends object> {
+export abstract class ElementConfigEditor<TConfig extends object> {
   private readonly elementsMirror = inject(ElementsMirrorService);
   private readonly notifications = inject(NotificationService);
 
   readonly element = input.required<ElementDetails>();
-  readonly mode = input.required<PresentationMode>();
   readonly presentationId = input.required<string>();
 
   protected abstract readonly defaultConfig: TConfig;
-
-  protected readonly isEditable = computed(() => this.mode() === PresentationMode.Edit);
 
   protected readonly config = computed(() =>
     parseElementConfig(this.element().configuration, this.defaultConfig),
@@ -67,4 +61,20 @@ export abstract class SlideElementBase<TConfig extends object> {
           }),
       });
   }
+}
+
+/**
+ * Contrat commun de tout élément de diapositive.
+ *
+ * Le rendu ne dépend que de `config()` et `mode()` : le même composant sert à l'éditeur (`Edit`),
+ * à l'hôte (`Presentation`), aux participants (`Client`) et aux miniatures (`Thumbnail`).
+ * Aucune affordance d'édition hors du mode `Edit`.
+ */
+@Directive()
+export abstract class SlideElementBase<
+  TConfig extends object,
+> extends ElementConfigEditor<TConfig> {
+  readonly mode = input.required<PresentationMode>();
+
+  protected readonly isEditable = computed(() => this.mode() === PresentationMode.Edit);
 }

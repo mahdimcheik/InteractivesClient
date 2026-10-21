@@ -3,6 +3,7 @@ import { SlideElementBase } from '@core/utilities/models/slide-element-base';
 
 import { ImageConfig } from '../image-element/image-element.model';
 import { EditableText } from '../shared/editable-text';
+import { defaultTextAppearance } from '../shared/text-appearance';
 import { ImageView } from '../shared/image-view';
 import {
   TEXT_IMAGE_TITLE_DEFAULT_CONFIG,
@@ -19,6 +20,7 @@ import {
         [text]="config().title"
         [editable]="isEditable()"
         [heading]="true"
+        [appearance]="titleAppearance"
         label="Titre"
         placeholder="Titre"
         (committed)="saveConfig({ title: $event })"
@@ -29,6 +31,7 @@ import {
         [editable]="isEditable()"
         label="Texte"
         placeholder="Texte"
+        [appearance]="bodyAppearance"
         (committed)="saveConfig({ body: $event })"
       />
       <app-image-view
@@ -46,6 +49,8 @@ import {
 })
 export class TextImageTitleElement extends SlideElementBase<TextImageTitleConfig> {
   protected readonly defaultConfig = TEXT_IMAGE_TITLE_DEFAULT_CONFIG;
+  protected readonly titleAppearance = defaultTextAppearance('title');
+  protected readonly bodyAppearance = defaultTextAppearance('body');
 
   protected saveImage(patch: Partial<ImageConfig>): void {
     this.saveConfig({ image: { ...this.config().image, ...patch } });

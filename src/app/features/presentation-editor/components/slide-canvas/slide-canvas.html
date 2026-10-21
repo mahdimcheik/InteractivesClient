@@ -2,6 +2,7 @@
   <div class="canvas-scroll-area">
     <div
       class="slide"
+      [style.background-color]="slideBackground()"
       cdkDropList
       id="slideCanvasDropList"
       [cdkDropListConnectedTo]="['elementPalette']"
