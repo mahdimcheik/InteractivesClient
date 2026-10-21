@@ -165,7 +165,7 @@ message keys there so every form picks them up.
 ### API client generation
 
 `npm run gen-api` (config in `openapi.config.ts`) regenerates the typed `src/client` from
-`http://localhost:5113/swagger/v1/swagger.json` (requires the API running). It's wired in: the
+`http://localhost:5268/swagger/v1/swagger.json` (requires the API running). It's wired in: the
 `@client`/`@client/*` path aliases live in `tsconfig.json`, and
 `provideDefaultClient({ basePath: environment.apiUrl })` is active in `app.config.ts`.
 
@@ -209,9 +209,9 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   `[textContent]` so Angular replaces browser-inserted nodes), `ImagePicker` (uploads via
   `MediasMirrorService` with `Public` visibility so participants need no signed URL), `ImageView`
   (`NgOptimizedImage` `fill` + alt-text field in edit mode).
-- `TextImageTitleElement` is built but **not registered**: `ElementTypeEnum.TextImageTitle` doesn't
-  exist in the API yet. After the backend adds it and `npm run gen-api` runs, add it to
-  `ELEMENT_COMPONENTS` and add a preset.
+- The API's `ElementConfigurationValidator` (`InteractivesAPI`) rejects with 400 any
+  configuration missing its minimal fields (`content` for `Text`, `url` for `Image`, `title` /
+  `body` / `image.url` for `TextImageTitle`) — keep new config fields compatible with it.
 - Adding an element: (new API type → backend + `gen-api`), then `elements/<name>/` with
   `<name>.model.ts` (config interface + `…_DEFAULT_CONFIG`) and the component, then a
   `ELEMENT_COMPONENTS` entry and a preset. `element-registry.spec.ts` checks every preset has a

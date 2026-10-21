@@ -16,17 +16,18 @@ diapositives et suit les commandes de l'hôte. Les lots 1 à 5 donnent un édite
 présentation complets **en local** ; le lot 6 ouvre le direct ; le lot 7 apporte le premier
 élément interactif, le QCM.
 
-## Lot 1 — Premiers éléments de diapositive — **livré en partie**
+## Lot 1 — Premiers éléments de diapositive — **livré**
 
 Contrat commun `SlideElementBase<TConfig>` (configuration typée, enregistrement optimiste avec
 retour arrière), registre unique `ELEMENT_COMPONENTS` + `ELEMENT_PRESETS`, palette générée
 depuis le registre. Éléments Titre, Zone de texte et Image (envoi via `MediasMirrorService`,
-texte alternatif). Briques partagées `EditableText`, `ImagePicker`, `ImageView`. Tests du
-contrat et du registre. Voir [les éléments de diapositive](../30-specs-techniques/01-elements-diapositive.md).
+texte alternatif) et Titre + texte + image (`TextImageTitle`). Briques partagées `EditableText`,
+`ImagePicker`, `ImageView`. Tests du contrat et du registre. Voir
+[les éléments de diapositive](../30-specs-techniques/01-elements-diapositive.md).
 
-**Reste :** brancher `TextImageTitleElement` (Titre + texte + image), prêt mais non enregistré.
-
-**Côté API, à prévoir :** `TextImageTitle` dans `ElementTypeEnum`, puis `npm run gen-api`.
+**Côté API (fait) :** `TextImageTitle` ajouté à `ElementTypeEnum` (stocké en entier, sans
+migration) ; `ElementConfigurationValidator` attend `url` pour une image au lieu de `assetId`, qui
+faisait refuser toute création d'élément Image.
 
 ## Lot 2 — Filet de sécurité
 

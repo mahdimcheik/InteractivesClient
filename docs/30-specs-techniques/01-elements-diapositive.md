@@ -68,12 +68,10 @@ Briques partagées dans `elements/shared/` :
 - `ImageView` — affiche l'image (`NgOptimizedImage` en mode `fill`), ou le sélecteur s'il n'y en a
   pas encore ; en édition, champ « Texte alternatif » et bouton « Remplacer ».
 
-> **À brancher :** `TextImageTitleElement` est prêt mais pas encore enregistré, car
-> `ElementTypeEnum.TextImageTitle` n'existe pas encore côté API. Une fois le type ajouté au
-> backend et `npm run gen-api` lancé, ajouter dans `element-registry.ts` l'entrée
-> `[ElementTypeEnum.TextImageTitle]: TextImageTitleElement` et un preset
-> (`size: { width: 720, height: 360 }`, configuration
-> `TEXT_IMAGE_TITLE_DEFAULT_CONFIG`).
+Côté API, `ElementConfigurationValidator` vérifie la forme minimale de chaque configuration, à la
+création comme à la mise à jour : `content` pour `Text`, `url` pour `Image` (présent, `null`
+accepté tant qu'aucune image n'est choisie), `title`, `body` et un objet `image` avec `url` pour
+`TextImageTitle`. Un champ ajouté côté client doit rester compatible avec ce validateur.
 
 ## Le registre
 

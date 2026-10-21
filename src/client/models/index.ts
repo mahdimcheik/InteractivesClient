@@ -76,7 +76,8 @@ export interface ElementDetailsResponse {
 export enum ElementTypeEnum {
     Text = "Text",
     Image = "Image",
-    Quiz = "Quiz"
+    Quiz = "Quiz",
+    TextImageTitle = "TextImageTitle"
 }
 
 export interface ForgotPasswordRequest {

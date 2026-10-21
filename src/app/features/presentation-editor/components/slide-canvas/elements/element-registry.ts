@@ -6,12 +6,18 @@ import { ImageElement } from './image-element/image-element';
 import { IMAGE_DEFAULT_CONFIG, ImageConfig } from './image-element/image-element.model';
 import { TextElement } from './text-element/text-element';
 import { TEXT_DEFAULT_CONFIG, TextElementConfig } from './text-element/text-element.model';
+import { TextImageTitleElement } from './text-image-title-element/text-image-title-element';
+import {
+  TEXT_IMAGE_TITLE_DEFAULT_CONFIG,
+  TextImageTitleConfig,
+} from './text-image-title-element/text-image-title-element.model';
 
 /** Composant de rendu par type API. Un type peut servir plusieurs presets (Titre/Texte → `Text`). */
 export const ELEMENT_COMPONENTS: Partial<Record<ElementTypeEnum, Type<SlideElementBase<object>>>> =
   {
     [ElementTypeEnum.Text]: TextElement,
     [ElementTypeEnum.Image]: ImageElement,
+    [ElementTypeEnum.TextImageTitle]: TextImageTitleElement,
   };
 
 /** Entrée de la palette de l'éditeur : ce qui est créé quand on la glisse sur la diapositive. */
@@ -56,6 +62,14 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     type: ElementTypeEnum.Image,
     size: { width: 320, height: 200 },
     configuration: JSON.stringify(IMAGE_DEFAULT_CONFIG satisfies ImageConfig),
+  },
+  {
+    id: 'text-image-title',
+    label: 'Titre, texte et image',
+    icon: 'pi-th-large',
+    type: ElementTypeEnum.TextImageTitle,
+    size: { width: 720, height: 360 },
+    configuration: JSON.stringify(TEXT_IMAGE_TITLE_DEFAULT_CONFIG satisfies TextImageTitleConfig),
   },
 ];
 
