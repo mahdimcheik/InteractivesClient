@@ -9,8 +9,7 @@
 
 ## Outillage
 
-- **O3 — README faux.** Il documente `npm test` et `npm run serve:ssr:InteractivesClient`, qui
-  n'existent pas. → Lot 2.
+_Aucun écart ouvert._
 
 ## Code
 

@@ -26,8 +26,7 @@ npx ng test --filter "^DashboardLayout"                                         
 npx ng test --watch --coverage
 ```
 
-Serve the built SSR bundle (no npm script for this — the README's `serve:ssr:*` script does
-not exist):
+Serve the built SSR bundle (no npm script for this):
 
 ```bash
 node dist/InteractivesClient/server/server.mjs   # http://localhost:4000, override with PORT
@@ -243,7 +242,6 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   bind `id`/`aria-*` straight onto that `<input>` instead.
 - `docs/20-specs-fonctionnelles/maquettes/*.html` are static HTML design mockups (home, editor,
   sign-up) used as visual references; nothing imports or builds them.
-- The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
 - `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) is vestigial — nothing imports it. Real
   auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").
   `environment.useMockAuth` no longer affects auth, but `ContactService` still reads it to fake

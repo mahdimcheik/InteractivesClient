@@ -1,83 +1,51 @@
 # InteractivesClient
 
-Base Angular 21 (SSR) réutilisable : site public prérendu, zone client protégée,
-authentification JWT mockable, thème clair/sombre persistant.
+Client web d'un « PowerPoint interactif » : l'hôte construit une présentation dans l'éditeur et
+la lance en direct ; les participants la suivent sur leur propre écran, chaque client rendant
+lui-même les diapositives. Angular 21 (composants autonomes, signaux, SSR Express), Syncfusion
+et Tailwind 4.
+
+La documentation du projet est dans [docs/](docs/README.md) : [feuille de
+route](docs/50-backlog/01-roadmap.md), [dette technique](docs/50-backlog/03-dette-technique.md),
+[éléments de diapositive](docs/30-specs-techniques/01-elements-diapositive.md). L'architecture
+détaillée est décrite dans [CLAUDE.md](CLAUDE.md).
 
 ## Démarrer
+
+L'API (`InteractivesAPI`) doit tourner en HTTPS sur `https://localhost:7033` (`apiUrl` dans
+`src/environments/environment.ts`).
 
 ```bash
 npm install
 npm start            # http://localhost:4200
+npm run dev          # https://localhost:4201 (key.pem / cert.pem requis)
 ```
 
-Compte de démonstration : `demo@example.com` / `demo1234`.
-
-## Structure
-
-```
-src/app/
-  core/
-    auth/            AuthService, AuthApi (Http + Mock), intercepteur JWT, guards
-    interceptors/    error.interceptor (toasts d'erreur HTTP)
-    services/        ThemeService, StorageService (SSR-safe)
-  layout/
-    public-layout/     en-tête + pied de page du site public
-    dashboard-layout/  sidebar + topbar de l'espace connecté
-    theme-toggle/      bouton clair/sombre
-  features/
-    home/ about/ contact/ not-found/
-    auth/login/ auth/register/
-    dashboard/       overview, profil, paramètres (routes lazy)
-src/environments/    apiUrl, useMockAuth, storagePrefix
-```
-
-Alias TypeScript disponibles : `@app/*`, `@core/*`, `@env/*`.
-
-## Rendu (SSR)
-
-`src/app/app.routes.server.ts` fixe le mode par route :
-
-| Route                        | Mode        | Pourquoi                                |
-| ---------------------------- | ----------- | --------------------------------------- |
-| `/`, `/a-propos`, `/contact` | `Prerender` | HTML statique, SEO et perf              |
-| `/connexion`, `/inscription` | `Client`    | dépend de l'état d'auth                 |
-| `/dashboard/**`              | `Client`    | aucune donnée authentifiée côté serveur |
-| `**`                         | `Server`    | rendu à la demande                      |
+## Commandes
 
 ```bash
-npm run build
-npm run serve:ssr:InteractivesClient   # http://localhost:4000
+npx ng test --watch=false   # tests unitaires (Vitest + jsdom)
+npm run lint                # ESLint
+npm run format:check        # Prettier (npm run format pour corriger)
+npm run build               # build production -> dist/InteractivesClient
+npm run gen-api             # régénère le client OpenAPI dans src/client (API démarrée)
 ```
 
-⚠️ `angular.json` → `security.allowedHosts` n'autorise que `localhost` et `127.0.0.1`.
-**Ajoutez-y le domaine de production**, sinon le serveur SSR retombe en rendu client.
+L'intégration continue (`.github/workflows/ci.yml`) lance lint, format, tests et build
+production sur chaque demande de fusion.
 
-## Brancher une vraie API
+## Rendu serveur
 
-1. Renseigner `apiUrl` dans `src/environments/environment*.ts`.
-2. Passer `useMockAuth` à `false` : `app.config.ts` bascule alors de `MockAuthApi`
-   vers `HttpAuthApi`.
-3. Adapter les chemins dans `src/app/core/auth/http-auth-api.ts` (`/auth/login`,
-   `/auth/refresh`, `/auth/me`, …) et les modèles de `auth.models.ts`.
+Les modes de rendu par route sont fixés dans `src/app/app.routes.server.ts` : pages publiques
+prérendues, connexion et `/dashboard/**` rendus côté client uniquement (aucune donnée
+authentifiée ne passe par le serveur de rendu). Une route authentifiée se déclare dans
+`app.routes.ts` **et** `app.routes.server.ts`.
 
-Le refresh token est stocké dans `localStorage` (voir le commentaire en tête de
-`auth.service.ts`) : si le backend peut poser un cookie `HttpOnly`, préférez-le.
-
-## Thème clair / sombre
-
-Piloté par la classe `app-dark` sur `<html>`, posée avant le premier rendu par le
-script inline de `src/index.html` (évite le flash clair au chargement). Trois
-points doivent rester alignés : ce script, `ThemeService` et `darkModeSelector`
-dans `app.config.ts`.
-
-Les couleurs viennent exclusivement des variables PrimeNG (`--p-*`), qui utilisent
-`light-dark()`. **N'écrivez pas de couleur en dur** : elle ne suivrait pas le thème.
-
-## Tests
+Servir le build :
 
 ```bash
-npm test
+node dist/InteractivesClient/server/server.mjs   # http://localhost:4000, PORT pour changer
 ```
 
-Vitest + jsdom. Exemples fournis pour `ThemeService`, `AuthService` et le
-formulaire de contact.
+`angular.json` → `security.allowedHosts` n'autorise que `localhost` et `127.0.0.1` : sans le
+domaine de production, le rendu serveur retombe silencieusement en rendu client.
