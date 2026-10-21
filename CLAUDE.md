@@ -13,8 +13,10 @@ npx ng test               # unit tests (see below — there is no `npm test` scr
 npm run gen-api           # regenerate the OpenAPI client into src/client (requires the API running)
 ```
 
-Tests use the `@angular/build:unit-test` builder with **Vitest + jsdom** (config lives in
-`angular.json` → `test`, not in a `vitest.config.ts`):
+Tests use the `@angular/build:unit-test` builder with **Vitest + jsdom**, configured in
+`angular.json` → `test`, which points `runnerConfig` at `vitest-base.config.ts`. That file inlines
+`@syncfusion/*`: its packages ship a UMD `main`, and without inlining any spec importing a
+Syncfusion component fails with "Named export … not found".
 
 ```bash
 npx ng test --include src/app/core/utilities/models/slide-element-base.spec.ts   # a single spec file
@@ -234,9 +236,6 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   bind `id`/`aria-*` straight onto that `<input>` instead.
 - `src/app/design-dev/*.html` are static HTML design mockups (home, editor, sign-up) used as
   visual references; nothing imports or builds them. `src/app/core/api/` is currently empty.
-- `src/app/layout/dashboard-layout/dashboard-layout.spec.ts` no longer compiles (it indexes
-  `sidebarOpen` / `shouldShowSidebar`, which `DashboardLayout` no longer has), and because the
-  test builder compiles every spec, it breaks `npx ng test` — even with `--include`.
 - The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
 - `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) is vestigial — nothing imports it. Real
   auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").

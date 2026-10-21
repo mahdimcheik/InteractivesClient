@@ -129,7 +129,8 @@
           "options": {
             "buildTarget": "InteractivesClient:build:development",
             "runner": "vitest",
-            "tsConfig": "tsconfig.spec.json"
+            "tsConfig": "tsconfig.spec.json",
+            "runnerConfig": "vitest-base.config.ts"
           }
         }
       }

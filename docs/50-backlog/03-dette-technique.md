@@ -11,9 +11,6 @@
 
 - **O1 — Ni linter ni intégration continue.** Seul Prettier est configuré (`.prettierrc`), et
   rien ne le vérifie. → Lot 2.
-- **O2 — `dashboard-layout.spec.ts` ne compile plus.** Il lit `sidebarOpen` et
-  `shouldShowSidebar`, que `DashboardLayout` n'a plus. Le constructeur de tests compilant toutes
-  les specs, `npx ng test` échoue — même avec `--include`. → Lot 2.
 - **O3 — README faux.** Il documente `npm test` et `npm run serve:ssr:InteractivesClient`, qui
   n'existent pas. → Lot 2.
 

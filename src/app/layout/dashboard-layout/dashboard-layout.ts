@@ -50,7 +50,10 @@ export class DashboardLayout {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private readonly navPanel = viewChild<ElementRef<HTMLElement>>('navPanel');
-  private readonly toggleButtonEl = viewChild<ElementRef<HTMLButtonElement>>('toggleButtonEl');
+  // `read` est requis : le bouton porte le composant `ejs-button`, que la référence viserait sinon.
+  private readonly toggleButtonEl = viewChild('toggleButtonEl', {
+    read: ElementRef<HTMLButtonElement>,
+  });
 
   protected readonly fullName = this.auth.fullName;
 
