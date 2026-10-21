@@ -9,8 +9,6 @@
 
 ## Outillage
 
-- **O1 — Ni linter ni intégration continue.** Seul Prettier est configuré (`.prettierrc`), et
-  rien ne le vérifie. → Lot 2.
 - **O3 — README faux.** Il documente `npm test` et `npm run serve:ssr:InteractivesClient`, qui
   n'existent pas. → Lot 2.
 

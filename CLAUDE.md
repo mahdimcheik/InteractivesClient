@@ -11,6 +11,8 @@ npm run build             # production build (SSR, outputMode: server) -> dist/I
 npm run watch             # development build in watch mode
 npx ng test               # unit tests (see below — there is no `npm test` script)
 npm run gen-api           # regenerate the OpenAPI client into src/client (requires the API running)
+npm run lint              # ESLint (angular-eslint), config in eslint.config.js
+npm run format:check      # Prettier check (npm run format to fix)
 ```
 
 Tests use the `@angular/build:unit-test` builder with **Vitest + jsdom**, configured in
@@ -31,7 +33,12 @@ not exist):
 node dist/InteractivesClient/server/server.mjs   # http://localhost:4000, override with PORT
 ```
 
-There is no linter configured. Formatting is Prettier (`.prettierrc`: 100 cols, single quotes).
+CI (`.github/workflows/ci.yml`, every PR and push to `main`) runs lint, format check, tests and
+the production build — run the same four locally before pushing. ESLint and Prettier both skip
+the generated `src/client`; `src/app/core/components` keeps its own conventions (`bp-` prefix,
+`any`, 4-space indent — see "Two code styles coexist") through an `eslint.config.js` override and
+`.prettierignore`, but template accessibility rules still apply there. Prettier: `.prettierrc`,
+100 cols, single quotes.
 
 ## Architecture
 
