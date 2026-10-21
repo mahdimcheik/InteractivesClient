@@ -146,11 +146,7 @@
   }
 
   .swatch-degrade {
-    background: linear-gradient(
-      135deg,
-      var(--app-primary-color),
-      var(--app-accent-color)
-    );
+    background: linear-gradient(135deg, var(--app-primary-color), var(--app-accent-color));
   }
 
   .swatch-add {

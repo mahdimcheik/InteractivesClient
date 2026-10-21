@@ -1,0 +1,7 @@
+# Client OpenAPI généré (`npm run gen-api`).
+src/client/
+# Bibliothèque de composants importée, indentée à 4 espaces : on suit son style.
+src/app/core/components/
+# Références visuelles statiques, hors application.
+docs/20-specs-fonctionnelles/maquettes/
+.remember/

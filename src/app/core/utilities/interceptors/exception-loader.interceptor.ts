@@ -9,10 +9,10 @@ import { exceptionList } from './exception-url';
  * @returns La réponse de la requête
  */
 export const exceptionLoaderInterceptor: HttpInterceptorFn = (req, next) => {
-    if (exceptionList.some((url) => req.url.includes(url))) {
-        req = req.clone({
-            setHeaders: { 'X-Show-Loader': 'false' }
-        });
-    }
-    return next(req);
+  if (exceptionList.some((url) => req.url.includes(url))) {
+    req = req.clone({
+      setHeaders: { 'X-Show-Loader': 'false' },
+    });
+  }
+  return next(req);
 };

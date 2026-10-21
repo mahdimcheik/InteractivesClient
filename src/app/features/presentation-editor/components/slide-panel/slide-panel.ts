@@ -1,4 +1,10 @@
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -68,9 +74,7 @@ export class SlidePanel {
           if (!slide) {
             return;
           }
-          this.presentation.update((p) =>
-            p ? { ...p, slides: [...(p.slides ?? []), slide] } : p,
-          );
+          this.presentation.update((p) => (p ? { ...p, slides: [...(p.slides ?? []), slide] } : p));
           this.slideModalVisible.set(false);
         },
         error: () => {
@@ -128,15 +132,20 @@ export class SlidePanel {
       this.slideSelected.emit(event.currentIndex);
     }
 
-    this.slidesMirror.reorder(presentationId, reordered.map((s) => s.id!)).subscribe({
-      error: () => {
-        this.presentation.update((p) => (p ? { ...p, slides: previous } : p));
-        this.notifications.add({
-          severity: 'error',
-          summary: 'Échec de la réorganisation',
-          detail: "L'ordre des diapositives n'a pas pu être enregistré.",
-        });
-      },
-    });
+    this.slidesMirror
+      .reorder(
+        presentationId,
+        reordered.map((s) => s.id!),
+      )
+      .subscribe({
+        error: () => {
+          this.presentation.update((p) => (p ? { ...p, slides: previous } : p));
+          this.notifications.add({
+            severity: 'error',
+            summary: 'Échec de la réorganisation',
+            detail: "L'ordre des diapositives n'a pas pu être enregistré.",
+          });
+        },
+      });
   }
 }

@@ -99,12 +99,12 @@ render decides. Removing that check would redirect every prerendered visitor to 
 
 `src/app/app.routes.server.ts` pairs with `app.routes.ts`:
 
-| Route                                                                                                        | Mode        | Why                                             |
-| ------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
-| `/`, `/a-propos`, `/contact`                                                                                 | `Prerender` | static HTML, SEO                                |
+| Route                                                                                                       | Mode        | Why                                             |
+| ----------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------- |
+| `/`, `/a-propos`, `/contact`                                                                                | `Prerender` | static HTML, SEO                                |
 | `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/confirmation-compte` | `Client`    | depends on auth state                           |
-| `/dashboard/**`                                                                                              | `Client`    | no authenticated data touches the render server |
-| `**`                                                                                                         | `Server`    | on demand                                       |
+| `/dashboard/**`                                                                                             | `Client`    | no authenticated data touches the render server |
+| `**`                                                                                                        | `Server`    | on demand                                       |
 
 Adding an authenticated route means adding it to **both** files. `angular.json` →
 `security.allowedHosts` only lists `localhost` / `127.0.0.1`; a production domain must be added
@@ -242,7 +242,7 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   `environment.useMockAuth` no longer affects auth, but `ContactService` still reads it to fake
   the contact-form submission (it's `true` in `environment.ts`, so dev never hits `/contact`).
 - `token.interceptor.ts`'s own doc comment marks `TokenInterceptor` `@obsolete Pour le
-  developpement uniquement`, despite it being actively registered in `app.config.ts`'s
+developpement uniquement`, despite it being actively registered in `app.config.ts`'s
   interceptor chain — resolve the contradiction (drop the comment or replace the interceptor)
   rather than leaving it.
 

@@ -1,1 +1,6 @@
-export const exceptionList = ['/booking/communications/add-message/', 'booking/communications', 'slots/conversation', 'notifications'];
+export const exceptionList = [
+  '/booking/communications/add-message/',
+  'booking/communications',
+  'slots/conversation',
+  'notifications',
+];

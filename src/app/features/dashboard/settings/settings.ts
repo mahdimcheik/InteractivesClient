@@ -71,7 +71,9 @@ interface ThemeOption {
     <section class="danger" aria-labelledby="session-title">
       <h2 id="session-title">Session</h2>
       <p>Vous serez déconnecté et renvoyé vers la page d'accueil.</p>
-      <button type="button" ejs-button cssClass="e-danger" (click)="logout()">Se déconnecter</button>
+      <button type="button" ejs-button cssClass="e-danger" (click)="logout()">
+        Se déconnecter
+      </button>
     </section>
   `,
 })

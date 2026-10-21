@@ -99,9 +99,7 @@ export class ResetPassword {
           void this.router.navigateByUrl('/connexion');
         },
         error: (error: { error?: { message?: string } }) => {
-          this.serverError.set(
-            error?.error?.message ?? 'Réinitialisation impossible. Réessayez.',
-          );
+          this.serverError.set(error?.error?.message ?? 'Réinitialisation impossible. Réessayez.');
           this.submitting.set(false);
         },
       });

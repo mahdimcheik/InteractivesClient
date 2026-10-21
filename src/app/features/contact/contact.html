@@ -32,11 +32,7 @@
 
   <div class="field">
     <label for="message">Message</label>
-    <ejs-textarea
-      [rows]="6"
-      formControlName="message"
-      [htmlAttributes]="fieldAttrs('message')"
-    />
+    <ejs-textarea [rows]="6" formControlName="message" [htmlAttributes]="fieldAttrs('message')" />
     @if (showError('message')) {
       <p id="message-error" class="field-error" role="alert">
         Votre message doit contenir au moins 10 caractères.
