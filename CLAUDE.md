@@ -81,10 +81,11 @@ a mirror-service + store pair — the same pattern used for every other API area
 Interceptor chain, registered in this order in `app.config.ts`
 (`core/utilities/interceptors/*.interceptor.ts`):
 
-- `token.interceptor.ts` (`TokenInterceptor`) — attaches `Bearer ${store.token()}`.
+- `token.interceptor.ts` (`TokenInterceptor`) — attaches `Bearer ${store.token()}`, **only** to
+  URLs starting with `environment.apiUrl`, so the token never reaches a third party.
 - `cookies.interceptor.ts` — forces `withCredentials: true` (except calls to
   `api-adresse.data.gouv.fr` made with `withCredentials: false`).
-- `error-handler.interceptor.ts` — retries once after a refresh on 401 via
+- `error-handler.interceptor.ts` — for API URLs only, retries once after a refresh on 401 via
   `AuthMirrorService.refreshSession()`, clearing the store on refresh failure. It does not
   special-case 409/422, and does not call `NotificationService`.
 - `exception-loader.interceptor.ts` / `loader.interceptor.ts` — toggle a loading indicator,
@@ -246,10 +247,6 @@ of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/
   auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").
   `environment.useMockAuth` no longer affects auth, but `ContactService` still reads it to fake
   the contact-form submission (it's `true` in `environment.ts`, so dev never hits `/contact`).
-- `token.interceptor.ts`'s own doc comment marks `TokenInterceptor` `@obsolete Pour le
-developpement uniquement`, despite it being actively registered in `app.config.ts`'s
-  interceptor chain — resolve the contradiction (drop the comment or replace the interceptor)
-  rather than leaving it.
 
 # Services
 

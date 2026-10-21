@@ -13,9 +13,6 @@ _Aucun écart ouvert._
 
 ## Code
 
-- **C1 — Intercepteur de jeton marqué obsolète mais actif.** `token.interceptor.ts` porte
-  `@obsolete Pour le developpement uniquement` alors qu'il est enregistré dans `app.config.ts`.
-  Trancher : retirer le commentaire ou remplacer l'intercepteur. → Lot 2.
 - **C2 — Restes de l'authentification simulée.** `core/auth/` n'est importé nulle part ;
   `environment.useMockAuth` ne sert plus qu'à `ContactService`, qui simule l'envoi du
   formulaire de contact en développement. → Lot 2.

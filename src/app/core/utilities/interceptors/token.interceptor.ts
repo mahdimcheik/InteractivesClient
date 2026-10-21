@@ -1,27 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { environment } from '@env/environment';
+
 import { Store } from '../services/store';
+
 /**
- * @obsolete Pour le developpement uniquement
- * Intercepteur qui ajoute le token d'authentification aux requêtes API.
- * @param req La requête HTTP
- * @param next La fonction pour passer à la prochaine étape
- * @returns La réponse de la requête
+ * Ajoute le jeton d'accès (`Authorization: Bearer …`) aux requêtes vers l'API, et à elles
+ * seules : un appel vers un service tiers ne doit jamais emporter le jeton.
  */
 export const TokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const store = inject(Store);
-  const token = store.token();
+  const token = inject(Store).token();
 
-  // Don't add token to non-API requests or if no token exists
-  if (!token) {
+  if (!token || !req.url.startsWith(environment.apiUrl)) {
     return next(req);
   }
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return next(authReq);
+  return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
 };

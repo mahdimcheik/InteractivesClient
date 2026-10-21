@@ -1,13 +1,14 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, finalize, switchMap, throwError } from 'rxjs';
+import { environment } from '@env/environment';
+
 import { AuthMirrorService } from '../services';
 import { Store } from '../services/store';
 
 /**
  * Interceptor qui gère les erreurs 401 (Unauthorized) en tentant de rafraîchir le token.
  * Si le rafraîchissement échoue, l'utilisateur est déconnecté.
- * Utilisation : dans app.module.ts, ajouter dans les providers :
  */
 
 let isRefreshing = false;
@@ -16,7 +17,8 @@ export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthMirrorService);
   const store = inject(Store);
 
-  if (req.url.includes('/refresh-token')) {
+  // Hors API, un 401 ne concerne pas notre session : rejouer la requête y enverrait le jeton.
+  if (req.url.includes('/refresh-token') || !req.url.startsWith(environment.apiUrl)) {
     return next(req);
   }
 
