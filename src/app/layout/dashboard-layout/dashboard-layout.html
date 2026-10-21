@@ -32,6 +32,8 @@
 </header>
 
 <div class="shell">
+  <!-- Fond cliquable pour la souris ; au clavier, Échap ferme le menu (hôte du composant). -->
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
   <div
     class="sidebar-backdrop"
     [hidden]="!isOverlayVisible()"

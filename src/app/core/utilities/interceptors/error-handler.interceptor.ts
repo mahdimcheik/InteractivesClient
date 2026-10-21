@@ -1,7 +1,6 @@
-import { HttpEvent, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, finalize, Observable, switchMap, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { catchError, finalize, switchMap, throwError } from 'rxjs';
 import { AuthMirrorService } from '../services';
 import { Store } from '../services/store';
 
@@ -22,7 +21,7 @@ export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   return next(req).pipe(
-    catchError((err: any) => {
+    catchError((err: HttpErrorResponse) => {
       if (err.status === 401 && !isRefreshing) {
         isRefreshing = true;
 
@@ -48,5 +47,5 @@ export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
 
       return throwError(() => err);
     }),
-  ) as Observable<HttpEvent<any>>;
+  );
 };

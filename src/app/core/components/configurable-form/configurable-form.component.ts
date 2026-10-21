@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
@@ -41,7 +41,7 @@ import { errorMessages, FormField, FormSection, Structure } from './related-mode
     templateUrl: './configurable-form.component.html',
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class ConfigurableFormComponent implements OnInit {
+export class ConfigurableFormComponent {
     private fb = inject(FormBuilder);
 
     // Input signal for the structure
@@ -95,8 +95,6 @@ export class ConfigurableFormComponent implements OnInit {
             }
         });
     }
-
-    ngOnInit(): void {}
 
     private createForm() {
         const structure = this.structure();

@@ -47,15 +47,17 @@ export class Store {
     this.token.set(data?.token ?? null);
     this.refreshToken.set(data?.refreshToken ?? null);
 
-    data?.user
-      ? this.storage.set(AUTH_USER_KEY, JSON.stringify(data.user))
-      : this.storage.remove(AUTH_USER_KEY);
-    data?.token
-      ? this.storage.set(AUTH_TOKEN_KEY, data.token)
-      : this.storage.remove(AUTH_TOKEN_KEY);
-    data?.refreshToken
-      ? this.storage.set(AUTH_REFRESH_TOKEN_KEY, data.refreshToken)
-      : this.storage.remove(AUTH_REFRESH_TOKEN_KEY);
+    this.persistOrRemove(AUTH_USER_KEY, data?.user ? JSON.stringify(data.user) : null);
+    this.persistOrRemove(AUTH_TOKEN_KEY, data?.token ?? null);
+    this.persistOrRemove(AUTH_REFRESH_TOKEN_KEY, data?.refreshToken ?? null);
+  }
+
+  private persistOrRemove(key: string, value: string | null): void {
+    if (value) {
+      this.storage.set(key, value);
+    } else {
+      this.storage.remove(key);
+    }
   }
 
   clearData() {

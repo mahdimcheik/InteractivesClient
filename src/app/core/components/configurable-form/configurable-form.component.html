@@ -156,7 +156,7 @@
                     [class.lg:col-span-1]="!field.fullWidth && field.type !== 'textarea'"
                   >
                     <!-- Field Label -->
-                    @if (field.type != 'checkbox') {
+                    @if (field.type !== 'checkbox') {
                       <label
                         [for]="field.id"
                         class="block text-sm font-medium configurable-form-field-label"

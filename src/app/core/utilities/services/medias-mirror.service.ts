@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   BooleanResponse,

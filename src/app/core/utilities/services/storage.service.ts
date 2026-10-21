@@ -1,7 +1,6 @@
-import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '@env/environment';
-import { LoginResponse, UserDetails } from '@client';
 
 /**
  * Accès à `localStorage` sûr en SSR : sur le serveur toutes les méthodes sont

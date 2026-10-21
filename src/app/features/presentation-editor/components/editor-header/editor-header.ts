@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  model,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PresentationMode } from '@app/core/utilities/models/enumerators';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';

@@ -56,10 +56,12 @@ import type { SelectedEventArgs } from '@syncfusion/ej2-inputs';
                                 <span class="text-xs text-gray-500">{{ file.size }} bytes</span>
                             </div>
                             <ejs-tooltip content="Annuler">
-                                <i
-                                    class="pi pi-times"
+                                <button
+                                    type="button"
+                                    class="pi pi-times cursor-pointer"
+                                    [attr.aria-label]="'Retirer ' + file.name"
                                     (click)="remove(file); uploader.clearAll()"
-                                ></i>
+                                ></button>
                             </ejs-tooltip>
                         </div>
                     }
@@ -110,7 +112,7 @@ export class CustomUploadFileComponent implements ControlValueAccessor, OnInit {
     disabled = signal<boolean>(false);
 
     // ControlValueAccessor callbacks
-    private onChange = (value: File | File[] | null) => {};
+    private onChange: (value: File | File[] | null) => void = () => {};
     private onTouched = () => {};
 
     ngOnInit() {
