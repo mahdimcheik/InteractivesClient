@@ -7,31 +7,57 @@
       [cdkDropListConnectedTo]="['elementPalette']"
       (cdkDropListDropped)="onElementDropped($event)"
     >
-      <app-slide-stage>
+      <app-slide-stage [clip]="!isEditMode()" (pointerdown)="onStagePointerDown($event)">
         @if (!slide()?.elements?.length) {
           <p class="slide-empty-hint">Glissez un élément depuis la barre d'outils</p>
         }
-        @for (element of slide()?.elements ?? []; track element.id) {
-          <div
-            class="slide-element"
-            [style.left.px]="element.x"
-            [style.top.px]="element.y"
-            [style.width.px]="element.width"
-            [style.height.px]="element.height"
-            [style.zIndex]="element.zIndex ?? 0"
-          >
-            <ng-container
-              [ngComponentOutlet]="elementComponents[element.type!] ?? null"
-              [ngComponentOutletInputs]="{
-                element,
-                mode: mode(),
-                presentationId: presentationId(),
-              }"
-            />
-          </div>
+        @for (element of renderedElements(); track element.id) {
+          @if (isEditMode()) {
+            <app-element-frame
+              [element]="element"
+              [label]="elementLabel(element)"
+              [selected]="selectedElementId() === element.id"
+              [scale]="stage()?.scale() ?? 1"
+              (selectRequested)="selectedElementId.set(element.id ?? null)"
+              (deselectRequested)="selectedElementId.set(null)"
+              (rectCommitted)="onRectCommitted(element, $event)"
+              (action)="onAction(element, $event)"
+            >
+              <ng-container
+                [ngComponentOutlet]="elementComponents[element.type!] ?? null"
+                [ngComponentOutletInputs]="{
+                  element,
+                  mode: mode(),
+                  presentationId: presentationId(),
+                }"
+              />
+            </app-element-frame>
+          } @else {
+            <div
+              class="slide-element"
+              [style.left.px]="element.x"
+              [style.top.px]="element.y"
+              [style.width.px]="element.width"
+              [style.height.px]="element.height"
+              [style.zIndex]="element.zIndex ?? 0"
+            >
+              <ng-container
+                [ngComponentOutlet]="elementComponents[element.type!] ?? null"
+                [ngComponentOutletInputs]="{
+                  element,
+                  mode: mode(),
+                  presentationId: presentationId(),
+                }"
+              />
+            </div>
+          }
         }
       </app-slide-stage>
     </div>
+    <p id="element-frame-help" class="app-visually-hidden">
+      Flèches : déplacer (Maj pour un pas fin). Alt et flèches : redimensionner. Entrée : modifier
+      le contenu. Échap : quitter le contenu, puis désélectionner. Suppr : supprimer.
+    </p>
   </div>
 
   <!-- <div class="canvas-controls">

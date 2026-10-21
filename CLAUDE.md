@@ -217,6 +217,12 @@ built from a component's copy of the element.
   scaled on screen by `SlideStage` (`components/slide-stage/`, `transform: scale`, exposes
   `--slide-scale` and `toSlidePoint`). Size slide content in logical `px`, never `rem`; edit-only
   controls divide their sizes by `var(--slide-scale)` to stay readable.
+- In `Edit` mode each element sits in an `ElementFrame` (`slide-canvas/element-frame/`): click
+  selects, drag moves, handles resize, the projected content stays `inert` until double-click /
+  `Enter`; arrows / Alt+arrows / `Delete` / `Escape` on the keyboard. The in-gesture rect is local
+  to the frame and only committed (through `patch`) when the gesture ends. Pure geometry
+  (`moveRect`, `resizeRect`, `clampRect`) lives in `slide-geometry.ts`. Hidden elements are
+  dimmed in `Edit` and not rendered in other modes.
 - `slide-canvas/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →
   component; `ELEMENT_PRESETS` is the editor palette (label, primeicons class, type, size,
   initial configuration JSON). Palette ≠ types: "Titre" and "Zone de texte" are both `Text`

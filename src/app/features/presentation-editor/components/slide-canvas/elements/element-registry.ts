@@ -1,6 +1,6 @@
 import { Type } from '@angular/core';
-import { ElementTypeEnum } from '@client';
-import { SlideElementBase } from '@core/utilities/models/slide-element-base';
+import { ElementDetails, ElementTypeEnum } from '@client';
+import { SlideElementBase, parseElementConfig } from '@core/utilities/models/slide-element-base';
 
 import { ImageElement } from './image-element/image-element';
 import { IMAGE_DEFAULT_CONFIG, ImageConfig } from './image-element/image-element.model';
@@ -76,4 +76,13 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
 
 export function findElementPreset(id: string): ElementPreset | undefined {
   return ELEMENT_PRESETS.find((preset) => preset.id === id);
+}
+
+/** Nom lisible d'un élément (palette ≠ type : un `Text` peut être un titre). */
+export function elementLabel(element: ElementDetails): string {
+  if (element.type === ElementTypeEnum.Text) {
+    const role = parseElementConfig(element.configuration, TEXT_DEFAULT_CONFIG).role;
+    return role === 'title' ? 'Titre' : 'Zone de texte';
+  }
+  return ELEMENT_PRESETS.find((preset) => preset.type === element.type)?.label ?? 'Élément';
 }

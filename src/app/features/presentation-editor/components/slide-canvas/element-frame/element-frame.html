@@ -1,0 +1,83 @@
+<div class="frame-content" [inert]="!editing()">
+  <ng-content />
+</div>
+
+@if (element().visible === false || locked()) {
+  <div class="frame-badges" aria-hidden="true">
+    @if (element().visible === false) {
+      <i class="pi pi-eye-slash"></i>
+    }
+    @if (locked()) {
+      <i class="pi pi-lock"></i>
+    }
+  </div>
+}
+
+@if (selected()) {
+  @if (!locked() && !editing()) {
+    @for (handle of handles; track handle) {
+      <span class="handle" [class]="'handle handle-' + handle" [attr.data-handle]="handle"></span>
+    }
+  }
+
+  <div
+    class="frame-toolbar"
+    role="toolbar"
+    aria-label="Actions de l'élément"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      aria-label="Premier plan"
+      title="Premier plan"
+      (click)="onAction($event, 'front')"
+    >
+      <i class="pi pi-arrow-up" aria-hidden="true"></i>
+    </button>
+    <button
+      type="button"
+      aria-label="Arrière-plan"
+      title="Arrière-plan"
+      (click)="onAction($event, 'back')"
+    >
+      <i class="pi pi-arrow-down" aria-hidden="true"></i>
+    </button>
+    <button
+      type="button"
+      [attr.aria-label]="locked() ? 'Déverrouiller' : 'Verrouiller'"
+      [attr.title]="locked() ? 'Déverrouiller' : 'Verrouiller'"
+      [attr.aria-pressed]="locked()"
+      (click)="onAction($event, 'lock')"
+    >
+      <i
+        class="pi"
+        [class.pi-lock]="locked()"
+        [class.pi-lock-open]="!locked()"
+        aria-hidden="true"
+      ></i>
+    </button>
+    <button
+      type="button"
+      [attr.aria-label]="element().visible === false ? 'Afficher' : 'Masquer'"
+      [attr.title]="element().visible === false ? 'Afficher' : 'Masquer'"
+      [attr.aria-pressed]="element().visible === false"
+      (click)="onAction($event, 'hide')"
+    >
+      <i
+        class="pi"
+        [class.pi-eye]="element().visible === false"
+        [class.pi-eye-slash]="element().visible !== false"
+        aria-hidden="true"
+      ></i>
+    </button>
+    <button
+      type="button"
+      class="is-danger"
+      aria-label="Supprimer"
+      title="Supprimer"
+      (click)="onAction($event, 'remove')"
+    >
+      <i class="pi pi-trash" aria-hidden="true"></i>
+    </button>
+  </div>
+}

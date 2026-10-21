@@ -6,20 +6,25 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   viewChild,
 } from '@angular/core';
-import { PresentationDetails } from '@client';
+import { ElementDetails, PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
-import { clampRect } from '@core/utilities/models/slide-geometry';
-import { ElementsMirrorService } from '@core/utilities/services/elements-mirror.service';
+import { SlideRect, clampRect } from '@core/utilities/models/slide-geometry';
+import {
+  ElementChanges,
+  ElementsMirrorService,
+} from '@core/utilities/services/elements-mirror.service';
 import { NotificationService } from '@core/utilities/services/notification.service';
 
 import { SlideStage } from '../slide-stage/slide-stage';
-import { ELEMENT_COMPONENTS, findElementPreset } from './elements/element-registry';
+import { ElementAction, ElementFrame } from './element-frame/element-frame';
+import { ELEMENT_COMPONENTS, elementLabel, findElementPreset } from './elements/element-registry';
 
 @Component({
   selector: 'app-slide-canvas',
-  imports: [CdkDropList, NgComponentOutlet, SlideStage],
+  imports: [CdkDropList, NgComponentOutlet, SlideStage, ElementFrame],
   templateUrl: './slide-canvas.html',
   styleUrl: './slide-canvas.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,13 +37,31 @@ export class SlideCanvas {
   readonly selectedSlideIndex = input(0);
   readonly mode = input<PresentationMode>(PresentationMode.Edit);
 
-  private readonly stage = viewChild(SlideStage);
+  protected readonly stage = viewChild(SlideStage);
 
   protected readonly presentationId = computed(() => this.presentation()?.id);
   protected readonly slide = computed(
     () => this.presentation()?.slides?.[this.selectedSlideIndex()],
   );
+  protected readonly isEditMode = computed(() => this.mode() === PresentationMode.Edit);
+  /** Hors édition, un élément masqué n'est pas rendu du tout. */
+  protected readonly renderedElements = computed(() => {
+    const elements = this.slide()?.elements ?? [];
+    return this.isEditMode() ? elements : elements.filter((e) => e.visible !== false);
+  });
+  /** Effacée quand on change de diapositive ou de mode. */
+  protected readonly selectedElementId = linkedSignal<string, string | null>({
+    source: () => `${this.slide()?.id}|${this.mode()}`,
+    computation: () => null,
+  });
   protected readonly elementComponents = ELEMENT_COMPONENTS;
+  protected readonly elementLabel = elementLabel;
+
+  protected onStagePointerDown(event: PointerEvent): void {
+    if (!(event.target as HTMLElement).closest('app-element-frame')) {
+      this.selectedElementId.set(null);
+    }
+  }
 
   protected onElementDropped(event: CdkDragDrop<unknown, unknown, string>): void {
     const presentationId = this.presentationId();
@@ -61,16 +84,78 @@ export class SlideCanvas {
       .create(presentationId, slide.id, {
         type: preset.type,
         ...rect,
-        zIndex: slide.elements?.length ?? 0,
+        zIndex: this.zIndexRange().max + 1,
+        visible: true,
         configuration: preset.configuration,
       })
       .subscribe({
-        error: () =>
-          this.notifications.add({
-            severity: 'error',
-            summary: 'Échec de l’ajout',
-            detail: 'L’élément n’a pas pu être ajouté à la diapositive.',
-          }),
+        next: (created) => this.selectedElementId.set(created?.id ?? null),
+        error: () => this.notifyError('Échec de l’ajout', 'L’élément n’a pas pu être ajouté.'),
       });
+  }
+
+  protected onRectCommitted(element: ElementDetails, rect: SlideRect): void {
+    this.patch(element, rect);
+  }
+
+  protected onAction(element: ElementDetails, action: ElementAction): void {
+    switch (action) {
+      case 'front':
+        this.patch(element, { zIndex: this.zIndexRange().max + 1 });
+        break;
+      case 'back':
+        this.patch(element, { zIndex: this.zIndexRange().min - 1 });
+        break;
+      case 'lock':
+        this.patch(element, { locked: !element.locked });
+        break;
+      case 'hide':
+        this.patch(element, { visible: element.visible === false });
+        break;
+      case 'remove':
+        this.remove(element);
+        break;
+    }
+  }
+
+  private zIndexRange(): { min: number; max: number } {
+    const values = (this.slide()?.elements ?? []).map((e) => e.zIndex ?? 0);
+    return values.length
+      ? { min: Math.min(...values), max: Math.max(...values) }
+      : { min: 0, max: -1 };
+  }
+
+  private patch(element: ElementDetails, changes: ElementChanges): void {
+    const presentationId = this.presentationId();
+    if (!presentationId || !element.slideId || !element.id) {
+      return;
+    }
+    this.elementsMirror.patch(presentationId, element.slideId, element.id, changes).subscribe({
+      error: () =>
+        this.notifyError(
+          'Échec de l’enregistrement',
+          'La modification n’a pas pu être enregistrée.',
+        ),
+    });
+  }
+
+  private remove(element: ElementDetails): void {
+    const presentationId = this.presentationId();
+    if (!presentationId || !element.slideId || !element.id) {
+      return;
+    }
+    this.elementsMirror.remove(presentationId, element.slideId, element.id).subscribe({
+      next: () => {
+        if (this.selectedElementId() === element.id) {
+          this.selectedElementId.set(null);
+        }
+      },
+      error: () =>
+        this.notifyError('Échec de la suppression', 'L’élément n’a pas pu être supprimé.'),
+    });
+  }
+
+  private notifyError(summary: string, detail: string): void {
+    this.notifications.add({ severity: 'error', summary, detail });
   }
 }

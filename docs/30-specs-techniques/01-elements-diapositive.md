@@ -43,6 +43,21 @@ Conséquences pour un élément :
 - les **contrôles d'édition** (choix d'image, texte alternatif) divisent leurs tailles par
   `var(--slide-scale)`, posée par `SlideStage`, pour rester lisibles à l'écran.
 
+En mode `Edit`, chaque élément est rendu dans un `ElementFrame` (`slide-canvas/element-frame/`),
+qui porte toute la manipulation, comme dans un logiciel de présentation :
+
+- un clic sélectionne, un glisser déplace, les poignées redimensionnent ; le contenu de l'élément
+  reste `inert` jusqu'au double-clic ou à `Entrée`, et `Échap` en ressort puis désélectionne ;
+- au clavier : flèches pour déplacer (Maj : pas fin), Alt + flèches pour redimensionner,
+  `Suppr` pour supprimer ;
+- la géométrie en cours de geste est locale au cadre, et n'est enregistrée qu'à la fin du geste
+  (relâchement du pointeur ou de la flèche), via `ElementsMirrorService.patch` ;
+- la barre de l'élément sélectionné : premier plan / arrière-plan (`zIndex`), verrouiller
+  (plus de déplacement ni d'édition), masquer (estompé en édition, absent dans les autres modes).
+
+Les calculs (`moveRect`, `resizeRect`, `clampRect`) sont des fonctions pures de
+`slide-geometry.ts` : un élément reste toujours entièrement dans la diapositive.
+
 Les éléments créés avant ce repère (diapositive de 800 px de large) apparaissent 1,6 fois plus
 petits : aucune migration, ce n'étaient que des données de développement.
 

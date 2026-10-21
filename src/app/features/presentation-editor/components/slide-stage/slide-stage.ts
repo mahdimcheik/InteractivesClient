@@ -5,6 +5,7 @@ import {
   ElementRef,
   afterNextRender,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { SLIDE_HEIGHT, SLIDE_WIDTH } from '@core/utilities/models/slide-geometry';
@@ -30,12 +31,16 @@ import { SLIDE_HEIGHT, SLIDE_WIDTH } from '@core/utilities/models/slide-geometry
   `,
   styleUrl: './slide-stage.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.is-clipped]': 'clip()' },
 })
 export class SlideStage {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly width = SLIDE_WIDTH;
   protected readonly height = SLIDE_HEIGHT;
+
+  /** Coupe ce qui dépasse de la diapositive ; l'éditeur le désactive pour ses poignées. */
+  readonly clip = input(true);
 
   /** Pixels d'écran par unité logique. */
   readonly scale = signal(1);

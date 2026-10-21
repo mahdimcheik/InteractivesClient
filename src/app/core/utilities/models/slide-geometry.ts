@@ -38,3 +38,43 @@ export function clampRect(rect: SlideRect): SlideRect {
     height,
   };
 }
+
+/** Poignée de redimensionnement : bords (`n`, `e`, `s`, `w`) et coins. */
+export type ResizeHandle = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
+
+export const RESIZE_HANDLES: readonly ResizeHandle[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+
+export function moveRect(rect: SlideRect, dx: number, dy: number): SlideRect {
+  return clampRect({ ...rect, x: rect.x + dx, y: rect.y + dy });
+}
+
+/**
+ * Redimensionne depuis une poignée : le bord opposé reste fixe, et la taille ne descend pas sous
+ * {@link MIN_ELEMENT_SIZE} ni ne dépasse la diapositive.
+ */
+export function resizeRect(
+  rect: SlideRect,
+  handle: ResizeHandle,
+  dx: number,
+  dy: number,
+): SlideRect {
+  let left = rect.x;
+  let top = rect.y;
+  let right = rect.x + rect.width;
+  let bottom = rect.y + rect.height;
+
+  if (handle.includes('w')) {
+    left = Math.min(Math.max(left + dx, 0), right - MIN_ELEMENT_SIZE);
+  }
+  if (handle.includes('e')) {
+    right = Math.max(Math.min(right + dx, SLIDE_WIDTH), left + MIN_ELEMENT_SIZE);
+  }
+  if (handle.includes('n')) {
+    top = Math.min(Math.max(top + dy, 0), bottom - MIN_ELEMENT_SIZE);
+  }
+  if (handle.includes('s')) {
+    bottom = Math.max(Math.min(bottom + dy, SLIDE_HEIGHT), top + MIN_ELEMENT_SIZE);
+  }
+
+  return clampRect({ x: left, y: top, width: right - left, height: bottom - top });
+}

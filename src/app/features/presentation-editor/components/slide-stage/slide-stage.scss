@@ -4,7 +4,10 @@
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
-    overflow: hidden;
+
+    &.is-clipped {
+      overflow: hidden;
+    }
   }
 
   .stage {
