@@ -17,7 +17,7 @@ Tests use the `@angular/build:unit-test` builder with **Vitest + jsdom** (config
 `angular.json` → `test`, not in a `vitest.config.ts`):
 
 ```bash
-npx ng test --include src/app/layout/dashboard-layout/dashboard-layout.spec.ts   # a single spec file
+npx ng test --include src/app/core/utilities/models/slide-element-base.spec.ts   # a single spec file
 npx ng test --filter "^DashboardLayout"                                          # by suite/test name regex
 npx ng test --watch --coverage
 ```
@@ -32,6 +32,19 @@ node dist/InteractivesClient/server/server.mjs   # http://localhost:4000, overri
 There is no linter configured. Formatting is Prettier (`.prettierrc`: 100 cols, single quotes).
 
 ## Architecture
+
+The product is an **interactive PowerPoint**: a host builds a presentation in the editor and runs
+it live; participants (students) follow on their own machines — not a video stream, each client
+renders the slides itself and changes slide when the host does. Slides are made of positioned
+**elements** (title, text, image, a combined title + text + image; quiz/QCM planned). The same
+element component renders in every `PresentationMode` (`Edit`, `Presentation` for the host,
+`Client` for participants, `Thumbnail`) — see [docs/30-specs-techniques/01-elements-diapositive.md](docs/30-specs-techniques/01-elements-diapositive.md).
+
+Project docs (French) live in [docs/](docs/README.md), structured like the sibling BonProf repo.
+Work is planned in **lots** in [docs/50-backlog/01-roadmap.md](docs/50-backlog/01-roadmap.md),
+with known debt coded (O/C/I/R/S) in `03-dette-technique.md` and pending product decisions in
+`02-questions-ouvertes.md`. When a change delivers a lot, fixes a debt item, or settles a
+question, update those files in the same change.
 
 Angular 21, standalone components only, signals for state, Syncfusion (styled to match its
 Tailwind3 theme package) for UI, Tailwind 4 for utilities, Express-based SSR. UI strings, comments,
@@ -112,9 +125,11 @@ the same class `ThemeService` toggles, and a `@theme { --color-surface-*: ... }`
 app's existing `surface-*` class naming (inherited from PrimeNG's old semantic scale) to real
 color values.
 
-**Known mismatch:** the inline script reads `bp_theme`, but `ThemeService` writes
-`boilerplate_theme` (`environment.storagePrefix` + `theme`). The pre-paint script therefore never
-sees a stored preference. Fix by aligning the key in `index.html` with `storagePrefix`.
+**Known mismatch:** the inline script hard-codes `bp_theme`, but `ThemeService` writes
+`environment.storagePrefix` + `theme`, and the prefix differs per environment (`interactives_` in
+`environment.ts`, `bp_` in `environment.production.ts`). So the pre-paint script only sees the
+stored preference in production builds; in dev it always misses. Fix by aligning the prefixes (or
+the key in `index.html`).
 
 **Never hard-code a color** — use the `--app-*` tokens defined in `:root`/`.app-dark` at the top
 of `styles.scss` (`--app-text-color`, `--app-background`, `--app-border-color`,
@@ -158,17 +173,49 @@ message keys there so every form picks them up.
 
 Plain TS types/enums/abstract classes shared across features — distinct from the
 `related-models.ts` pattern used by `ConfigurableFormComponent`. Currently: `enumerators.ts`
-(`PresentationMode`, `TypeElement`) and `abstract-base-element.ts` (`AbstractBaseElement`,
-implementing `IAbstractBaseElement`), scaffolding for the slide-element type hierarchy used by
-the presentation editor (see below).
+(`PresentationMode`: `Edit`, `Presentation`, `Client`, `Thumbnail`) and `slide-element-base.ts`
+(`SlideElementBase<TConfig>`, the common contract every slide-element component extends, plus
+`parseElementConfig` — see below).
+Element types themselves come from the generated client (`ElementTypeEnum`, `ElementDetails`).
 
 ### The presentation editor
 
-`src/app/features/presentation-editor/` (`slide-panel`, `slide-canvas`, `slide-modal`, and
-`my-presentations` components) is the slide/presentation-building feature at the center of the
-app. It's backed by `presentations-mirror.service.ts` / `slides-mirror.service.ts` and the
-`Store`'s `presentations` / `presentationDetails` cache (upsert/reorder/remove helpers for
-slides within a cached presentation).
+`src/app/features/presentation-editor/` is the slide/presentation-building feature at the center
+of the app, routed at `/dashboard/presentations` (list) and `/dashboard/editeur/:presentationId`
+(editor). It's backed by the presentations / slides / elements mirror services and the `Store`'s
+`presentations` / `presentationDetails` cache (upsert/reorder/remove helpers for slides, and
+`setElementsForSlide` etc. for elements nested inside a cached presentation's slides).
+
+**Slide elements: one contract, one registry.** Full write-up (French) in
+[docs/30-specs-techniques/01-elements-diapositive.md](docs/30-specs-techniques/01-elements-diapositive.md). In short:
+
+- Every element component extends `SlideElementBase<TConfig>` and only declares
+  `protected readonly defaultConfig` plus its template. The base provides the `element` / `mode`
+  / `presentationId` inputs, `isEditable()` (mode is `Edit`), `config()` — a `linkedSignal` of the
+  `element.configuration` JSON merged over `defaultConfig` (bad JSON or missing fields fall back
+  to defaults, so old rows stay valid) — and `saveConfig(patch)`, which updates `config`
+  optimistically, persists through `ElementsMirrorService.update`, and rolls back + notifies on
+  error. The optimistic local copy matters: the canvas renders from the editor's `presentation`
+  signal, not the `Store`, so `element()` is not refreshed after an update.
+- Rendering must depend only on `config()` + `mode()`, with no edit affordances outside `Edit` —
+  that's what lets participants render the same components in `Client` mode.
+- `slide-canvas/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →
+  component; `ELEMENT_PRESETS` is the editor palette (label, primeicons class, type, size,
+  initial configuration JSON). Palette ≠ types: "Titre" and "Zone de texte" are both `Text`
+  (`role: 'title' | 'body'`). `editor-toolbar` renders the palette from `ELEMENT_PRESETS`
+  (CDK drag `data` = preset id); `SlideCanvas.onElementDropped` creates the element from the
+  preset and renders each element with `ngComponentOutlet`.
+- Shared building blocks in `elements/shared/`: `EditableText` (contenteditable, binds
+  `[textContent]` so Angular replaces browser-inserted nodes), `ImagePicker` (uploads via
+  `MediasMirrorService` with `Public` visibility so participants need no signed URL), `ImageView`
+  (`NgOptimizedImage` `fill` + alt-text field in edit mode).
+- `TextImageTitleElement` is built but **not registered**: `ElementTypeEnum.TextImageTitle` doesn't
+  exist in the API yet. After the backend adds it and `npm run gen-api` runs, add it to
+  `ELEMENT_COMPONENTS` and add a preset.
+- Adding an element: (new API type → backend + `gen-api`), then `elements/<name>/` with
+  `<name>.model.ts` (config interface + `…_DEFAULT_CONFIG`) and the component, then a
+  `ELEMENT_COMPONENTS` entry and a preset. `element-registry.spec.ts` checks every preset has a
+  component.
 
 ## Gotchas
 
@@ -185,11 +232,16 @@ slides within a cached presentation).
   underlying element (see `fieldHtmlAttrs()` in `configurable-form.component.ts`) — but
   `ColorPickerComponent` (`[ejs-colorpicker]`) does not; it enhances a real `<input>` directly, so
   bind `id`/`aria-*` straight onto that `<input>` instead.
-- `InteractivesClient/` at the repo root is a stray nested git repo containing only a README.
+- `src/app/design-dev/*.html` are static HTML design mockups (home, editor, sign-up) used as
+  visual references; nothing imports or builds them. `src/app/core/api/` is currently empty.
+- `src/app/layout/dashboard-layout/dashboard-layout.spec.ts` no longer compiles (it indexes
+  `sidebarOpen` / `shouldShowSidebar`, which `DashboardLayout` no longer has), and because the
+  test builder compiles every spec, it breaks `npx ng test` — even with `--include`.
 - The README documents `npm test` and `npm run serve:ssr:InteractivesClient`; neither script exists.
-- `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) and `environment.useMockAuth` are
-  vestigial — not referenced anywhere in `app.config.ts`. Real auth is `AuthMirrorService` +
-  `Store` (see "Auth is the spine of the app").
+- `src/app/core/auth/` (`auth-api.ts`, `auth.models.ts`) is vestigial — nothing imports it. Real
+  auth is `AuthMirrorService` + `Store` (see "Auth is the spine of the app").
+  `environment.useMockAuth` no longer affects auth, but `ContactService` still reads it to fake
+  the contact-form submission (it's `true` in `environment.ts`, so dev never hits `/contact`).
 - `token.interceptor.ts`'s own doc comment marks `TokenInterceptor` `@obsolete Pour le
   developpement uniquement`, despite it being actively registered in `app.config.ts`'s
   interceptor chain — resolve the contradiction (drop the comment or replace the interceptor)
@@ -198,8 +250,10 @@ slides within a cached presentation).
 # Services
 
 Every generated `@client` service gets a mirror service under `core/utilities/services/`
-(`auth-mirror.service.ts`, `medias-mirror.service.ts`, `presentations-mirror.service.ts`,
-`slides-mirror.service.ts`, barrel-exported from `index.ts`) that wraps its methods with
+(`auth-mirror.service.ts`, `elements-mirror.service.ts`, `medias-mirror.service.ts`,
+`presentations-mirror.service.ts`, `slides-mirror.service.ts`, barrel-exported from `index.ts`) that wraps its methods with
 readable names and handles caching. A single store service, `Store` (`store.ts`), holds the
-cache used by all mirror services (session + presentation/slide data). Follow this pattern for
+cache used by all mirror services (session + presentation/slide/element data). Read methods
+take an optional `CacheOptions` (`{ force }`, exported from `presentations-mirror.service.ts`)
+to bypass the cache. Follow this pattern for
 any newly generated service.
