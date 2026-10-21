@@ -1,4 +1,44 @@
 @layer app {
+  :host {
+    position: relative;
+    display: block;
+  }
+
+  .card-delete {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--app-border-color);
+    border-radius: 9999px;
+    background: var(--app-background);
+    color: var(--app-danger-color);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 120ms ease;
+
+    &:focus-visible {
+      outline: 2px solid var(--app-primary-color);
+      outline-offset: 2px;
+    }
+  }
+
+  :host(:hover) .card-delete,
+  .card-delete:focus-visible {
+    opacity: 1;
+  }
+
+  // Écrans tactiles : pas de survol, le bouton reste visible.
+  @media (hover: none) {
+    .card-delete {
+      opacity: 1;
+    }
+  }
+
   .presentation-card {
     display: flex;
     flex-direction: column;

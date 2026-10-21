@@ -43,22 +43,17 @@ Avant d'empiler les lots suivants, de quoi détecter les régressions.
   (C3) ; clé de thème alignée, vérifiée par un test (I1).
 - Découvert : l'API n'a pas de route `/contact` (C5, lot 8).
 
-## Lot 3 — Manipuler les éléments
+## Lot 3 — Manipuler les éléments — **livré, à vérifier dans le navigateur**
 
-L'API est prête (`x`, `y`, `width`, `height`, `zIndex`, `locked`, `visible` dans
-`UpdateElementRequest`) : il manque l'interface.
+- `Store` seule source de vérité de l'éditeur, `ElementsMirrorService.patch` (C4) — prérequis :
+  l'API remplaçant l'élément entier, un déplacement aurait renvoyé un texte périmé.
+- Repère logique 1280 × 720 (`slide-geometry.ts`), mis à l'échelle par `SlideStage`.
+- `ElementFrame` : sélection, déplacement et redimensionnement à la souris et au clavier,
+  enregistrés en fin de geste ; premier plan / arrière-plan, verrouiller, masquer, supprimer.
+- Supprimer une diapositive (panneau) et une présentation (liste), avec confirmation.
 
-- **Repère logique de diapositive** (par exemple 1280 × 720) mis à l'échelle à l'affichage, au
-  lieu de pixels relatifs à la largeur actuelle du canvas. À faire **en premier** : chaque
-  élément créé avant fige des coordonnées dans l'ancien repère, et le direct (lot 6) exige un
-  rendu identique sur tous les écrans.
-- Sélection d'un élément (clic, `Échap` pour désélectionner), cadre de sélection.
-- Déplacer (glisser, flèches du clavier) et redimensionner (poignées), enregistrés à la fin du
-  geste, avec retour arrière en cas d'échec.
-- Supprimer (bouton, touche `Suppr`), premier plan / arrière-plan (`zIndex`), verrouiller,
-  masquer.
-- Supprimer une diapositive et une présentation : les services existent
-  (`SlidesMirrorService.remove`, `PresentationsMirrorService.remove`), pas les boutons.
+Testé unitairement (géométrie, `patch`, cadre) ; le parcours complet reste à faire à la main,
+avec l'API redémarrée (Image et Titre + texte + image).
 
 ## Lot 4 — Propriétés et mise en forme
 

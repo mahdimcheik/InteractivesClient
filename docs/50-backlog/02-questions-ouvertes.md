@@ -5,10 +5,12 @@
 > Arbitrages produit à trancher avant le lot qui en dépend. Une question tranchée est retirée
 > d'ici et sa réponse va dans la spec concernée.
 
-## Avant le lot 3 — Manipuler les éléments
+## Avant le lot 4 — Propriétés et mise en forme
 
-- **Taille du repère logique de diapositive** (1280 × 720 ? 1920 × 1080 ?) et format : 16:9
-  seulement, ou 4:3 aussi ?
+- **Les diapositives suivent-elles le thème clair / sombre du spectateur ?** Aujourd'hui le
+  texte des éléments utilise `--app-text-color` : un participant en thème sombre ne voit pas la
+  même diapositive que l'hôte. Couleurs propres à la diapositive (arrière-plan et texte choisis
+  par l'auteur), indépendantes du thème de l'application ?
 
 ## Avant le lot 6 — Séance en direct
 

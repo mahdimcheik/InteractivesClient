@@ -30,7 +30,8 @@ chaque client rend les mêmes composants en mode `Client`.
 ## Le repère de la diapositive
 
 Positions et tailles (`x`, `y`, `width`, `height`) sont stockées dans un repère logique de
-**1280 × 720** (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
+**1280 × 720**, format 16:9 uniquement (choix par défaut au lot 3, à confirmer : en changer
+demandera de convertir les éléments existants) (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
 en pixels d'écran. `SlideStage` (`components/slide-stage/`) occupe la largeur disponible au
 format 16:9 et met son contenu à l'échelle (`transform: scale`) ; `toSlidePoint` convertit un
 point de l'écran en coordonnées logiques. Une diapositive se rend ainsi à l'identique dans

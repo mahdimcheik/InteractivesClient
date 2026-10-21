@@ -15,3 +15,12 @@
     </p>
   </div>
 </a>
+
+<button
+  type="button"
+  class="card-delete"
+  [attr.aria-label]="'Supprimer la présentation ' + (presentation().title || 'Sans titre')"
+  (click)="deleteRequested.emit()"
+>
+  <i class="pi pi-trash" aria-hidden="true"></i>
+</button>

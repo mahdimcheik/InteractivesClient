@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PresentationSummary } from '@client';
@@ -13,4 +13,5 @@ import { PresentationSummary } from '@client';
 })
 export class PresentationCard {
   readonly presentation = input.required<PresentationSummary>();
+  readonly deleteRequested = output<void>();
 }

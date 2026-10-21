@@ -19,11 +19,12 @@ import { NotificationService } from '@core/utilities/services/notification.servi
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 import { Store } from '@core/utilities/services/store';
 
+import { ConfirmDeleteModal } from '../confirm-delete-modal/confirm-delete-modal';
 import { SlideModal } from '../slide-modal/slide-modal';
 
 @Component({
   selector: 'app-slide-panel',
-  imports: [SlideModal, CdkDropList, CdkDrag, CdkDragHandle],
+  imports: [SlideModal, ConfirmDeleteModal, CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './slide-panel.html',
   styleUrl: './slide-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +44,11 @@ export class SlidePanel {
   protected readonly slideModalMode = signal<'add' | 'edit'>('add');
   protected readonly editingSlide = signal<SlideDetails | undefined>(undefined);
   protected readonly savingSlide = signal(false);
+  protected readonly slidePendingDeletion = signal<{ slide: SlideDetails; index: number } | null>(
+    null,
+  );
+  protected readonly deleteModalVisible = signal(false);
+  protected readonly deletingSlide = signal(false);
 
   protected openAddModal(): void {
     if (!this.presentationId()) {
@@ -141,5 +147,38 @@ export class SlidePanel {
           });
         },
       });
+  }
+
+  protected askDelete(slide: SlideDetails, index: number): void {
+    this.slidePendingDeletion.set({ slide, index });
+    this.deleteModalVisible.set(true);
+  }
+
+  protected confirmDelete(): void {
+    const presentationId = this.presentationId();
+    const pending = this.slidePendingDeletion();
+    if (!presentationId || !pending?.slide.id) {
+      return;
+    }
+
+    this.deletingSlide.set(true);
+    this.slidesMirror.remove(presentationId, pending.slide.id).subscribe({
+      next: () => {
+        this.deletingSlide.set(false);
+        this.deleteModalVisible.set(false);
+        const selected = this.selectedSlideIndex();
+        if (pending.index < selected || selected >= this.slides().length) {
+          this.slideSelected.emit(Math.max(selected - 1, 0));
+        }
+      },
+      error: () => {
+        this.deletingSlide.set(false);
+        this.notifications.add({
+          severity: 'error',
+          summary: 'Échec de la suppression',
+          detail: "La diapositive n'a pas pu être supprimée.",
+        });
+      },
+    });
   }
 }

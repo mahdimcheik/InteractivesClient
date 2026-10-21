@@ -23,8 +23,23 @@
   } @else {
     <div class="presentation-grid">
       @for (presentation of presentations(); track presentation.id) {
-        <app-presentation-card [presentation]="presentation" />
+        <app-presentation-card
+          [presentation]="presentation"
+          (deleteRequested)="askDelete(presentation)"
+        />
       }
     </div>
   }
 </section>
+
+<app-confirm-delete-modal
+  [(visible)]="deleteModalVisible"
+  heading="Supprimer la présentation"
+  [message]="
+    '« ' +
+    (pendingDeletion()?.title || 'Sans titre') +
+    ' » et toutes ses diapositives seront supprimées.'
+  "
+  [deleting]="deleting()"
+  (confirmed)="confirmDelete()"
+/>

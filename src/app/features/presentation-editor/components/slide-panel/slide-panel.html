@@ -32,6 +32,14 @@
           </button>
           <button
             type="button"
+            class="thumbnail-topbar-button"
+            [attr.aria-label]="'Supprimer la diapositive ' + ($index + 1)"
+            (click)="$event.stopPropagation(); askDelete(slide, $index)"
+          >
+            <i class="pi pi-trash" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
             class="thumbnail-topbar-button thumbnail-drag-handle"
             cdkDragHandle
             [attr.aria-label]="'Réordonner la diapositive ' + ($index + 1)"
@@ -78,4 +86,16 @@
   [initialColor]="editingSlide()?.backgroundColor ?? '#ffffff'"
   [saving]="savingSlide()"
   (confirmed)="onSlideModalConfirm($event)"
+/>
+
+<app-confirm-delete-modal
+  [(visible)]="deleteModalVisible"
+  heading="Supprimer la diapositive"
+  [message]="
+    'La diapositive ' +
+    ((slidePendingDeletion()?.index ?? 0) + 1) +
+    ' et tous ses éléments seront supprimés.'
+  "
+  [deleting]="deletingSlide()"
+  (confirmed)="confirmDelete()"
 />
