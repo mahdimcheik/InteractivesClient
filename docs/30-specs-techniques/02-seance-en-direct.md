@@ -1,6 +1,6 @@
 # Séance en direct
 
-> Statut : **Livré (lot 6), à vérifier dans le navigateur** · Feuille de route :
+> Statut : **Livré (lots 6 et 7), à vérifier dans le navigateur** · Feuille de route :
 > [lot 6](../50-backlog/01-roadmap.md)
 
 L'hôte diffuse sa présentation ; chaque participant la suit sur son propre écran. Seul l'index
@@ -48,8 +48,28 @@ utilisateur (deux onglets comptent une fois) ; l'hôte n'est pas compté. L'éta
 - Participant (`features/live-session/`) : `/seance` pour saisir un code, `/seance/:code` pour
   suivre la séance (états : connexion, en direct, reconnexion, introuvable, terminée).
 
+## QCM en séance (lot 7)
+
+Décisions : réponse **unique**, **sans minuteur** ; résultats **nominatifs** pour l'hôte,
+pendant la séance seulement ; après la révélation, le participant voit la bonne réponse, la
+sienne et la répartition ; rien n'est conservé.
+
+| Hub (hôte)                       | Effet                                                               |
+| -------------------------------- | ------------------------------------------------------------------- |
+| `OpenQuiz(code, elementId)`      | lit le QCM en base (et vérifie qu'il est dans la présentation)      |
+| `CloseQuiz(code, elementId)`     | plus de réponse acceptée                                            |
+| `RevealQuiz(code, elementId)`    | ferme si besoin et publie la bonne réponse et la répartition        |
+| **Hub (participant)**            |                                                                     |
+| `AnswerQuiz(code, elementId, i)` | une réponse par participant, modifiable tant que le vote est ouvert |
+
+Événements : `QuizStateChanged(ParticipantQuizState)` à tous, sans réponse personnelle (le
+client garde la sienne), répartition et `correct` seulement une fois révélé ;
+`QuizResultsChanged(HostQuizState)` à l'hôte, avec les réponses nominatives. `Join` et
+`JoinAsHost` renvoient l'état des QCM déjà lancés : une reconnexion retrouve tout, y compris la
+réponse du participant. La présentation servie par `GET /live-sessions/{code}/presentation`
+est expurgée de `correct`.
+
 ## Limites connues
 
 - Un jeton d'accès expiré pendant la séance fait échouer la reconnexion : il faudra renouveler
   la session avant de se reconnecter.
-- Au lot QCM, `GET /live-sessions/{code}/presentation` devra expurger les bonnes réponses.

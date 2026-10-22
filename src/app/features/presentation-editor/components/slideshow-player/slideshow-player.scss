@@ -5,6 +5,8 @@
     --player-backdrop: #000000;
     --player-control-color: #ffffff;
     --player-control-background: rgb(0 0 0 / 60%);
+    --player-correct: #4ade80;
+    --player-wrong: #f87171;
 
     position: fixed;
     inset: 0;
@@ -95,5 +97,50 @@
     min-width: 3.5rem;
     font-size: 0.875rem;
     text-align: center;
+  }
+
+  .player-responses {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    bottom: 4.5rem;
+    width: min(20rem, calc(100% - 2rem));
+    padding: 1rem;
+    overflow-y: auto;
+    border-radius: 0.75rem;
+    background: var(--player-control-background);
+    color: var(--player-control-color);
+
+    h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    ul {
+      margin: 0 0 1rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.25rem 0;
+    }
+
+    p {
+      margin: 0 0 1rem;
+      opacity: 0.8;
+    }
+
+    // Sur fond sombre (cadre du lecteur) : contraste AA.
+    .is-correct {
+      color: var(--player-correct);
+    }
+
+    .is-wrong {
+      color: var(--player-wrong);
+    }
   }
 }

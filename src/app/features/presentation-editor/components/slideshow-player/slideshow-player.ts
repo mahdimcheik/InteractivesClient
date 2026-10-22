@@ -10,8 +10,15 @@ import {
   input,
   linkedSignal,
   output,
+  signal,
 } from '@angular/core';
-import { PresentationDetails } from '@client';
+import { ElementTypeEnum, PresentationDetails } from '@client';
+import {
+  QUIZ_DEFAULT_CONFIG,
+  QUIZ_LETTERS,
+} from '@app/shared/slides/elements/quiz-element/quiz-element.model';
+import { QuizRuntime } from '@app/shared/slides/elements/quiz-element/quiz-runtime';
+import { parseElementConfig } from '@core/utilities/models/slide-element-base';
 import { PresentationMode } from '@core/utilities/models/enumerators';
 
 import { SlideView } from '@app/shared/slides/slide-view/slide-view';
@@ -59,6 +66,23 @@ export class SlideshowPlayer {
   protected readonly current = computed(() => this.slides()[this.index()]);
   protected readonly isFirst = computed(() => this.index() === 0);
   protected readonly isLast = computed(() => this.index() >= this.slides().length - 1);
+
+  private readonly quizRuntime = inject(QuizRuntime, { optional: true });
+  /** Réponses nominatives : visibles par l'hôte seul, hors de la diapositive projetée. */
+  protected readonly responsesOpen = signal(false);
+  protected readonly letters = QUIZ_LETTERS;
+  protected readonly quizResults = computed(() => {
+    const runtime = this.quizRuntime;
+    if (!runtime || runtime.role() !== 'host') {
+      return [];
+    }
+    return (this.current()?.elements ?? [])
+      .filter((element) => element.type === ElementTypeEnum.Quiz && element.id)
+      .map((element) => ({
+        question: parseElementConfig(element.configuration, QUIZ_DEFAULT_CONFIG).question,
+        state: runtime.hostState(element.id!),
+      }));
+  });
 
   constructor() {
     const onFullscreenChange = () => {

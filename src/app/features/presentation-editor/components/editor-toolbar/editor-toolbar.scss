@@ -41,41 +41,4 @@
       background: var(--app-surface-subtle);
     }
   }
-
-  .insert-group {
-    gap: 0.5rem;
-  }
-
-  .insert-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: var(--app-radius);
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1px solid transparent;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-
-  .insert-button-poll {
-    background: color-mix(in srgb, var(--app-success-color) 10%, transparent);
-    color: var(--app-success-color);
-    border-color: color-mix(in srgb, var(--app-success-color) 20%, transparent);
-
-    &:hover {
-      background: color-mix(in srgb, var(--app-success-color) 20%, transparent);
-    }
-  }
-
-  .insert-button-quiz {
-    background: color-mix(in srgb, var(--app-accent-color) 10%, transparent);
-    color: var(--app-accent-color);
-    border-color: color-mix(in srgb, var(--app-accent-color) 20%, transparent);
-
-    &:hover {
-      background: color-mix(in srgb, var(--app-accent-color) 20%, transparent);
-    }
-  }
 }

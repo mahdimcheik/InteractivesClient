@@ -104,19 +104,20 @@ conservé après.
 **Reste :** essai de bout en bout à plusieurs navigateurs ; renouveler le jeton avant une
 reconnexion si la séance dure plus longtemps que sa validité.
 
-## Lot 7 — QCM
+## Lot 7 — QCM — **livré, à vérifier dans le navigateur**
 
-Premier élément interactif (`Quiz`, déjà dans `ElementTypeEnum`).
+Tranché : réponse unique sans minuteur, résultats nominatifs pour l'hôte (pendant la séance),
+participant qui voit sa réponse et la répartition après révélation, rien de conservé. Voir
+[la séance en direct](../30-specs-techniques/02-seance-en-direct.md#qcm-en-séance-lot-7).
 
-- Élément `QuizElement` : édition de la question et des réponses, choix de la bonne réponse.
-- En séance : l'hôte ouvre et ferme le QCM, les participants répondent, l'hôte voit les
-  résultats en direct puis révèle la bonne réponse.
-- Le contrat `SlideElementBase` gagne de quoi remonter une interaction du participant en mode
-  `Client` — conçu ici, sur un vrai besoin.
-
-**Côté API, à prévoir :** réponses des participants dans l'état de séance, agrégation des
-résultats, et **ne jamais envoyer la bonne réponse aux participants avant la révélation** —
-la configuration servie en mode participant doit en être expurgée.
+- `QuizElement` (preset « QCM ») et `QuizElementPanel` : question, 2 à 6 réponses, bonne
+  réponse.
+- Le contrat des éléments s'étend par injection : `QuizRuntime`, fourni par l'écran qui tient
+  la connexion, optionnel hors séance.
+- API : ouvrir / fermer / révéler / répondre dans le hub, état des QCM rendu à la reconnexion,
+  bonne réponse retirée de la présentation servie aux participants.
+- Réponses nominatives dans un panneau du lecteur, jamais sur la diapositive projetée.
+- Boutons factices « Ajouter un sondage » et « Ajouter un quiz » retirés de la barre d'outils.
 
 ## Lot 8 — Mise en production
 

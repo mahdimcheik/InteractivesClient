@@ -3,6 +3,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
+import { QuizRuntime } from '@app/shared/slides/elements/quiz-element/quiz-runtime';
 import { LiveSessionConnection } from '@core/utilities/services/live-session-connection';
 import { LiveSessionsMirrorService } from '@core/utilities/services/live-sessions-mirror.service';
 import { SlideView } from '@app/shared/slides/slide-view/slide-view';
@@ -18,7 +19,7 @@ type PageState = 'loading' | 'live' | 'not-found' | 'ended';
 @Component({
   selector: 'app-live-session-page',
   imports: [SlideView, RouterLink],
-  providers: [LiveSessionConnection],
+  providers: [LiveSessionConnection, { provide: QuizRuntime, useExisting: LiveSessionConnection }],
   templateUrl: './live-session-page.html',
   styleUrl: './live-session-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

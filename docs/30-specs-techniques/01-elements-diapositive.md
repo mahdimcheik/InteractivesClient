@@ -130,6 +130,7 @@ Les composants sont sous
 | Zone de texte         | `Text`           | `TextElement`           | `{ content, role: 'body' }`                                     |
 | Image                 | `Image`          | `ImageElement`          | `{ key, url, alt, fit: 'contain' \| 'cover' }`                  |
 | Titre + texte + image | `TextImageTitle` | `TextImageTitleElement` | `{ title, body, image: { key, url, alt, fit }, imagePosition }` |
+| QCM                   | `Quiz`           | `QuizElement`           | `{ question, answers: string[], correct }`                      |
 
 Le Titre n'est pas un type API à part : c'est un `Text` avec `role: 'title'`, rendu comme un titre
 accessible (`role="heading"`).
@@ -182,9 +183,30 @@ Règles à respecter :
   **contrôles d'édition**, eux, utilisent les jetons `--app-*` ;
 - réutiliser les briques de `shared/` plutôt que de recoder l'édition de texte ou l'envoi d'image.
 
+## Éléments interactifs : `QuizRuntime`
+
+Un élément interactif reçoit la séance par injection, pas par le contrat de base : il injecte
+`QuizRuntime` (`elements/quiz-element/quiz-runtime.ts`) en **optionnel**. L'écran qui tient la
+connexion le fournit (`{ provide: QuizRuntime, useExisting: LiveSessionConnection }` dans
+`PresentationEditor` et `LiveSessionPage`) ; hors séance, il est absent ou sans rôle, et
+l'élément s'affiche sans interaction (miniatures, présentation seule).
+
+Le QCM selon le mode et le rôle :
+
+- `Edit` — question et réponses modifiables en place ; bonne réponse, ajout et retrait dans le
+  panneau (`QuizElementPanel`, 2 à 6 réponses) ;
+- `Presentation` + hôte — « Ouvrir le vote », « Fermer le vote », « Rouvrir », « Révéler la
+  réponse », nombre de réponses ; répartition dès l'ouverture, bonne réponse après révélation.
+  Les **réponses nominatives** ne s'affichent jamais sur la diapositive (souvent projetée) :
+  elles sont dans un panneau du lecteur, que l'hôte ouvre lui-même ;
+- `Client` + participant — un bouton par réponse (actif seulement vote ouvert, modifiable tant
+  qu'il l'est) ; après révélation : bonne réponse, sa réponse juste ou fausse, répartition.
+
+**Règle de sécurité :** l'API retire `correct` de la configuration servie aux participants, et
+la fusion avec les défauts y remet `0`. Hors `Edit`, la bonne réponse ne se lit **jamais** dans
+`config()`, seulement dans l'état révélé de la séance (un test le vérifie).
+
 ## À venir
 
-- **QCM** (`Quiz`, déjà présent dans `ElementTypeEnum`) : premier élément interactif ; il faudra
-  ajouter à la base de quoi remonter les réponses des participants en mode `Client`.
-- **Synchronisation en direct** hôte → participants.
 - **Animations.**
+- Autres éléments interactifs (sondage, nuage de mots) sur le modèle de `QuizRuntime`.

@@ -42,7 +42,46 @@
   <button type="button" aria-label="Diapositive suivante" [disabled]="isLast()" (click)="next()">
     <i class="pi pi-chevron-right" aria-hidden="true"></i>
   </button>
+  @if (quizResults().length) {
+    <button
+      type="button"
+      aria-label="Réponses des participants"
+      aria-controls="player-responses"
+      [attr.aria-expanded]="responsesOpen()"
+      (click)="responsesOpen.set(!responsesOpen())"
+    >
+      <i class="pi pi-users" aria-hidden="true"></i>
+    </button>
+  }
   <button type="button" aria-label="Quitter la présentation" (click)="close()">
     <i class="pi pi-times" aria-hidden="true"></i>
   </button>
 </div>
+
+@if (responsesOpen() && quizResults().length) {
+  <aside id="player-responses" class="player-responses" aria-label="Réponses des participants">
+    @for (quiz of quizResults(); track $index) {
+      <h2>{{ quiz.question }}</h2>
+      @if (quiz.state?.responses?.length) {
+        <ul>
+          @for (response of quiz.state!.responses; track response.participantName) {
+            <li>
+              <span>{{ response.participantName }}</span>
+              <strong
+                [class.is-correct]="quiz.state!.correct === response.answer"
+                [class.is-wrong]="
+                  quiz.state!.correct !== null &&
+                  quiz.state!.correct !== undefined &&
+                  quiz.state!.correct !== response.answer
+                "
+                >{{ letters[response.answer] }}</strong
+              >
+            </li>
+          }
+        </ul>
+      } @else {
+        <p>Aucune réponse pour l'instant.</p>
+      }
+    }
+  </aside>
+}

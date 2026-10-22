@@ -57,8 +57,16 @@
     --app-success-background: #f0fdf4;
 
     // Contenu des diapositives : volontairement absent de `.app-dark`. Une diapositive a ses
-    // propres couleurs (`slide-style.ts`) et se rend à l'identique quel que soit le thème.
+    // propres couleurs (`slide-style.ts`, `--slide-text-color` = `SLIDE_DEFAULT_TEXT_COLOR`) et se
+    // rend à l'identique quel que soit le thème.
     --slide-placeholder-color: #6b7280;
+    --slide-text-color: #1f2937;
+    --slide-quiz-accent: #2563eb;
+    --slide-quiz-on-accent: #ffffff;
+    --slide-quiz-surface: #f3f4f6;
+    --slide-quiz-border: #d1d5db;
+    --slide-quiz-correct: #15803d;
+    --slide-quiz-wrong: #b91c1c;
   }
 
   .app-dark {

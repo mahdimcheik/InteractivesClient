@@ -1,0 +1,35 @@
+@layer app {
+  .quiz-fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .quiz-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quiz-letter {
+    width: 1rem;
+    font-weight: 700;
+    color: var(--app-text-color);
+  }
+
+  .quiz-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--app-border-color);
+    border-radius: 0.5rem;
+    background: var(--app-background);
+    color: var(--app-text-color);
+    font-size: 0.875rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--app-primary-color);
+      outline-offset: 1px;
+    }
+  }
+}

@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 
 import { LiveSessionDetails, PresentationDetails } from '@client';
+import { QuizRuntime } from '@app/shared/slides/elements/quiz-element/quiz-runtime';
 import { LiveSessionConnection } from '@core/utilities/services/live-session-connection';
 import { LiveSessionsMirrorService } from '@core/utilities/services/live-sessions-mirror.service';
 import { NotificationService } from '@core/utilities/services/notification.service';
@@ -45,7 +46,7 @@ const NEW_PRESENTATION_ID = 'new';
     SlideshowPlayer,
     ConfirmDeleteModal,
   ],
-  providers: [LiveSessionConnection],
+  providers: [LiveSessionConnection, { provide: QuizRuntime, useExisting: LiveSessionConnection }],
   templateUrl: './presentation-editor.html',
   styleUrl: './presentation-editor.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

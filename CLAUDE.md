@@ -210,6 +210,12 @@ only the current slide index travels; each client renders the slide itself. API:
 presentation. Client: `LiveSessionsMirrorService` (REST, no cache) and `LiveSessionConnection`
 (SignalR, **provided per component**, lazy `import('@microsoft/signalr')`, rejoins on reconnect).
 Host flow in `PresentationEditor`; participant pages in `features/live-session/`.
+Interactive elements get the session by **optional injection** of `QuizRuntime`
+(`shared/slides/elements/quiz-element/quiz-runtime.ts`), provided as
+`{ provide: QuizRuntime, useExisting: LiveSessionConnection }` by the editor and the participant
+page. Security rule: the API strips `correct` from quiz configs served to participants, and
+`parseElementConfig` refills it with the default `0` — outside `Edit`, never read the correct
+answer from `config()`, only from the revealed session state.
 
 Slide **rendering** shared by the editor and the live-session page lives in `src/app/shared/slides/`
 (`slide-stage/`, `slide-view/`, `elements/` with the registry); editor-only pieces (`SlideCanvas`,

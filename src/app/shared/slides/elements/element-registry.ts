@@ -9,6 +9,9 @@ import {
 import { ImageElement } from './image-element/image-element';
 import { ImageElementPanel } from './image-element/image-element-panel';
 import { IMAGE_DEFAULT_CONFIG, ImageConfig } from './image-element/image-element.model';
+import { QuizElement } from './quiz-element/quiz-element';
+import { QuizElementPanel } from './quiz-element/quiz-element-panel';
+import { QUIZ_DEFAULT_CONFIG, QuizConfig } from './quiz-element/quiz-element.model';
 import { TextElement } from './text-element/text-element';
 import { TextElementPanel } from './text-element/text-element-panel';
 import { TEXT_DEFAULT_CONFIG, TextElementConfig } from './text-element/text-element.model';
@@ -25,6 +28,7 @@ export const ELEMENT_COMPONENTS: Partial<Record<ElementTypeEnum, Type<SlideEleme
     [ElementTypeEnum.Text]: TextElement,
     [ElementTypeEnum.Image]: ImageElement,
     [ElementTypeEnum.TextImageTitle]: TextImageTitleElement,
+    [ElementTypeEnum.Quiz]: QuizElement,
   };
 
 /**
@@ -35,6 +39,7 @@ export const ELEMENT_PANELS: Partial<Record<ElementTypeEnum, Type<ElementConfigE
   [ElementTypeEnum.Text]: TextElementPanel,
   [ElementTypeEnum.Image]: ImageElementPanel,
   [ElementTypeEnum.TextImageTitle]: TextImageTitleElementPanel,
+  [ElementTypeEnum.Quiz]: QuizElementPanel,
 };
 
 /** Entrée de la palette de l'éditeur : ce qui est créé quand on la glisse sur la diapositive. */
@@ -88,6 +93,14 @@ export const ELEMENT_PRESETS: readonly ElementPreset[] = [
     type: ElementTypeEnum.TextImageTitle,
     size: { width: 1152, height: 576 },
     configuration: JSON.stringify(TEXT_IMAGE_TITLE_DEFAULT_CONFIG satisfies TextImageTitleConfig),
+  },
+  {
+    id: 'quiz',
+    label: 'QCM',
+    icon: 'pi-question-circle',
+    type: ElementTypeEnum.Quiz,
+    size: { width: 1024, height: 560 },
+    configuration: JSON.stringify(QUIZ_DEFAULT_CONFIG satisfies QuizConfig),
   },
 ];
 

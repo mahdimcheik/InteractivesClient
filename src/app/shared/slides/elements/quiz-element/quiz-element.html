@@ -1,0 +1,98 @@
+<div class="quiz">
+  <app-editable-text
+    class="quiz-question"
+    [text]="config().question"
+    [editable]="isEditable()"
+    [heading]="true"
+    [appearance]="questionAppearance"
+    label="Question"
+    placeholder="Question"
+    (committed)="saveConfig({ question: $event })"
+  />
+
+  <ol class="quiz-answers">
+    @for (text of config().answers; track $index; let i = $index) {
+      <li
+        class="quiz-answer"
+        [class.is-correct]="correct() === i"
+        [class.is-wrong]="
+          correct() !== null && !isEditable() && myAnswer() === i && correct() !== i
+        "
+        [class.is-mine]="myAnswer() === i"
+      >
+        @if (showDistribution()) {
+          <span class="quiz-bar" [style.width.%]="percent(i)" aria-hidden="true"></span>
+        }
+        <span class="quiz-letter" aria-hidden="true">{{ letters[i] }}</span>
+
+        @if (isParticipant()) {
+          <button
+            type="button"
+            class="quiz-choice"
+            [attr.aria-pressed]="myAnswer() === i"
+            [disabled]="status() !== 'Open'"
+            (click)="answer(i)"
+          >
+            <span class="app-visually-hidden">Réponse {{ letters[i] }} :</span> {{ text }}
+          </button>
+        } @else {
+          <app-editable-text
+            class="quiz-text"
+            [text]="text"
+            [editable]="isEditable()"
+            [appearance]="answerAppearance"
+            [label]="'Réponse ' + letters[i]"
+            (committed)="saveAnswer(i, $event)"
+          />
+        }
+
+        @if (correct() === i) {
+          <span class="quiz-mark">
+            <i class="pi pi-check" aria-hidden="true"></i>
+            <span class="app-visually-hidden">Bonne réponse</span>
+          </span>
+        }
+        @if (showDistribution()) {
+          <span class="quiz-count">{{ percent(i) }} % · {{ counts()?.[i] ?? 0 }}</span>
+        }
+      </li>
+    }
+  </ol>
+
+  @if (isHost()) {
+    <div class="quiz-host">
+      <span class="quiz-host-status">
+        @switch (status()) {
+          @case ('Pending') {
+            Vote fermé
+          }
+          @case ('Open') {
+            Vote ouvert · {{ total() }} {{ total() > 1 ? 'réponses' : 'réponse' }}
+          }
+          @case ('Closed') {
+            Vote clos · {{ total() }} {{ total() > 1 ? 'réponses' : 'réponse' }}
+          }
+          @case ('Revealed') {
+            Réponse révélée
+          }
+        }
+      </span>
+      @switch (status()) {
+        @case ('Pending') {
+          <button type="button" (click)="hostAction($event, 'open')">Ouvrir le vote</button>
+        }
+        @case ('Open') {
+          <button type="button" (click)="hostAction($event, 'close')">Fermer le vote</button>
+        }
+        @case ('Closed') {
+          <button type="button" (click)="hostAction($event, 'open')">Rouvrir</button>
+          <button type="button" (click)="hostAction($event, 'reveal')">Révéler la réponse</button>
+        }
+      }
+    </div>
+  }
+
+  @if (isParticipant()) {
+    <p class="quiz-status" role="status">{{ participantMessage() }}</p>
+  }
+</div>
