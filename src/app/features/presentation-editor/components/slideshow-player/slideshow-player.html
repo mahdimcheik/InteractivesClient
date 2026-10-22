@@ -10,6 +10,21 @@
   }
 </div>
 
+@if (live(); as session) {
+  <div class="player-live">
+    <span
+      >Rejoindre : <strong>{{ session.joinUrl }}</strong></span
+    >
+    <span
+      >Code <strong class="player-live-code">{{ session.code }}</strong></span
+    >
+    <span>
+      {{ session.participantCount }}
+      {{ session.participantCount > 1 ? 'participants' : 'participant' }}
+    </span>
+  </div>
+}
+
 <p class="app-visually-hidden" aria-live="polite">
   Diapositive {{ index() + 1 }} sur {{ slides().length }}
 </p>

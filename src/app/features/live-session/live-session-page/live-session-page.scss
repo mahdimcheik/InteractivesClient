@@ -1,0 +1,50 @@
+// Fond noir dans les deux thèmes : c'est le cadre de la diapositive, comme le lecteur de l'hôte.
+@layer app {
+  .live-page {
+    --live-backdrop: #000000;
+    --live-text: #ffffff;
+
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--live-backdrop);
+    color: var(--live-text);
+  }
+
+  .live-slide {
+    width: min(100vw, calc(100vh * 16 / 9));
+  }
+
+  .live-banner {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    z-index: 1;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 75%);
+    transform: translateX(-50%);
+  }
+
+  .live-message {
+    max-width: 28rem;
+    padding: 1rem;
+    text-align: center;
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin: 0 0 1rem;
+    }
+
+    a {
+      color: var(--live-text);
+    }
+  }
+}

@@ -127,12 +127,26 @@
     gap: 1rem;
   }
 
-  .join-room-button {
-    display: none;
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--app-text-color);
+  }
 
-    @media (min-width: 40rem) {
-      display: inline-flex;
-    }
+  .live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--app-danger-color);
+  }
+
+  .live-code {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.1em;
   }
 
   .go-live-button {

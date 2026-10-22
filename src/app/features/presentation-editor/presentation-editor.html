@@ -2,8 +2,12 @@
   <app-editor-header
     [presentationTitle]="presentationTitle()"
     [canPresent]="!!presentation()?.slides?.length"
+    [live]="liveInfo()"
+    [startingLive]="startingLive()"
     (rename)="openRenameModal()"
     (present)="isPresenting.set(true)"
+    (goLive)="goLive()"
+    (endLive)="endLiveModalVisible.set(true)"
   ></app-editor-header>
   <app-editor-toolbar />
 
@@ -39,7 +43,18 @@
 @if (isPresenting() && presentation(); as p) {
   <app-slideshow-player
     [presentation]="p"
-    [startIndex]="selectedSlideIndex()"
+    [startIndex]="liveSession() ? liveConnection.currentSlideIndex() : selectedSlideIndex()"
+    [live]="liveInfo()"
+    (indexChange)="onPresentedSlideChange($event)"
     (closed)="stopPresenting($event)"
   />
 }
+
+<app-confirm-delete-modal
+  [(visible)]="endLiveModalVisible"
+  heading="Terminer la séance"
+  message="Les participants seront déconnectés. Vous pourrez démarrer une nouvelle séance plus tard."
+  confirmLabel="Terminer"
+  [deleting]="endingLive()"
+  (confirmed)="endLive()"
+/>

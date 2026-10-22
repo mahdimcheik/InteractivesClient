@@ -1,0 +1,39 @@
+<main class="live-page">
+  @switch (state()) {
+    @case ('live') {
+      <h1 class="app-visually-hidden">{{ presentation()?.title }}</h1>
+      <p class="app-visually-hidden" aria-live="polite">
+        Diapositive {{ connection.currentSlideIndex() + 1 }} sur {{ slides().length }}
+      </p>
+      @if (connection.status() === 'reconnecting') {
+        <p class="live-banner" role="status">Connexion perdue, reconnexion en cours…</p>
+      }
+      <div class="live-slide">
+        @if (currentSlide(); as slide) {
+          <app-slide-view
+            [slide]="slide"
+            [presentationId]="presentation()!.id!"
+            [mode]="clientMode"
+          />
+        }
+      </div>
+    }
+    @case ('loading') {
+      <p class="live-message" role="status">Connexion à la séance…</p>
+    }
+    @case ('not-found') {
+      <div class="live-message">
+        <h1>Séance introuvable</h1>
+        <p>Le code est peut-être erroné, ou la séance est terminée.</p>
+        <a routerLink="/seance">Saisir un autre code</a>
+      </div>
+    }
+    @case ('ended') {
+      <div class="live-message">
+        <h1>Séance terminée</h1>
+        <p>L'hôte a mis fin à la séance. Merci de votre participation.</p>
+        <a routerLink="/dashboard">Retour au tableau de bord</a>
+      </div>
+    }
+  }
+</main>

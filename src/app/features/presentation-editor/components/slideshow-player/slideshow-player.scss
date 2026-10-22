@@ -70,6 +70,27 @@
     }
   }
 
+  .player-live {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    max-width: calc(100% - 2rem);
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    background: var(--player-control-background);
+    color: var(--player-control-color);
+    font-size: 0.875rem;
+  }
+
+  .player-live-code {
+    font-family: ui-monospace, monospace;
+    font-size: 1.125rem;
+    letter-spacing: 0.15em;
+  }
+
   .player-counter {
     min-width: 3.5rem;
     font-size: 0.875rem;

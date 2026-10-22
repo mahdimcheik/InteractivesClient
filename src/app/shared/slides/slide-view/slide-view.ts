@@ -50,7 +50,7 @@ import { SlideStage } from '../slide-stage/slide-stage';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-hidden]': "isThumbnail() ? 'true' : null",
-    '[inert]': 'isThumbnail()',
+    '[attr.inert]': "isThumbnail() ? '' : null",
   },
 })
 export class SlideView {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 
-/** Confirmation d'une suppression définitive, aux couleurs du thème courant. */
+/** Confirmation d'une action destructrice (suppression, fin de séance), aux couleurs du thème. */
 @Component({
   selector: 'app-confirm-delete-modal',
   imports: [ButtonModule, DialogModule],
@@ -42,7 +42,7 @@ import { DialogModule } from '@syncfusion/ej2-angular-popups';
             [disabled]="deleting()"
             (click)="confirmed.emit()"
           >
-            {{ deleting() ? 'Suppression…' : 'Supprimer' }}
+            {{ deleting() ? 'Un instant…' : confirmLabel() }}
           </button>
         </div>
       </ng-template>
@@ -76,6 +76,7 @@ export class ConfirmDeleteModal {
   readonly heading = input.required<string>();
   readonly message = input.required<string>();
   readonly deleting = input(false);
+  readonly confirmLabel = input('Supprimer');
 
   readonly confirmed = output<void>();
 

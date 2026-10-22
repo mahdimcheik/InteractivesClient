@@ -91,6 +91,21 @@ export interface GoogleAuthRequest {
     privacyPolicyConsent?: boolean;
 }
 
+export interface LiveSessionDetails {
+    code: string;
+    presentationId: string;
+    currentSlideIndex: number;
+    participantCount: number;
+    startedAt: Date;
+}
+
+export interface LiveSessionDetailsResponse {
+    message: string;
+    status: number;
+    data?: LiveSessionDetails;
+    count?: number | null;
+}
+
 export interface LoginRequest {
     email: string;
     password: string;
@@ -202,6 +217,10 @@ export interface SlideDetailsResponse {
     status: number;
     data?: SlideDetails;
     count?: number | null;
+}
+
+export interface StartLiveSessionRequest {
+    presentationId: string;
 }
 
 export enum StorageProviderEnum {

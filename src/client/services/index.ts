@@ -9,6 +9,7 @@
 */
 export { AuthService } from "./auth.service";
 export { ElementsService } from "./elements.service";
+export { LiveSessionsService } from "./liveSessions.service";
 export { MediasService } from "./medias.service";
 export { PresentationsService } from "./presentations.service";
 export { SlidesService } from "./slides.service";

@@ -15,10 +15,14 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 
-import { PresentationDetails } from '@client';
+import { LiveSessionDetails, PresentationDetails } from '@client';
+import { LiveSessionConnection } from '@core/utilities/services/live-session-connection';
+import { LiveSessionsMirrorService } from '@core/utilities/services/live-sessions-mirror.service';
+import { NotificationService } from '@core/utilities/services/notification.service';
 import { PresentationsMirrorService } from '@core/utilities/services/presentations-mirror.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 
+import { ConfirmDeleteModal } from './components/confirm-delete-modal/confirm-delete-modal';
 import { EditorHeader } from './components/editor-header/editor-header';
 import { EditorToolbar } from './components/editor-toolbar/editor-toolbar';
 import { PresentationNameModal } from './components/presentation-name-modal/presentation-name-modal';
@@ -39,7 +43,9 @@ const NEW_PRESENTATION_ID = 'new';
     PropertiesPanel,
     PresentationNameModal,
     SlideshowPlayer,
+    ConfirmDeleteModal,
   ],
+  providers: [LiveSessionConnection],
   templateUrl: './presentation-editor.html',
   styleUrl: './presentation-editor.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,9 +57,27 @@ export class PresentationEditor {
   private readonly slidesMirror = inject(SlidesMirrorService);
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
+  private readonly liveSessions = inject(LiveSessionsMirrorService);
+  private readonly notifications = inject(NotificationService);
+  protected readonly liveConnection = inject(LiveSessionConnection);
 
   protected readonly selectedSlideIndex = signal(0);
   protected readonly isPresenting = signal(false);
+  /** Séance en direct en cours : le lecteur diffuse alors chaque changement de diapositive. */
+  protected readonly liveSession = signal<LiveSessionDetails | null>(null);
+  protected readonly startingLive = signal(false);
+  protected readonly endLiveModalVisible = signal(false);
+  protected readonly endingLive = signal(false);
+  protected readonly liveInfo = computed(() => {
+    const session = this.liveSession();
+    return session
+      ? {
+          code: session.code,
+          joinUrl: `${this.document.location.origin}/seance/${session.code}`,
+          participantCount: this.liveConnection.participantCount(),
+        }
+      : null;
+  });
   protected readonly isNameModalOpen = signal(false);
   protected readonly savingName = signal(false);
 
@@ -111,6 +135,67 @@ export class PresentationEditor {
       if (id) {
         untracked(() => this.presentationsMirror.get(id).subscribe());
       }
+    });
+  }
+
+  protected async goLive(): Promise<void> {
+    const presentationId = this.presentation()?.id;
+    if (!presentationId) {
+      return;
+    }
+    if (this.liveSession()) {
+      this.isPresenting.set(true);
+      return;
+    }
+
+    this.startingLive.set(true);
+    try {
+      const session = await firstValueFrom(this.liveSessions.start(presentationId));
+      if (!session) {
+        return;
+      }
+      await this.liveConnection.joinAsHost(session.code, this.selectedSlideIndex());
+      this.liveSession.set(session);
+      this.isPresenting.set(true);
+    } catch {
+      this.notifications.add({
+        severity: 'error',
+        summary: 'Échec du démarrage',
+        detail: 'La séance en direct n’a pas pu démarrer.',
+      });
+    } finally {
+      this.startingLive.set(false);
+    }
+  }
+
+  protected onPresentedSlideChange(index: number): void {
+    const session = this.liveSession();
+    if (session) {
+      void this.liveConnection.goToSlide(session.code, index).catch(() => undefined);
+    }
+  }
+
+  protected endLive(): void {
+    const session = this.liveSession();
+    if (!session) {
+      return;
+    }
+    this.endingLive.set(true);
+    this.liveSessions.end(session.code).subscribe({
+      next: () => {
+        this.endingLive.set(false);
+        this.endLiveModalVisible.set(false);
+        this.liveSession.set(null);
+        void this.liveConnection.close();
+      },
+      error: () => {
+        this.endingLive.set(false);
+        this.notifications.add({
+          severity: 'error',
+          summary: 'Échec',
+          detail: 'La séance n’a pas pu être terminée.',
+        });
+      },
     });
   }
 

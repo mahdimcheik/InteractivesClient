@@ -18,6 +18,8 @@ Le modèle de données côté serveur est décrit dans le dépôt `InteractivesA
 
 - [Éléments de diapositive](30-specs-techniques/01-elements-diapositive.md) — contrat commun,
   registre, ajouter un élément.
+- [Séance en direct](30-specs-techniques/02-seance-en-direct.md) — décisions, API (routes et
+  hub SignalR), connexion côté client.
 
 ### 50 — Backlog
 

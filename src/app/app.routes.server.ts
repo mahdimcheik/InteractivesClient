@@ -14,5 +14,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'reinitialiser-mot-de-passe', renderMode: RenderMode.Client },
   { path: 'confirmation-compte', renderMode: RenderMode.Client },
   { path: 'dashboard/**', renderMode: RenderMode.Client },
+  { path: 'seance', renderMode: RenderMode.Client },
+  { path: 'seance/**', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Server },
 ];

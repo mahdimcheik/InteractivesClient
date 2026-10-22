@@ -87,24 +87,22 @@ texte de l'élément Titre + texte + image ; boutons encore factices de la barre
 `features/presentation-editor/` ; la page participant devra les importer de là ou les déplacer
 dans un dossier partagé.
 
-## Lot 6 — Séance en direct
+## Lot 6 — Séance en direct — **livré, à vérifier dans le navigateur**
 
-Le cœur du produit. Demande l'état d'exécution séparé de la configuration, prévu par le modèle
-de données de l'API.
+Voir [la séance en direct](../30-specs-techniques/02-seance-en-direct.md). Tranché : compte
+obligatoire, participant calé sur l'hôte, une séance à la fois par présentation, rien de
+conservé après.
 
-- L'hôte démarre une séance depuis une présentation et obtient un code et un lien.
-- Les participants rejoignent par `/seance/:code` (rendu `Client`, à déclarer dans
-  `app.routes.ts` **et** `app.routes.server.ts`) et voient la diapositive courante en mode
-  `Client`.
-- Le changement de diapositive de l'hôte est diffusé ; un participant qui arrive en cours ou se
-  reconnecte reprend sur la diapositive courante.
-- L'hôte voit le nombre de participants connectés et peut terminer la séance.
-- Client SignalR (`@microsoft/signalr`), connexion ouverte une seule fois par séance, jeton
-  relu à chaque connexion.
+- API : hub SignalR `/hubs/live-session`, routes `/live-sessions`, état en mémoire, jeton lu
+  dans la chaîne de requête du hub. Corrigé au passage : le chargement d'une présentation
+  renvoyait les diapositives et éléments supprimés.
+- Client : rendu des diapositives déplacé dans `shared/slides/` ; `LiveSessionConnection`
+  (SignalR chargé à la demande, reconnexion qui reprend la diapositive courante) ; hôte :
+  « Démarrer en direct », code, lien et participants dans le lecteur, « Terminer la séance » ;
+  participant : `/seance` et `/seance/:code`.
 
-**Côté API, à prévoir :** hub SignalR, état de séance (en mémoire ou table dédiée), routes
-démarrer / rejoindre / terminer, lecture du jeton dans la chaîne de requête du hub
-(`OnMessageReceived`) — sinon WebSocket retombe en _long polling_.
+**Reste :** essai de bout en bout à plusieurs navigateurs ; renouveler le jeton avant une
+reconnexion si la séance dure plus longtemps que sa validité.
 
 ## Lot 7 — QCM
 

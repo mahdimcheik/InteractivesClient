@@ -111,6 +111,7 @@ render decides. Removing that check would redirect every prerendered visitor to 
 | `/`, `/a-propos`, `/contact`                                                                                | `Prerender` | static HTML, SEO                                |
 | `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/confirmation-compte` | `Client`    | depends on auth state                           |
 | `/dashboard/**`                                                                                             | `Client`    | no authenticated data touches the render server |
+| `/seance`, `/seance/:code`                                                                                  | `Client`    | live session, account required (`authGuard`)    |
 | `**`                                                                                                        | `Server`    | on demand                                       |
 
 Adding an authenticated route means adding it to **both** files. `angular.json` →
@@ -201,6 +202,14 @@ replaces the whole element, `patch` builds the request from the latest cached el
 to the `Store` before the response, and on failure restores only the fields it changed (so a
 move and a text edit in flight never overwrite each other). Don't call `update` with a payload
 built from a component's copy of the element.
+
+**Live sessions** (lot 6, write-up in
+[docs/30-specs-techniques/02-seance-en-direct.md](docs/30-specs-techniques/02-seance-en-direct.md)):
+only the current slide index travels; each client renders the slide itself. API: REST
+`/live-sessions` + SignalR hub `/hubs/live-session`, in-memory state, one session per
+presentation. Client: `LiveSessionsMirrorService` (REST, no cache) and `LiveSessionConnection`
+(SignalR, **provided per component**, lazy `import('@microsoft/signalr')`, rejoins on reconnect).
+Host flow in `PresentationEditor`; participant pages in `features/live-session/`.
 
 Slide **rendering** shared by the editor and the live-session page lives in `src/app/shared/slides/`
 (`slide-stage/`, `slide-view/`, `elements/` with the registry); editor-only pieces (`SlideCanvas`,

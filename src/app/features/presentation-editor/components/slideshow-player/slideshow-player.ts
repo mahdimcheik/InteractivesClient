@@ -45,7 +45,11 @@ export class SlideshowPlayer {
 
   readonly presentation = input.required<PresentationDetails>();
   readonly startIndex = input(0);
+  /** Séance en direct diffusée pendant la présentation, ou `null` pour présenter seul. */
+  readonly live = input<{ code: string; joinUrl: string; participantCount: number } | null>(null);
   readonly closed = output<number>();
+  /** Chaque changement de diapositive, pour la diffusion aux participants. */
+  readonly indexChange = output<number>();
 
   protected readonly presentationMode = PresentationMode.Presentation;
   protected readonly slides = computed(() => this.presentation().slides ?? []);
@@ -80,14 +84,18 @@ export class SlideshowPlayer {
   }
 
   protected next(): void {
-    if (!this.isLast()) {
-      this.index.update((i) => i + 1);
-    }
+    this.goTo(this.index() + 1);
   }
 
   protected previous(): void {
-    if (!this.isFirst()) {
-      this.index.update((i) => i - 1);
+    this.goTo(this.index() - 1);
+  }
+
+  private goTo(index: number): void {
+    const bounded = Math.min(Math.max(index, 0), Math.max(this.slides().length - 1, 0));
+    if (bounded !== this.index()) {
+      this.index.set(bounded);
+      this.indexChange.emit(bounded);
     }
   }
 
@@ -108,9 +116,9 @@ export class SlideshowPlayer {
     } else if (PREVIOUS_KEYS.has(event.key)) {
       this.previous();
     } else if (event.key === 'Home') {
-      this.index.set(0);
+      this.goTo(0);
     } else if (event.key === 'End') {
-      this.index.set(Math.max(this.slides().length - 1, 0));
+      this.goTo(this.slides().length - 1);
     } else if (event.key === 'Escape') {
       this.close();
     } else {

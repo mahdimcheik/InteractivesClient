@@ -35,21 +35,32 @@
       Présenter
     </button>
 
-    <button
-      type="button"
-      ejs-button
-      cssClass="e-outline join-room-button !border-[var(--app-primary-color)] !text-[var(--app-primary-color)] !px-4 !py-2 !rounded-lg"
-    >
-      Rejoindre la salle
-    </button>
+    @if (live(); as session) {
+      <p class="live-badge" role="status">
+        <span class="live-dot" aria-hidden="true"></span>
+        En direct · <span class="live-code">{{ session.code }}</span> ·
+        {{ session.participantCount }}
+        {{ session.participantCount > 1 ? 'participants' : 'participant' }}
+      </p>
+      <button
+        type="button"
+        ejs-button
+        cssClass="e-outline !px-4 !py-2 !rounded-lg"
+        (click)="endLive.emit()"
+      >
+        Terminer la séance
+      </button>
+    }
 
     <button
       type="button"
       ejs-button
       cssClass="!bg-[var(--app-primary-color)] !text-[var(--app-primary-contrast-color)] !px-4 !py-2 !rounded-lg go-live-button"
+      [disabled]="!canPresent() || startingLive()"
+      (click)="goLive.emit()"
     >
       <i class="pi pi-play" aria-hidden="true"></i>
-      Démarrer en direct
+      {{ live() ? 'Reprendre le direct' : 'Démarrer en direct' }}
     </button>
 
     <button type="button" class="avatar-button" aria-label="Profil utilisateur">

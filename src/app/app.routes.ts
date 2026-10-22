@@ -70,6 +70,27 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
   },
+  {
+    // Séance en direct : compte obligatoire pour rejoindre. Rendu client (app.routes.server.ts).
+    path: 'seance',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        title: 'Rejoindre une séance',
+        loadComponent: () =>
+          import('./features/live-session/join-session/join-session').then((m) => m.JoinSession),
+      },
+      {
+        path: ':code',
+        title: 'Séance en direct',
+        loadComponent: () =>
+          import('./features/live-session/live-session-page/live-session-page').then(
+            (m) => m.LiveSessionPage,
+          ),
+      },
+    ],
+  },
 
   {
     path: '**',

@@ -25,6 +25,7 @@ const presentation: PresentationDetails = {
 describe('SlideshowPlayer', () => {
   let host: HTMLElement;
   let closedWith: number[];
+  let changes: number[];
   let detect: () => void;
 
   const press = (key: string) => {
@@ -44,7 +45,9 @@ describe('SlideshowPlayer', () => {
     fixture.componentRef.setInput('presentation', presentation);
     fixture.componentRef.setInput('startIndex', 0);
     closedWith = [];
+    changes = [];
     fixture.componentInstance.closed.subscribe((index) => closedWith.push(index));
+    fixture.componentInstance.indexChange.subscribe((index) => changes.push(index));
     fixture.detectChanges();
     host = fixture.nativeElement;
     detect = () => fixture.detectChanges();
@@ -72,5 +75,13 @@ describe('SlideshowPlayer', () => {
     press('ArrowRight');
     press('Escape');
     expect(closedWith).toEqual([1]);
+  });
+
+  it('émet chaque changement de diapositive, pas les appuis sans effet', () => {
+    press('ArrowLeft');
+    press('ArrowRight');
+    press('End');
+    press('End');
+    expect(changes).toEqual([1, 2]);
   });
 });
