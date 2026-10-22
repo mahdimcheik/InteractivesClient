@@ -30,7 +30,7 @@ chaque client rend les mêmes composants en mode `Client`.
 Deux surfaces rendent une diapositive :
 
 - `SlideCanvas` — la surface d'édition, toujours en mode `Edit` (cadres, sélection, dépôt) ;
-- `SlideView` (`components/slide-view/`) — la lecture seule, pour tous les autres modes : même
+- `SlideView` (`shared/slides/slide-view/`) — la lecture seule, pour tous les autres modes : même
   `SlideStage`, arrière-plan de la diapositive, éléments masqués absents. En `Thumbnail`, elle
   est `inert` et retirée de l'arbre d'accessibilité : c'est le bouton qui la contient qui la
   nomme (« Diapositive 3 »).
@@ -46,7 +46,7 @@ contrôle d'édition (`contenteditable`, champ, bouton) hors du mode `Edit`.
 
 Positions et tailles (`x`, `y`, `width`, `height`) sont stockées dans un repère logique de
 **1280 × 720**, format 16:9 uniquement (`SLIDE_WIDTH` × `SLIDE_HEIGHT`, `core/utilities/models/slide-geometry.ts`), pas
-en pixels d'écran. `SlideStage` (`components/slide-stage/`) occupe la largeur disponible au
+en pixels d'écran. `SlideStage` (`shared/slides/slide-stage/`) occupe la largeur disponible au
 format 16:9 et met son contenu à l'échelle (`transform: scale`) ; `toSlidePoint` convertit un
 point de l'écran en coordonnées logiques. Une diapositive se rend ainsi à l'identique dans
 l'éditeur, en présentation, chez chaque participant et en miniature.
@@ -122,7 +122,7 @@ Le composant n'a qu'à déclarer `protected readonly defaultConfig` et son templ
 ## Les éléments actuels
 
 Les composants sont sous
-`src/app/features/presentation-editor/components/slide-canvas/elements/`.
+`src/app/shared/slides/elements/`.
 
 | Preset (palette)      | Type API         | Composant               | Configuration                                                   |
 | --------------------- | ---------------- | ----------------------- | --------------------------------------------------------------- |

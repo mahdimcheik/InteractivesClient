@@ -14,7 +14,7 @@ import {
 import { PresentationDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
 
-import { SlideView } from '../slide-view/slide-view';
+import { SlideView } from '@app/shared/slides/slide-view/slide-view';
 
 const NEXT_KEYS = new Set(['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter']);
 const PREVIOUS_KEYS = new Set(['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace']);

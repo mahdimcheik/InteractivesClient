@@ -7,7 +7,7 @@ import { ElementsMirrorService } from '@core/utilities/services/elements-mirror.
 import { NotificationService } from '@core/utilities/services/notification.service';
 import { SlidesMirrorService } from '@core/utilities/services/slides-mirror.service';
 
-import { ELEMENT_PANELS, elementLabel } from '../slide-canvas/elements/element-registry';
+import { ELEMENT_PANELS, elementLabel } from '@app/shared/slides/elements/element-registry';
 
 /**
  * Propriétés de l'élément sélectionné (position et taille communes, puis le panneau propre à son

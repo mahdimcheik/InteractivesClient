@@ -19,9 +19,13 @@ import {
 } from '@core/utilities/services/elements-mirror.service';
 import { NotificationService } from '@core/utilities/services/notification.service';
 
-import { SlideStage } from '../slide-stage/slide-stage';
+import { SlideStage } from '@app/shared/slides/slide-stage/slide-stage';
 import { ElementAction, ElementFrame } from './element-frame/element-frame';
-import { ELEMENT_COMPONENTS, elementLabel, findElementPreset } from './elements/element-registry';
+import {
+  ELEMENT_COMPONENTS,
+  elementLabel,
+  findElementPreset,
+} from '@app/shared/slides/elements/element-registry';
 
 @Component({
   selector: 'app-slide-canvas',

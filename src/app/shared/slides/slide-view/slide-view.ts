@@ -4,7 +4,7 @@ import { SlideDetails } from '@client';
 import { PresentationMode } from '@core/utilities/models/enumerators';
 import { SLIDE_DEFAULT_BACKGROUND } from '@core/utilities/models/slide-style';
 
-import { ELEMENT_COMPONENTS } from '../slide-canvas/elements/element-registry';
+import { ELEMENT_COMPONENTS } from '../elements/element-registry';
 import { SlideStage } from '../slide-stage/slide-stage';
 
 /**

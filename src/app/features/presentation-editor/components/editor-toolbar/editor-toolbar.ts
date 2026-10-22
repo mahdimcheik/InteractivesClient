@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { ELEMENT_PRESETS } from '../slide-canvas/elements/element-registry';
+import { ELEMENT_PRESETS } from '@app/shared/slides/elements/element-registry';
 
 @Component({
   selector: 'app-editor-toolbar',

@@ -202,6 +202,10 @@ to the `Store` before the response, and on failure restores only the fields it c
 move and a text edit in flight never overwrite each other). Don't call `update` with a payload
 built from a component's copy of the element.
 
+Slide **rendering** shared by the editor and the live-session page lives in `src/app/shared/slides/`
+(`slide-stage/`, `slide-view/`, `elements/` with the registry); editor-only pieces (`SlideCanvas`,
+`ElementFrame`, panels' host) stay under `features/presentation-editor/`.
+
 **Slide elements: one contract, one registry.** Full write-up (French) in
 [docs/30-specs-techniques/01-elements-diapositive.md](docs/30-specs-techniques/01-elements-diapositive.md). In short:
 
@@ -214,11 +218,11 @@ built from a component's copy of the element.
 - Rendering must depend only on `config()` + `mode()`, with no edit affordances outside `Edit` —
   that's what lets participants render the same components in `Client` mode
   (`element-registry.spec.ts` asserts it for every registered component). Two surfaces render
-  a slide: `SlideCanvas` (always `Edit`, with frames) and `SlideView` (`components/slide-view/`,
+  a slide: `SlideCanvas` (always `Edit`, with frames) and `SlideView` (`shared/slides/slide-view/`,
   read-only, hides `visible: false` elements, `inert` + `aria-hidden` in `Thumbnail`). The host's
   full-screen player `SlideshowPlayer` shows a `SlideView` in `Presentation` mode.
 - Geometry lives in a **logical 1280 × 720 frame** (`core/utilities/models/slide-geometry.ts`),
-  scaled on screen by `SlideStage` (`components/slide-stage/`, `transform: scale`, exposes
+  scaled on screen by `SlideStage` (`shared/slides/slide-stage/`, `transform: scale`, exposes
   `--slide-scale` and `toSlidePoint`). Size slide content in logical `px`, never `rem`; edit-only
   controls divide their sizes by `var(--slide-scale)` to stay readable.
 - In `Edit` mode each element sits in an `ElementFrame` (`slide-canvas/element-frame/`): click
@@ -227,7 +231,7 @@ built from a component's copy of the element.
   to the frame and only committed (through `patch`) when the gesture ends. Pure geometry
   (`moveRect`, `resizeRect`, `clampRect`) lives in `slide-geometry.ts`. Hidden elements are
   dimmed in `Edit` and not rendered in other modes.
-- `slide-canvas/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →
+- `shared/slides/elements/element-registry.ts`: `ELEMENT_COMPONENTS` maps API `ElementTypeEnum` →
   component; `ELEMENT_PRESETS` is the editor palette (label, primeicons class, type, size,
   initial configuration JSON). Palette ≠ types: "Titre" and "Zone de texte" are both `Text`
   (`role: 'title' | 'body'`). `editor-toolbar` renders the palette from `ELEMENT_PRESETS`

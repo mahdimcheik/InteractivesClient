@@ -22,7 +22,7 @@ import { Store } from '@core/utilities/services/store';
 
 import { ConfirmDeleteModal } from '../confirm-delete-modal/confirm-delete-modal';
 import { SlideModal } from '../slide-modal/slide-modal';
-import { SlideView } from '../slide-view/slide-view';
+import { SlideView } from '@app/shared/slides/slide-view/slide-view';
 
 @Component({
   selector: 'app-slide-panel',
